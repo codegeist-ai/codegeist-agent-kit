@@ -34,6 +34,12 @@ Detailed commit guidance that complements `commit.md`.
 - Do not use commit messages as a substitute for task planning; keep planning in
   repo-local planning docs and rule files.
 
+## Relationship To `commit.md`
+
+- Treat `commit.md` as the short mandatory rule set.
+- Use this file for the longer explanation, preferred patterns, and examples
+  when the shorter rule is not enough.
+
 ## Examples
 
 - `feat(run): add default develop worktree`
