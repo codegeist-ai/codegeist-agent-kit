@@ -32,6 +32,8 @@ Use these rules whenever you create a git commit for this project.
 - When constructing commit messages via shell flags or automation, use real line
   breaks in the body; never leave literal `\n` escape sequences in the final
   committed message.
+- Prefer `git commit -m "<subject>" -m "<body>"` or `git commit -F <file>` over
+  embedding escaped newline sequences inside a single `-m` string.
 
 ## Examples
 

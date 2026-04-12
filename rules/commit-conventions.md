@@ -21,6 +21,8 @@ Detailed commit guidance that complements `commit.md`.
 - Use bullet points when several related outcomes matter.
 - When using CLI flags or automation to create commit messages, pass a real
   multiline body and do not commit literal `\n` sequences.
+- Prefer multiple `-m` flags or `git commit -F <file>` when scripting commit
+  messages; do not rely on escaped newlines inside one quoted `-m` argument.
 
 ## Scope And Context
 
