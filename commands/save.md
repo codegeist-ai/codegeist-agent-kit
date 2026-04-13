@@ -42,7 +42,10 @@ Then:
 7. Stage the relevant changes for the current task, including any refreshed
    project-memory or rule updates that belong to the task.
 8. Draft a commit message that matches the project commit rule.
-9. Create the git commit on the current branch.
+9. When `.opencode/ai-scripts/commit-message-guard.sh` exists, create the git
+   commit through that script by setting `ARG_COMMIT_SUBJECT`, optionally
+   `ARG_COMMIT_BODY`, and `ARG_EXECUTE=1`; otherwise use a direct `git commit`
+   command that still follows `@.opencode/rules/commit.md`.
 10. Execute @.opencode/commands/rebase.md on the current branch.
 11. Record the current branch name, the resolved local base branch, and the
     rebased HEAD commit after the rebase succeeds.
@@ -108,3 +111,4 @@ not been updated and, when configured, pushed yet.
 Do not force-check out the base branch in the current worktree when another
 worktree already has that branch checked out.
 If commit or rebase fails, stop and report the exact failure.
+Do not use literal `\n` escape sequences in commit-message inputs.

@@ -24,7 +24,10 @@ Then:
    leave out.
 5. Draft one commit message that matches the project commit rule and describes
    the overall result of the full staged change set.
-6. Create the git commit on the current branch.
+6. When `.opencode/ai-scripts/commit-message-guard.sh` exists, create the git
+   commit through that script by setting `ARG_COMMIT_SUBJECT`, optionally
+   `ARG_COMMIT_BODY`, and `ARG_EXECUTE=1`; otherwise use a direct `git commit`
+   command that still follows `@.opencode/rules/commit.md`.
 7. Report the final commit hash and commit message.
 
 Do not create an empty commit.
@@ -32,3 +35,4 @@ Do not commit secrets or generated noise.
 Do not omit edited files only because they appear outside the main task area.
 Do not split the current task into multiple commits unless the user explicitly
 asks for that split.
+Do not use literal `\n` escape sequences in commit-message inputs.

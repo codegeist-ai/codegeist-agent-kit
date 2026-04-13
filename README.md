@@ -13,6 +13,7 @@ multiple repositories via a checked-out `.opencode/` directory.
 
 ## Layout
 
+- `ai-scripts/` - repo-local helper scripts for repeated AI workflows
 - `commands/` - shared slash-command definitions
 - `rules/` - shared durable workflow and editing rules
 - `skills/` - shared reusable skills
@@ -42,7 +43,8 @@ analysis flows should live in local overlays such as:
 
 - Commands: see `commands/README.md`
 - Rules: see `rules/README.md`
-- Skills: currently `skills/gh-auth/SKILL.md`
+- Skills: currently `skills/gh-auth/SKILL.md` and
+  `skills/commit-message-guard/SKILL.md`
 
 ## Development Notes
 
