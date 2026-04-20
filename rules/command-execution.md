@@ -16,15 +16,17 @@ Use these rules whenever you choose or run commands in this project.
   `@.opencode/skills/gh-auth/SKILL.md` before continuing with `gh` commands.
 - Prefer non-interactive command forms whenever a tool might prompt or open a
   pager.
-- Never create a git commit in this repo unless the user explicitly invokes the
-  repo-local `/commit` or `/save` workflow.
-- Treat plain chat requests to commit, save, or record changes as insufficient
-  for this repo unless they explicitly direct the OpenCode `/commit` or `/save`
-  workflow.
-- If commit-like work is requested outside `/commit` or `/save`, stop and tell
-  the user to use one of those repo-local workflows instead.
-- Apply the same restriction to submodule commits, parent gitlink updates, and
-  any other git steps whose purpose is to create or record a commit.
+- Prefer the repo-local `/commit` or `/save` workflow for commit-style tasks
+  because those commands already bundle project-memory, learn, rebase, and
+  branch-sync steps.
+- A plain chat request to commit, save, or record changes is also sufficient in
+  this repo when the user is explicitly asking for that git write workflow.
+- When commit-like work is requested outside `/commit` or `/save`, still follow
+  the same project commit, memory, learn, rebase, and branch-sync rules instead
+  of refusing only because the request came from normal chat.
+- Apply the same allowance and the same safety checks to submodule commits,
+  parent gitlink updates, and any other git steps whose purpose is to create or
+  record a commit.
 - For git read commands, prefer `git --no-pager ...`.
 - Prefer read-only inspection, documentation, and repo-local workflow commands
   over speculative implementation commands.
