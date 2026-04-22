@@ -16,6 +16,11 @@ Use these rules whenever you create a git commit for this project.
 - Describe the result or intent, not a vague action like `update stuff`.
 - Make sure the staged diff matches the message.
 - Keep one commit focused on one coherent change.
+- When a task intentionally changes a submodule, include the relevant submodule
+  commit or commits together with the matching parent gitlink update.
+- Treat a changed submodule commit ID in the parent repo as a real task change;
+  do not leave an intended gitlink update out of the commit or commit the
+  parent change without the corresponding submodule state.
 - When workflow behavior changes, include matching project-memory or rule
   updates in the same commit when they belong to that change.
 - Do not include unrelated files, secrets, or generated noise.

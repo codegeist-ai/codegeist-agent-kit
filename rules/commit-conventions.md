@@ -29,6 +29,8 @@ Detailed commit guidance that complements `commit.md`.
 - Keep one commit focused on one unit of work.
 - If the change belongs to a named branch or worktree, keep the commit scope and
   message consistent with that work.
+- When a task includes submodule work, keep the submodule commit or commits and
+  the parent gitlink update aligned within the same unit of work.
 - If repo memory or workflow rules change as part of the same task, include the
   matching project-memory or `.opencode/rules/*.md` updates in that commit.
 - Do not use commit messages as a substitute for task planning; keep planning in
