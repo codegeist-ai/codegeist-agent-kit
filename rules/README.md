@@ -24,6 +24,7 @@ Shared AI rules intended to work across repos.
 - `commit-conventions.md` - longer-form commit guidance.
 - `language-policy.md` - English for code and durable repo text.
 - `ai-ready-documentation.md` - documentation standards for non-trivial files.
+- `bash-scripts.md` - minimal Bash style for repo-owned shell scripts.
 - `scripting-best-practices.md` - shell and automation guidance.
 - `software-documentation.md` - how repo-local software documentation should be
   structured and maintained.
