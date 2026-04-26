@@ -11,33 +11,37 @@ Then:
    - the explicit branch name from `$ARGUMENTS`, if provided
    - a clearly documented local base branch from repo-local docs, if present
    - the local branch pointed to by `origin/HEAD`, if available
-4. Stop and report if no suitable local base branch can be determined.
-5. Stop and report if the current branch is that base branch.
-6. Verify that the local base branch exists.
-7. Determine whether the base branch is already checked out in another
+4. If no suitable local base branch can be determined because the repo has no
+   remote default branch yet, or is a purely local repository created with
+   `git init`, treat the sync as a successful no-op and report that no base
+   branch could be resolved.
+5. Otherwise stop and report if no suitable local base branch can be determined.
+6. Stop and report if the current branch is that base branch.
+7. Verify that the local base branch exists.
+8. Determine whether the base branch is already checked out in another
    worktree.
-8. Stop and report if the current worktree is not clean.
-9. If the base branch is checked out elsewhere, stop and report if that
+9. Stop and report if the current worktree is not clean.
+10. If the base branch is checked out elsewhere, stop and report if that
    worktree is not clean.
-10. Execute @.opencode/commands/rebase.md with the resolved base branch as the
+11. Execute @.opencode/commands/rebase.md with the resolved base branch as the
     explicit branch argument.
-11. Record the current branch name, the resolved base branch, and the rebased
+12. Record the current branch name, the resolved base branch, and the rebased
     HEAD commit.
-12. Determine whether the rebased branch HEAD is already reachable from the
+13. Determine whether the rebased branch HEAD is already reachable from the
     local base branch.
-13. If the rebased branch HEAD is not yet on the base branch and that branch is
+14. If the rebased branch HEAD is not yet on the base branch and that branch is
     checked out elsewhere, fast-forward it there with
     `git -C <base-worktree> merge --ff-only <recorded-branch>`.
-14. If the rebased branch HEAD is not yet on the base branch and that branch is
+15. If the rebased branch HEAD is not yet on the base branch and that branch is
     not checked out elsewhere, switch to the local base branch in the current
     worktree.
-15. If you switched to the base branch, fast-forward it with
+16. If you switched to the base branch, fast-forward it with
     `git merge --ff-only <recorded-branch>`.
-16. Verify that `git rev-list --left-right --count <base-branch>...<recorded-branch>`
+17. Verify that `git rev-list --left-right --count <base-branch>...<recorded-branch>`
     reports `0 0`.
-17. Stop and report if the base branch and `<recorded-branch>` are still
+18. Stop and report if the base branch and `<recorded-branch>` are still
     divergent.
-18. Report the final synchronized commit hash, the current branch name, the
+19. Report the final synchronized commit hash, the current branch name, the
     resolved base branch, and whether that base branch was updated in the
     current worktree or another worktree.
 

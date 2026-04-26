@@ -36,6 +36,10 @@ Use these rules whenever you choose or run commands in this project.
 - When a repo-local rebase workflow resolves the current branch as the same as
   the local base branch, treat that rebase step as a valid no-op instead of a
   failure.
+- When a repo-local rebase or branch-sync workflow cannot resolve a base branch
+  only because the repository has no remote default branch yet, or is a purely
+  local `git init` repository, treat that step as a valid no-op instead of a
+  failure.
 - When using `@.opencode/commands/save.md`, include the refreshed
   `docs/memory-bank/chat.md` and
   any relevant rule updates from the learn step in the same commit, then let it
