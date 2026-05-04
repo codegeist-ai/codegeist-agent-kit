@@ -49,5 +49,5 @@ analysis flows should live in local overlays such as:
 ## Development Notes
 
 - `node_modules/` is ignored.
-- `package.json` and `package-lock.json` are part of the repo because they pin
-  the plugin dependency used by this workspace.
+- `package.json` and `package-lock.json` are local-only plugin files and are
+  ignored because consuming workspaces do not require pinned plugin versions.
