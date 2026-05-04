@@ -35,6 +35,7 @@ Shared AI rules intended to work across repos.
 - `session-titles.md` - short, searchable session title conventions.
 - `ai-scripts.md` - policy for future `.opencode/ai-scripts/` helpers.
 - `excalidraw.md` - editable `.excalidraw.svg` export requirements.
+- `semver.md` - how to choose and format project release versions.
 
 ## Project-Specific Notes
 
