@@ -28,6 +28,30 @@ multiple repositories via a checked-out `.opencode/` directory.
 - Project-specific extensions should live beside it in a local overlay such as
   `@.oc_local/` rather than being added to the shared core.
 
+## Submodule Usage
+
+Consuming repositories should add the generated `release` branch as their
+`.opencode` submodule. The release branch contains only the files needed at
+runtime: `.gitignore`, `README.md`, `opencode.json`, `ai-scripts/`,
+`commands/`, `rules/`, and `skills/`.
+
+```bash
+git submodule add -b release <repository-url> .opencode
+git submodule update --init --recursive
+```
+
+To update an existing consuming repository to the latest release branch commit:
+
+```bash
+git submodule update --remote .opencode
+```
+
+Maintainers build and push the release branch from this repository with:
+
+```bash
+task release-build
+```
+
 ## Shared Vs Local
 
 Keep this repository repo-agnostic.

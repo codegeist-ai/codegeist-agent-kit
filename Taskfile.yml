@@ -1,0 +1,86 @@
+# Taskfile.yml - build the minimal submodule release branch.
+#
+# Why this exists:
+# - Consuming repositories should add only the OpenCode shared workspace files as
+#   a git submodule, without local devcontainer files, generated files, or nested
+#   checkout metadata.
+# - `task release-build` creates an orphan release branch in a temporary worktree,
+#   updates the local release ref, and pushes it with `--force-with-lease` so the
+#   current branch and dirty worktree stay untouched.
+#
+# Inputs:
+# - RELEASE_BRANCH: target branch name, defaults to `release`.
+# - RELEASE_REMOTE: target remote name or URL, defaults to `origin`.
+# - RELEASE_SOURCE: source revision to archive, defaults to `HEAD`.
+# - RELEASE_WORKTREE: temporary worktree path, defaults to `.release-build`.
+#
+# Related files:
+# - README.md, opencode.json, ai-scripts/, commands/, rules/, skills/
+
+version: '3'
+
+vars:
+  RELEASE_BRANCH: '{{default "release" .RELEASE_BRANCH}}'
+  RELEASE_REMOTE: '{{default "origin" .RELEASE_REMOTE}}'
+  RELEASE_SOURCE: '{{default "HEAD" .RELEASE_SOURCE}}'
+  RELEASE_WORKTREE: '{{default ".release-build" .RELEASE_WORKTREE}}'
+  RELEASE_PATHS: README.md opencode.json ai-scripts commands rules skills
+
+tasks:
+  release-build:
+    desc: Build an orphan release branch containing only submodule files
+    cmds:
+      - |
+        bash -euo pipefail <<'BASH'
+
+        branch='{{.RELEASE_BRANCH}}'
+        remote='{{.RELEASE_REMOTE}}'
+        source='{{.RELEASE_SOURCE}}'
+        worktree='{{.RELEASE_WORKTREE}}'
+        build_branch="release-build-${branch}-$$"
+
+        if [ -e "${worktree}" ]; then
+          printf 'Release worktree path already exists: %s\n' "${worktree}" >&2
+          printf 'Remove it or set RELEASE_WORKTREE to another path.\n' >&2
+          exit 1
+        fi
+
+        git rev-parse --verify --quiet "${source}^{commit}" >/dev/null
+        git worktree add --detach "${worktree}" "${source}"
+
+        cleanup() {
+          git worktree remove --force "${worktree}" >/dev/null 2>&1 || true
+        }
+        trap cleanup EXIT
+
+        (
+          cd "${worktree}"
+          git checkout --orphan "${build_branch}"
+          git rm -rf --quiet --ignore-unmatch .
+        )
+
+        git archive "${source}" {{.RELEASE_PATHS}} | tar -x -C "${worktree}"
+
+        cat >"${worktree}/.gitignore" <<'GITIGNORE'
+        node_modules/
+        bun.lock
+        package.json
+        package-lock.json
+        GITIGNORE
+
+        (
+          cd "${worktree}"
+          git add .
+          git commit -m "chore(release): build submodule release"
+        )
+        commit=$(git -C "${worktree}" rev-parse HEAD)
+
+        trap - EXIT
+        cleanup
+
+        git branch --force "${branch}" "${commit}"
+        git push --force-with-lease -u "${remote}" "${branch}"
+
+        printf 'Built orphan release branch: %s\n' "${branch}"
+        printf 'Pushed release branch to %s/%s\n' "${remote}" "${branch}"
+        BASH
