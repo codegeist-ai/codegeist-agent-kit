@@ -11,6 +11,9 @@ state and chat context.
 Then execute @.opencode/commands/learn.md so durable project guidance from the
 current repository state and chat context is captured before the commit.
 
+Then execute @.opencode/commands/update-submodules.md so `.opencode` and
+`.devcontainer` are refreshed to their configured branches before the commit.
+
 Then review the current git status, staged and unstaged changes, and recent
 commit messages. Follow @.opencode/rules/commit.md and
 @.opencode/rules/commit-conventions.md.

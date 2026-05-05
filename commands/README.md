@@ -29,6 +29,8 @@ Shared workflow commands intended to work across repos.
   recent result.
 - `/task` - manage task folders under `docs/tasks/` with the actions `create`,
   `specify`, `solve`, `cancel`, and `backlog`.
+- `/update-submodules` - update `.opencode` and `.devcontainer` to their
+  configured branches from `.gitmodules`.
 - `/update-documentation` - refresh the docs affected by recent changes.
 - `/verify-documentation` - audit repo docs and report stale or broken
   references.
