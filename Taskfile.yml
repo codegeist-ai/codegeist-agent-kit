@@ -7,15 +7,19 @@
 # - `task release-build` creates an orphan release branch in a temporary worktree,
 #   updates the local release ref, and pushes it with `--force-with-lease` so the
 #   current branch and dirty worktree stay untouched.
+# - `task test-release` builds the same file bundle in a temporary directory and
+#   starts OpenCode from there without creating commits, branches, or pushes.
 #
 # Inputs:
 # - RELEASE_BRANCH: target branch name, defaults to `release`.
 # - RELEASE_REMOTE: target remote name or URL, defaults to `origin`.
-# - RELEASE_SOURCE: source revision to archive, defaults to `HEAD`.
+# - RELEASE_SOURCE: source revision used for validation, defaults to `HEAD`.
 # - RELEASE_WORKTREE: temporary worktree path, defaults to `.release-build`.
+# - TEST_RELEASE_DIR: optional temp directory for `test-release`.
+# - TEST_RELEASE_KEEP: set to `1` to keep the temp directory after `test-release`.
 #
 # Related files:
-# - README.md, opencode.json, ai-scripts/, commands/, rules/, skills/
+# - README.md, opencode.json, ai-scripts/, commands/, rules/, skills/, plugin/
 
 version: '3'
 
@@ -24,9 +28,53 @@ vars:
   RELEASE_REMOTE: '{{default "origin" .RELEASE_REMOTE}}'
   RELEASE_SOURCE: '{{default "HEAD" .RELEASE_SOURCE}}'
   RELEASE_WORKTREE: '{{default ".release-build" .RELEASE_WORKTREE}}'
-  RELEASE_PATHS: README.md opencode.json ai-scripts commands rules skills
+  RELEASE_PATHS: README.md opencode.json ai-scripts commands rules skills plugin
+  TEST_RELEASE_DIR: '{{default "" .TEST_RELEASE_DIR}}'
 
 tasks:
+  test:
+    desc: Run the repository test suite
+    vars:
+      TEST_RELEASE_COPY_TARGET:
+        sh: mktemp -d /tmp/opencode-release-copy-test.XXXXXX
+    cmds:
+      - defer: rm -rf '{{.TEST_RELEASE_COPY_TARGET}}'
+      - task: release-copy
+        vars:
+          RELEASE_TARGET: '{{.TEST_RELEASE_COPY_TARGET}}'
+      - bash tests/release-copy.sh '{{.TEST_RELEASE_COPY_TARGET}}'
+
+  release-copy:
+    internal: true
+    desc: Copy release files into RELEASE_TARGET without git writes
+    cmds:
+      - |
+        bash -euo pipefail <<'BASH'
+
+        source='{{.RELEASE_SOURCE}}'
+        target='{{.RELEASE_TARGET}}'
+
+        if [ -z "${target}" ]; then
+          printf 'RELEASE_TARGET is required.\n' >&2
+          exit 1
+        fi
+
+        if [ ! -d "${target}" ]; then
+          printf 'Release target does not exist: %s\n' "${target}" >&2
+          exit 1
+        fi
+
+        git rev-parse --verify --quiet "${source}^{commit}" >/dev/null
+        tar -c {{.RELEASE_PATHS}} | tar -x -C "${target}"
+
+        cat >"${target}/.gitignore" <<'GITIGNORE'
+        node_modules/
+        bun.lock
+        package.json
+        package-lock.json
+        GITIGNORE
+        BASH
+
   release-build:
     desc: Build an orphan release branch containing only submodule files
     cmds:
@@ -34,7 +82,6 @@ tasks:
         bash -euo pipefail <<'BASH'
 
         branch='{{.RELEASE_BRANCH}}'
-        remote='{{.RELEASE_REMOTE}}'
         source='{{.RELEASE_SOURCE}}'
         worktree='{{.RELEASE_WORKTREE}}'
         build_branch="release-build-${branch}-$$"
@@ -48,25 +95,34 @@ tasks:
         git rev-parse --verify --quiet "${source}^{commit}" >/dev/null
         git worktree add --detach "${worktree}" "${source}"
 
-        cleanup() {
-          git worktree remove --force "${worktree}" >/dev/null 2>&1 || true
-        }
-        trap cleanup EXIT
-
         (
           cd "${worktree}"
           git checkout --orphan "${build_branch}"
-          git rm -rf --quiet --ignore-unmatch .
+          git rm -rf --cached --quiet --ignore-unmatch .
+          git clean -fdx --quiet
         )
+        BASH
 
-        git archive "${source}" {{.RELEASE_PATHS}} | tar -x -C "${worktree}"
+      - defer: |
+          bash -euo pipefail <<'BASH'
+          worktree='{{.RELEASE_WORKTREE}}'
+          build_branch='release-build-{{.RELEASE_BRANCH}}-'
+          git worktree remove --force "${worktree}" >/dev/null 2>&1 || true
+          for branch in $(git for-each-ref --format='%(refname:short)' refs/heads/"${build_branch}"'*'); do
+            git branch --delete --force "${branch}" >/dev/null 2>&1 || true
+          done
+          BASH
 
-        cat >"${worktree}/.gitignore" <<'GITIGNORE'
-        node_modules/
-        bun.lock
-        package.json
-        package-lock.json
-        GITIGNORE
+      - task: release-copy
+        vars:
+          RELEASE_TARGET: '{{.RELEASE_WORKTREE}}'
+
+      - |
+        bash -euo pipefail <<'BASH'
+
+        branch='{{.RELEASE_BRANCH}}'
+        remote='{{.RELEASE_REMOTE}}'
+        worktree='{{.RELEASE_WORKTREE}}'
 
         (
           cd "${worktree}"
@@ -75,12 +131,42 @@ tasks:
         )
         commit=$(git -C "${worktree}" rev-parse HEAD)
 
-        trap - EXIT
-        cleanup
-
         git branch --force "${branch}" "${commit}"
         git push --force-with-lease -u "${remote}" "${branch}"
 
         printf 'Built orphan release branch: %s\n' "${branch}"
         printf 'Pushed release branch to %s/%s\n' "${remote}" "${branch}"
+        BASH
+
+  test-release:
+    desc: Copy release files into a temp directory and start OpenCode
+    vars:
+      TEST_RELEASE_TARGET:
+        sh: |
+          if [ -n '{{.TEST_RELEASE_DIR}}' ]; then
+            mkdir -p '{{.TEST_RELEASE_DIR}}'
+            printf '%s' '{{.TEST_RELEASE_DIR}}'
+          else
+            mktemp -d /tmp/opencode-release-test.XXXXXX
+          fi
+    cmds:
+      - defer: |
+          bash -euo pipefail <<'BASH'
+          target='{{.TEST_RELEASE_TARGET}}'
+          if [ "${TEST_RELEASE_KEEP:-0}" = "1" ]; then
+            printf 'Kept test release directory: %s\n' "${target}"
+          else
+            rm -rf "${target}"
+          fi
+          BASH
+
+      - task: release-copy
+        vars:
+          RELEASE_TARGET: '{{.TEST_RELEASE_TARGET}}'
+
+      - |
+        bash -euo pipefail <<'BASH'
+        target='{{.TEST_RELEASE_TARGET}}'
+        printf 'Starting OpenCode with test release bundle: %s\n' "${target}"
+        opencode "${target}"
         BASH
