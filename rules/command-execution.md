@@ -41,14 +41,19 @@ Use these rules whenever you choose or run commands in this project.
   local `git init` repository, treat that step as a valid no-op instead of a
   failure.
 - When using `@.opencode/commands/save.md`, include the refreshed
-  `docs/memory-bank/chat.md` and
-  any relevant rule updates from the learn step in the same commit, then let it
-  continue through the branch rebase, the final fast-forward update of the
-  local base branch, and when that base branch has an upstream, the final
-  synchronization and push of the local and remote base-branch refs. When the
-  task touches submodules, finish the same local and remote branch
-  synchronization there before recording the parent gitlink whenever those
-  submodule branches have configured upstreams.
+  `docs/memory-bank/chat.md` and any relevant rule updates from the learn step
+  in the same commit. If the save workflow refreshes `.opencode` or
+  `.devcontainer`, include the resulting parent gitlink updates in that same
+  commit as task state. Then continue through the branch rebase, the final
+  fast-forward update of the local base branch, and when that base branch has
+  an upstream, the final synchronization and push of the local and remote
+  base-branch refs. When the task touches submodules, finish the same local and
+  remote branch synchronization there before recording the parent gitlink
+  whenever those submodule branches have configured upstreams.
+- After a successful commit, rebase, push, or branch-sync step, report routine
+  completion metadata in the response instead of editing
+  `docs/memory-bank/chat.md` and creating a second commit only to store that
+  metadata.
 - Prefer `@.opencode/commands/git-sync.md` when you want to synchronize the
   current branch and the local base branch without creating a commit.
 - Never use `git reset` or `git revert` unless the user explicitly asks for

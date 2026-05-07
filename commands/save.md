@@ -43,7 +43,10 @@ Then:
    exists and any configured upstream synchronization for the touched
    submodules is complete.
 7. Stage the relevant changes for the current task, including any refreshed
-   project-memory or rule updates that belong to the task.
+   project-memory or rule updates that belong to the task. If
+   @.opencode/commands/update-submodules.md changed the parent gitlinks for
+   `.opencode` or `.devcontainer`, treat those gitlink updates as task changes
+   and stage them in this same commit.
 8. Draft a commit message that matches the project commit rule.
 9. When `.opencode/ai-scripts/commit-message-guard.sh` exists, create the git
    commit through that script by setting `ARG_COMMIT_SUBJECT`, optionally
@@ -94,7 +97,9 @@ Then:
     divergent when an upstream is configured.
 28. Report the final commit hash, commit message, source branch, whether
     the base branch was updated in the current worktree or another worktree,
-    and whether the final base-branch push was skipped or succeeded.
+    and whether the final base-branch push was skipped or succeeded. Do not
+    create another commit only to write those final identifiers or sync results
+    into project memory.
 
 Do not create an empty commit.
 Do not commit secrets or unrelated files.
@@ -111,6 +116,8 @@ finished until their local and remote branches are synchronized when those
 submodule branches have configured upstreams.
 Do not stop after a successful commit or rebase if the local base branch has
 not been updated and, when configured, pushed yet.
+Do not update `docs/memory-bank/chat.md` after the commit only to record the
+commit hash, rebased HEAD, push result, or other routine completion metadata.
 Do not force-check out the base branch in the current worktree when another
 worktree already has that branch checked out.
 If commit or rebase fails, stop and report the exact failure.

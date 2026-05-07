@@ -61,6 +61,7 @@ assert_absent ".devcontainer"
 assert_absent ".oc_local"
 assert_absent "Taskfile.yml"
 assert_absent "compose.local.yml"
+assert_absent "README_release.md"
 
 expected_gitignore=$(mktemp /tmp/opencode-release-gitignore.XXXXXX)
 trap 'rm -f "${expected_gitignore}"' EXIT

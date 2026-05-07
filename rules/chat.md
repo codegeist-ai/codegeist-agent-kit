@@ -17,6 +17,9 @@ Use these rules whenever you create or update `docs/memory-bank/chat.md`.
 - Important workflow conventions introduced during the chat.
 - Rule or workflow changes that future sessions need immediately.
 - Real next steps that are still open.
+- Commit ids only when they are durable project state, such as a release,
+  deployment, or external handoff anchor. Routine final commit hashes from the
+  just-finished task should stay in the assistant response instead.
 
 ## What To Remove Or Rewrite
 
@@ -24,6 +27,8 @@ Use these rules whenever you create or update `docs/memory-bank/chat.md`.
 - Repeated discussion that does not add new state.
 - Temporary exploration details that no longer matter.
 - Raw command output, unless one result materially changes the project state.
+- Routine completion metadata such as the final commit hash, rebased HEAD, push
+  result, or branch-sync summary when it does not change future work.
 
 ## Style
 
@@ -40,3 +45,5 @@ Use these rules whenever you create or update `docs/memory-bank/chat.md`.
 - Keep next steps realistic and still pending.
 - When rules or workflow conventions change, reflect the durable result here.
 - If a decision changed, rewrite the old point instead of keeping both versions.
+- Do not create or require a follow-up commit just to save routine completion
+  metadata in `docs/memory-bank/chat.md`.

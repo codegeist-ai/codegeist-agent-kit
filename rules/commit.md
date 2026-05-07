@@ -21,6 +21,10 @@ Use these rules whenever you create a git commit for this project.
 - Treat a changed submodule commit ID in the parent repo as a real task change;
   do not leave an intended gitlink update out of the commit or commit the
   parent change without the corresponding submodule state.
+- Treat parent gitlink updates for shared workspace submodules such as
+  `.opencode` and `.devcontainer` as real task changes when they were refreshed
+  by the task workflow; include them in the same commit instead of saving them
+  separately.
 - When workflow behavior changes, include matching project-memory or rule
   updates in the same commit when they belong to that change.
 - Do not include unrelated files, secrets, or generated noise.

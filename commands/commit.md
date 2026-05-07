@@ -16,7 +16,9 @@ Then:
 1. Review the edited files as one intended change set for the current working
    state.
 2. Unless the user explicitly asks for multiple commits, create exactly one
-   commit for the full edited change set.
+   commit for the full edited change set. Do not create a follow-up commit only
+   to store the final commit id, rebase result, or sync status in project
+   memory.
 3. If the change set includes modified submodule contents, commit those changes
    inside the relevant submodule first unless they are already committed.
 4. For each touched submodule, determine the intended branch and whether it has
@@ -41,7 +43,9 @@ Then:
    `ARG_COMMIT_BODY`, and `ARG_EXECUTE=1`; otherwise use a direct `git commit`
    command that still follows `@.opencode/rules/commit.md`.
 11. Report the final commit hash and commit message, plus any committed
-   submodule paths and their synchronized upstream refs.
+   submodule paths and their synchronized upstream refs. Keep those final
+   identifiers in the response unless they are already part of a meaningful
+   task-state change that was staged before the commit.
 
 Do not create an empty commit.
 Do not commit secrets or generated noise.
@@ -50,4 +54,6 @@ submodule commit and, when configured, upstream synchronization.
 Do not omit edited files only because they appear outside the main task area.
 Do not split the current task into multiple commits unless the user explicitly
 asks for that split.
+Do not update `docs/memory-bank/chat.md` after the commit only to record the
+commit hash or other routine completion metadata.
 Do not use literal `\n` escape sequences in commit-message inputs.

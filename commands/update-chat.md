@@ -14,3 +14,7 @@ Requirements:
 3. Remove or rewrite obsolete content when the newer context supersedes it.
 4. Prefer a concise, lively markdown structure over a transcript.
 5. Make sure the result matches the current repository state.
+6. Do not add routine final commit ids, rebased HEAD ids, push results, or sync
+   summaries only so they can be committed after the task commit. Those belong
+   in the assistant response unless the identifier is itself durable project
+   state, such as a release or deployment anchor.

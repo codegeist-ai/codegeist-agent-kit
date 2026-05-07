@@ -19,7 +19,8 @@
 # - TEST_RELEASE_KEEP: set to `1` to keep the temp directory after `test-release`.
 #
 # Related files:
-# - README.md, opencode.json, ai-scripts/, commands/, rules/, skills/, plugin/
+# - README_release.md copied as README.md, opencode.json, ai-scripts/,
+#   commands/, rules/, skills/, plugin/
 
 version: '3'
 
@@ -28,7 +29,7 @@ vars:
   RELEASE_REMOTE: '{{default "origin" .RELEASE_REMOTE}}'
   RELEASE_SOURCE: '{{default "HEAD" .RELEASE_SOURCE}}'
   RELEASE_WORKTREE: '{{default ".release-build" .RELEASE_WORKTREE}}'
-  RELEASE_PATHS: README.md opencode.json ai-scripts commands rules skills plugin
+  RELEASE_PATHS: README_release.md opencode.json ai-scripts commands rules skills plugin
   TEST_RELEASE_DIR: '{{default "" .TEST_RELEASE_DIR}}'
 
 tasks:
@@ -66,6 +67,7 @@ tasks:
 
         git rev-parse --verify --quiet "${source}^{commit}" >/dev/null
         tar -c {{.RELEASE_PATHS}} | tar -x -C "${target}"
+        mv "${target}/README_release.md" "${target}/README.md"
 
         cat >"${target}/.gitignore" <<'GITIGNORE'
         node_modules/
