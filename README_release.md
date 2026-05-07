@@ -15,8 +15,8 @@ configuration while leaving project-specific behavior in the consuming repo.
 - `commands/` contains reusable slash-command workflows such as `/save`,
   `/commit`, `/learn`, `/update-chat`, `/git-sync`, `/rebase`, `/task`, and
   `/update-submodules`.
-- `skills/` contains targeted reusable workflows, currently `gh-auth` and
-  `commit-message-guard`.
+- `skills/` contains targeted reusable workflows, currently `gh-auth`,
+  `commit-message-guard`, and `graphify`.
 - `ai-scripts/` contains helper scripts used by the commands and skills, such
   as `commit-message-guard.sh`.
 - `plugin/` contains Graphify OpenCode integration files. Graphify is optional

@@ -67,8 +67,9 @@ analysis flows should live in local overlays such as:
 
 - Commands: see `commands/README.md`
 - Rules: see `rules/README.md`
-- Skills: currently `skills/gh-auth/SKILL.md` and
-  `skills/commit-message-guard/SKILL.md`
+- Skills: currently `skills/gh-auth/SKILL.md`,
+  `skills/commit-message-guard/SKILL.md`, and
+  `skills/graphify/SKILL.md`
 
 ## Development Notes
 
