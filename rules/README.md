@@ -22,6 +22,7 @@ Shared AI rules intended to work across repos.
 ## Supporting Rules
 
 - `commit-conventions.md` - longer-form commit guidance.
+- `devcontainer-tools.md` - coding-relevant tools available in the devcontainer.
 - `language-policy.md` - English for code and durable repo text.
 - `ai-ready-documentation.md` - documentation standards for non-trivial files.
 - `bash-scripts.md` - minimal Bash style for repo-owned shell scripts.

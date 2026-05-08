@@ -7,6 +7,7 @@
     ".opencode/rules/command-execution.md",
     ".opencode/rules/commit-conventions.md",
     ".opencode/rules/commit.md",
+    ".opencode/rules/devcontainer-tools.md",
     ".opencode/rules/excalidraw.md",
     ".opencode/rules/language-policy.md",
     ".opencode/rules/learn.md",
@@ -19,6 +20,7 @@
     ".opencode/rules/task-workflow.md",
     ".opencode/rules/taskfile-and-script-creation.md",
     ".opencode/README.md",
+    ".oc_local/rules/project-release-source.md",
     "plugin/graphify.md"
   ],
   "watcher": {
