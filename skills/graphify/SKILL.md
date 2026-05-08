@@ -29,7 +29,6 @@ Turn any folder of files into a navigable knowledge graph with community detecti
 /graphify add <url> --contributor "Name"              # tag who added it to the corpus
 /graphify query "<question>"                          # BFS traversal - broad context
 /graphify query "<question>" --dfs                    # DFS - trace a specific path
-/graphify query "<question>" --budget 1500            # cap answer at N tokens
 /graphify path "AuthModule" "Database"                # shortest path between two concepts
 /graphify explain "SwinTransformer"                   # plain-language explanation of a node
 ```
@@ -108,8 +107,7 @@ Omit any category with 0 files from the summary.
 Then act on it:
 - If `total_files` is 0: stop with "No supported files found in [path]."
 - If `skipped_sensitive` is non-empty: mention file count skipped, not the file names.
-- If `total_words` > 2,000,000 OR `total_files` > 200: show the warning and the top 5 subdirectories by file count, then ask which subfolder to run on. Wait for the user's answer before proceeding.
-- Otherwise: proceed directly to Step 2.5 if video files were detected, or Step 3 if not.
+- Proceed directly to Step 2.5 if video files were detected, or Step 3 if not.
 
 ### Step 2.5 - Transcribe video / audio files (only if video files detected)
 
@@ -199,8 +197,8 @@ else:
 
 Before dispatching subagents, print a timing estimate:
 - Load `total_words` and file counts from `graphify-out/.graphify_detect.json`
-- Estimate agents needed: `ceil(uncached_non_code_files / 22)` (chunk size is 20-25)
-- Estimate time: ~45s per agent batch (they run in parallel, so total ≈ 45s × ceil(agents/parallel_limit))
+- Estimate agents needed from the number and size of uncached non-code files.
+- Estimate time from the number of planned agent batches.
 - Print: "Semantic extraction: ~N files → X agents, estimated ~Ys"
 
 **Step B0 - Check extraction cache first**
@@ -229,7 +227,7 @@ Only dispatch subagents for files listed in `graphify-out/.graphify_uncached.txt
 
 **Step B1 - Split into chunks**
 
-Load files from `graphify-out/.graphify_uncached.txt`. Split into chunks of 20-25 files each. Each image gets its own chunk (vision needs separate context). When splitting, group files from the same directory together so related artifacts land in the same chunk and cross-file relationships are more likely to be extracted.
+Load files from `graphify-out/.graphify_uncached.txt`. Split them into chunks that fit the current agent context and preserve related artifacts together. Each image can get its own chunk when vision context needs separation. When splitting, group files from the same directory together so related artifacts land in the same chunk and cross-file relationships are more likely to be extracted.
 
 **Step B2 - Dispatch ALL subagents in a single message (OpenCode)**
 
@@ -280,11 +278,11 @@ Semantic similarity: if two concepts in this chunk solve the same problem or rep
 - Two error types that handle the same failure mode differently
 Only add these when the similarity is genuinely non-obvious and cross-cutting. Do not add them for trivially similar things.
 
-Hyperedges: if 3 or more nodes clearly participate together in a shared concept, flow, or pattern that is not captured by pairwise edges alone, add a hyperedge to a top-level `hyperedges` array. Examples:
+Hyperedges: if multiple nodes clearly participate together in a shared concept, flow, or pattern that is not captured by pairwise edges alone, add a hyperedge to a top-level `hyperedges` array. Examples:
 - All classes that implement a common protocol or interface
 - All functions in an authentication flow (even if they don't all call each other)
 - All concepts from a paper section that form one coherent idea
-Use sparingly — only when the group relationship adds information beyond the pairwise edges. Maximum 3 hyperedges per chunk.
+Use sparingly — only when the group relationship adds information beyond the pairwise edges.
 
 If a file has YAML frontmatter (--- ... ---), copy source_url, captured_at, author,
   contributor onto every node from that file.
@@ -309,7 +307,7 @@ Wait for all subagents. For each result:
 - If the file is missing, the subagent was likely dispatched as read-only (Explore type) — print a warning: "chunk N missing from disk — subagent may have been read-only. Re-run with general-purpose agent." Do not silently skip.
 - If a subagent failed or returned invalid JSON, print a warning and skip that chunk - do not abort
 
-If more than half the chunks failed or are missing, stop and tell the user to re-run and ensure `subagent_type="general-purpose"` is used.
+If chunks failed or are missing, report the affected chunks and continue with the valid chunk files that were produced.
 
 Merge all chunk files into `.graphify_semantic_new.json`. **After each Agent call completes, read the real token counts from the Agent tool result's `usage` field and write them back into the chunk JSON before merging** — the chunk JSON itself always has placeholder zeros. Then run:
 ```bash
@@ -556,33 +554,8 @@ G = build_from_json(extraction)
 communities = {int(k): v for k, v in analysis['communities'].items()}
 labels = {int(k): v for k, v in labels_raw.items()}
 
-NODE_LIMIT = 5000
-if G.number_of_nodes() > NODE_LIMIT:
-    from collections import Counter
-    print(f'Graph has {G.number_of_nodes()} nodes (above {NODE_LIMIT} limit). Building aggregated community view...')
-    node_to_community = {nid: cid for cid, members in communities.items() for nid in members}
-    import networkx as nx_meta
-    meta = nx_meta.Graph()
-    for cid, members in communities.items():
-        meta.add_node(str(cid), label=labels.get(cid, f'Community {cid}'))
-    edge_counts = Counter()
-    for u, v in G.edges():
-        cu, cv = node_to_community.get(u), node_to_community.get(v)
-        if cu is not None and cv is not None and cu != cv:
-            edge_counts[(min(cu, cv), max(cu, cv))] += 1
-    for (cu, cv), w in edge_counts.items():
-        meta.add_edge(str(cu), str(cv), weight=w, relation=f'{w} cross-community edges', confidence='AGGREGATED')
-    if meta.number_of_nodes() > 1:
-        meta_communities = {cid: [str(cid)] for cid in communities}
-        member_counts = {cid: len(members) for cid, members in communities.items()}
-        to_html(meta, meta_communities, 'graphify-out/graph.html', community_labels=labels or None, member_counts=member_counts)
-        print(f'graph.html written (aggregated: {meta.number_of_nodes()} community nodes, {meta.number_of_edges()} cross-community edges)')
-        print('Tip: run with --obsidian for full node-level detail.')
-    else:
-        print('Single community — aggregated view not useful. Skipping graph.html.')
-else:
-    to_html(G, communities, 'graphify-out/graph.html', community_labels=labels or None)
-    print('graph.html written - open in any browser, no server needed')
+to_html(G, communities, 'graphify-out/graph.html', community_labels=labels or None)
+print('graph.html written - open in any browser, no server needed')
 "
 ```
 
@@ -717,9 +690,9 @@ To configure in Claude Desktop, add to `claude_desktop_config.json`:
 }
 ```
 
-### Step 8 - Token reduction benchmark (only if total_words > 5000)
+### Step 8 - Token reduction benchmark
 
-If `total_words` from `graphify-out/.graphify_detect.json` is greater than 5,000, run:
+Run the token reduction benchmark:
 
 ```bash
 $(cat graphify-out/.graphify_python) -c "
@@ -733,7 +706,7 @@ print_benchmark(result)
 "
 ```
 
-Print the output directly in chat. If `total_words <= 5000`, skip silently - the graph value is structural clarity, not token compression, for small corpora.
+Print the output directly in chat.
 
 ---
 
@@ -978,7 +951,7 @@ If it fails, stop and tell the user to run `/graphify <path>` first.
 
 Load `graphify-out/graph.json`, then:
 
-1. Find the 1-3 nodes whose label best matches key terms in the question.
+1. Find the nodes whose label best matches key terms in the question.
 2. Run the appropriate traversal from each starting node.
 3. Read the subgraph - node labels, edge relations, confidence tags, source locations.
 4. Answer using **only** what the graph contains. Quote `source_location` when citing a specific fact.
@@ -1006,7 +979,7 @@ for nid, ndata in G.nodes(data=True):
     if score > 0:
         scored.append((score, nid))
 scored.sort(reverse=True)
-start_nodes = [nid for _, nid in scored[:3]]
+start_nodes = [nid for _, nid in scored]
 
 if not start_nodes:
     print('No matching nodes found for query terms:', terms)
@@ -1017,12 +990,11 @@ subgraph_edges = []
 
 if mode == 'dfs':
     # DFS: follow one path as deep as possible before backtracking.
-    # Depth-limited to 6 to avoid traversing the whole graph.
     visited = set()
     stack = [(n, 0) for n in reversed(start_nodes)]
     while stack:
         node, depth = stack.pop()
-        if node in visited or depth > 6:
+        if node in visited:
             continue
         visited.add(node)
         subgraph_nodes.add(node)
@@ -1031,10 +1003,10 @@ if mode == 'dfs':
                 stack.append((neighbor, depth + 1))
                 subgraph_edges.append((node, neighbor))
 else:
-    # BFS: explore all neighbors layer by layer up to depth 3.
+    # BFS: explore all neighbors layer by layer.
     frontier = set(start_nodes)
     subgraph_nodes = set(start_nodes)
-    for _ in range(3):
+    while frontier:
         next_frontier = set()
         for n in frontier:
             for neighbor in G.neighbors(n):
@@ -1043,10 +1015,6 @@ else:
                     subgraph_edges.append((n, neighbor))
         subgraph_nodes.update(next_frontier)
         frontier = next_frontier
-
-# Token-budget aware output: rank by relevance, cut at budget (~4 chars/token)
-token_budget = BUDGET  # default 2000
-char_budget = token_budget * 4
 
 # Score each node by term overlap for ranked output
 def relevance(nid):
@@ -1065,13 +1033,11 @@ for u, v in subgraph_edges:
         lines.append(f'  EDGE {G.nodes[u].get(\"label\",u)} --{d.get(\"relation\",\"\")} [{d.get(\"confidence\",\"\")}]--> {G.nodes[v].get(\"label\",v)}')
 
 output = '\n'.join(lines)
-if len(output) > char_budget:
-    output = output[:char_budget] + f'\n... (truncated at ~{token_budget} token budget - use --budget N for more)'
 print(output)
 "
 ```
 
-Replace `QUESTION` with the user's actual question, `MODE` with `bfs` or `dfs`, and `BUDGET` with the token budget (default `2000`, or whatever `--budget N` specifies). Then answer based on the subgraph output above.
+Replace `QUESTION` with the user's actual question and `MODE` with `bfs` or `dfs`. Then answer based on the subgraph output above.
 
 After writing the answer, save it back into the graph so it improves future queries:
 
@@ -1212,7 +1178,7 @@ for neighbor in G.neighbors(nid):
 "
 ```
 
-Replace `NODE_NAME` with the concept the user asked about. Then write a 3-5 sentence explanation of what this node is, what it connects to, and why those connections are significant. Use the source locations as citations.
+Replace `NODE_NAME` with the concept the user asked about. Then explain what this node is, what it connects to, and why those connections are significant. Use the source locations as citations.
 
 After writing the explanation, save it back:
 
@@ -1311,7 +1277,5 @@ graphify claude uninstall  # remove the section
 ## Honesty Rules
 
 - Never invent an edge. If unsure, use AMBIGUOUS.
-- Never skip the corpus check warning.
 - Always show token cost in the report.
 - Never hide cohesion scores behind symbols - show the raw number.
-- Never run HTML viz on a graph with more than 5,000 nodes without warning the user.
