@@ -143,8 +143,8 @@ authentication.
 
 ## Documentation, Memory, And Local Rules
 
-- Keep durable repo-owned docs and comments in English unless the consuming repo
-  records an explicit language exception.
+- Keep durable repo-owned docs and comments in English. User conversations may
+  use the user's preferred language, but committed project text stays English.
 - Update docs in the same task when behavior changes.
 - Update `docs/memory-bank/chat.md` when future sessions would otherwise miss
   important context.

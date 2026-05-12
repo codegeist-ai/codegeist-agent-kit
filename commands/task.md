@@ -18,8 +18,7 @@ Then:
 2. For `backlog`:
    - treat the remaining arguments as one idea title and stop if they are
      missing
-   - create `docs/tasks/backlog.md` with a small explanation in the repo's docs
-     language; default to English if the repo does not define one
+   - create `docs/tasks/backlog.md` with a small English explanation
    - record the current branch and whether it was already synchronized with its
      upstream before writing the backlog entry
    - append exactly one new `* <idea>` line to `docs/tasks/backlog.md`
@@ -39,8 +38,8 @@ Then:
      without treating the backlog item as the new active task context
 3. Inspect `docs/tasks/README.md` and `docs/tasks/template.md` before writing
    task files. Create the directory or helper docs only if they are missing.
-4. Follow the repo's language rules for task docs under `docs/`. If the repo
-   does not define a language for that documentation tree, default to English.
+4. Keep task docs under `docs/` in English, even when the user discussion is in
+   another language.
 5. Resolve task references by exact repo-relative path, exact task folder name,
    exact task filename, or exact task id such as `T001` or `T001_01`. Stop and
    list the

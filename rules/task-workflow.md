@@ -37,8 +37,8 @@ Keep task handoff small, traceable, and easy to resume.
 - Keep each task self-contained; a task under another task still needs its own
   goal, acceptance criteria, verification, and file targets, with the `Parent`
   field linking back to the owning task.
-- Follow the repo's language rules for task docs under `docs/`. If the repo
-  does not define a language for that documentation tree, default to English.
+- Keep task docs under `docs/` in English, even when the user discussion is in
+  another language.
 - Use `specify` to clarify a task with the user in depth before implementation.
 - Capture concrete solution directions, suggestions, and alternatives when they
   help specify the work more clearly, but keep `specify` focused on defining

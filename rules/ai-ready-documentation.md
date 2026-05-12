@@ -41,6 +41,6 @@ quickly.
 ## Reminder
 
 - Comments stay in English.
-- Durable docs default to English unless the repo records an explicit language
-  exception for a documentation tree such as `docs/`.
+- Durable docs stay in English. Summarize multilingual chat context in English
+  before committing it to repo-owned documentation.
 - Prefer concise, high-signal context over large templates copied everywhere.

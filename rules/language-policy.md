@@ -1,11 +1,15 @@
 # Language Policy
 
-Use English for code and durable repo-local project text.
+Use English for code and all durable repo-local project text.
 
 ## Must Be In English
 
 - Code comments and identifiers.
 - Rule files, README-style docs, and script help text.
+- Repo-owned documentation under `docs/`, including user docs, developer docs,
+  task docs, and memory-bank summaries.
+- Repo-owned source files, configuration files, comments, identifiers, and
+  examples.
 - Commit messages.
 - Test names and assertions.
 - Error messages and log output.
@@ -15,21 +19,17 @@ Use English for code and durable repo-local project text.
 - Direct conversation with the user.
 - Clarifying questions.
 - Short explanations during discussion.
-- A repo memory file such as `docs/memory-bank/chat.md` when that file is intentionally kept in
-  another language.
-- Repo-local documentation trees such as `docs/` when the repo rules explicitly
-  require another language.
-- Repo-local planning or feature docs when those documents are intentionally kept
-  in another language.
+- User-facing chats, prompts, and transient conversation text that are not
+  committed as durable project documentation.
 
 ## Notes
 
 - Keep commands, file paths, env vars, and code snippets in English even inside
   non-English discussion.
-- `docs/README.md` and other files under `docs/` may be non-English only when
-  the repo rules record that exception explicitly.
-- Even when a repo memory file or planning docs are written in another
-  language, keep rule files, command files, README-style docs, commit messages,
-  and code comments in English.
-- Record repo-local language exceptions explicitly instead of mixing languages
-  by default.
+- If chat content needs to be recorded in the repository, summarize it in
+  English instead of committing raw multilingual chat logs.
+- Do not add localized copies of repo-owned documentation under `docs/`. Vendored
+  third-party snapshots under `docs/third-party/` keep their upstream language
+  structure unless the third-party import workflow explicitly filters them.
+- Do not record repo-local language exceptions for durable documentation or
+  source artifacts in this project.
