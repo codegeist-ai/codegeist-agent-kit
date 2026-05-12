@@ -78,6 +78,80 @@ Do not add product-specific deployment steps, architecture assumptions, branch
 names, or planning rules to the shared `.opencode` submodule unless they are
 intended to apply across all consuming repositories.
 
+## Extending This Agent Kit
+
+A consuming repository can ask its coding agent to add reusable shared behavior
+to this agent kit instead of only creating local `.oc_local/` overlays. The
+intended command shape is:
+
+```text
+/add-agent-kit command|rule|skill <description of the shared behavior>
+/add-agent-kit move <explicit .oc_local command, rule, or skill path>
+```
+
+This is an upstream change workflow. Do not edit `.opencode/` directly as the
+implementation path; it is the generated `release` branch of
+`codegeist-agent-kit`, mounted as a submodule. Shared changes belong in a source
+checkout of `https://github.com/codegeist-ai/codegeist-agent-kit.git` on `main`.
+`README_release.md` is the source file that becomes `.opencode/README.md` in
+consuming repositories.
+
+Expected autonomous workflow for the agent:
+
+1. Inspect the consuming repository state and verify that `.opencode` exists,
+   is a Git submodule, and is configured to track the `release` branch in
+   `.gitmodules`.
+2. Clone `https://github.com/codegeist-ai/codegeist-agent-kit.git` into an
+   explicit temporary directory outside the consuming repository, for example
+   under `/tmp/opencode`, unless the user or local workflow provides a trusted
+   source checkout.
+3. Implement the requested shared `command`, `rule`, or `skill` in the source
+   paths of that temporary checkout: `commands/`, `rules/`, `skills/`,
+   `ai-scripts/`, `plugin/`, `opencode.json`, and `README_release.md` as
+   applicable. For `move`, start only from the explicitly selected
+   `.oc_local/commands/`, `.oc_local/rules/`, or `.oc_local/skills/` overlays
+   and rewrite them into repo-agnostic shared form before adding them upstream.
+   Do not move whole `.oc_local/` directories or infer extra files that the user
+   did not select.
+4. Continue only when the change is generic across repositories with unrelated
+   domains, products, architectures, and deployment models. Shared additions
+   must not encode product-specific services, customer workflows, environment
+   names, domain assumptions, branch policies, or repository layouts beyond the
+   shared OpenCode workspace contract.
+5. If the behavior is specific to the current consuming repository, stop the
+   upstream workflow and create or update a local overlay in the consuming
+   repository instead. If generic applicability is unclear, ask one short
+   clarification question before editing the source checkout.
+6. For `move`, remove only the selected original `.oc_local/` overlays after
+   the upstream source change is committed, the release branch is built,
+   `.opencode` is updated to the new release, and each replacement shared file
+   is verified in the updated submodule. Leave all unselected local overlays in
+   place.
+7. Run the source repository verification, starting with `task test`, and fix
+   failures before continuing.
+8. Commit the source repository change with a focused Conventional Commit
+   message, then push the source branch when the remote is configured and the
+   authenticated session has permission.
+9. Run `task release-build` in the source repository. This creates and pushes a
+   normal commit on the generated `release` branch with only the runtime files
+   that consuming repositories mount as `.opencode`, preserving release history
+   so the copied changes remain reviewable.
+10. Return to the consuming repository and update only the `.opencode` submodule
+   to the new `origin/release` commit, using the same safety checks as
+   `/update-submodules`: fetch the configured branch, run
+   `git checkout -B release origin/release` inside `.opencode`, verify that
+   `HEAD` matches `origin/release`, and verify that the submodule status is
+   clean.
+11. Report the new `.opencode` commit and the parent repository gitlink change.
+   If the user requested a full save workflow, commit the parent gitlink update
+   in the consuming repository through `/save` or the repo's equivalent commit
+   workflow.
+
+Only use direct edits inside `.opencode/` for temporary inspection or debugging;
+do not leave them as the implementation path. The agent must not update
+unrelated submodules, delete local files inside the consumer checkout, or commit
+unrelated parent-repo changes as part of this workflow.
+
 ## Agent Startup Checklist
 
 When working inside a consuming repository that uses this submodule:
@@ -107,6 +181,9 @@ When working inside a consuming repository that uses this submodule:
   recent result.
 - `/task` manages tracked task files under `docs/tasks/` when the repo uses
   that workflow.
+- `/add-agent-kit` adds reusable shared commands, rules, or skills upstream, or
+  moves generic `.oc_local/` overlays into the shared agent kit, then builds a
+  new release and updates the consuming repo's `.opencode` submodule.
 
 Prefer these commands over reimplementing their shell and git logic in chat,
 especially for commits, saves, submodule updates, and base-branch sync.
@@ -164,8 +241,10 @@ Graphify is available as an optional OpenCode aid. For normal coding tasks:
 ## Maintaining This Shared Repository
 
 The source repository contains development-only files that are not part of the
-release submodule. Maintainers should use the Taskfile instead of hand-building
-the release branch.
+release submodule. Maintainers and coding agents must make shared-kit changes in
+the source repository on `main`, never directly in a consuming repository's
+`.opencode/` submodule checkout. Use the Taskfile instead of hand-building the
+release branch.
 
 Run the release smoke test:
 
@@ -173,16 +252,19 @@ Run the release smoke test:
 task test
 ```
 
-Build and push the generated orphan release branch:
+Build and push the generated release branch:
 
 ```bash
 task release-build
 ```
 
 The `release-build` task creates a temporary worktree, copies only the release
-runtime paths, commits them on an orphan branch, updates the local release ref,
-and pushes it with `--force-with-lease`. The working branch and dirty worktree
-are left untouched except for the temporary release worktree cleanup.
+runtime paths, commits them on the release branch, updates the local release
+ref, and pushes it without rewriting existing release history. The first release
+for a new remote is bootstrapped as an orphan; later releases are normal commits
+so maintainers can inspect which runtime changes were published. The working
+branch and dirty worktree are left untouched except for the temporary release
+worktree cleanup.
 
 When using this repo's local release workflow, prefer
 `.oc_local/commands/release-build.md`; it runs `task release-build`, refreshes

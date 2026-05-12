@@ -4,9 +4,10 @@
 # - Consuming repositories should add only the OpenCode shared workspace files as
 #   a git submodule, without local devcontainer files, generated files, or nested
 #   checkout metadata.
-# - `task release-build` creates an orphan release branch in a temporary worktree,
-#   updates the local release ref, and pushes it with `--force-with-lease` so the
-#   current branch and dirty worktree stay untouched.
+# - `task release-build` creates a normal commit on the release branch in a
+#   temporary worktree, updates the local release ref, and pushes it so the
+#   current branch and dirty worktree stay untouched while release history stays
+#   reviewable. The first release for a new remote is bootstrapped as an orphan.
 # - `task test-release` builds the same file bundle in a temporary directory and
 #   starts OpenCode from there without creating commits, branches, or pushes.
 #
@@ -78,15 +79,17 @@ tasks:
         BASH
 
   release-build:
-    desc: Build an orphan release branch containing only submodule files
+    desc: Build a release branch commit containing only submodule files
     cmds:
       - |
         bash -euo pipefail <<'BASH'
 
         branch='{{.RELEASE_BRANCH}}'
         source='{{.RELEASE_SOURCE}}'
+        remote='{{.RELEASE_REMOTE}}'
         worktree='{{.RELEASE_WORKTREE}}'
         build_branch="release-build-${branch}-$$"
+        release_ref="refs/tmp/release-build/${branch}"
 
         if [ -e "${worktree}" ]; then
           printf 'Release worktree path already exists: %s\n' "${worktree}" >&2
@@ -95,21 +98,32 @@ tasks:
         fi
 
         git rev-parse --verify --quiet "${source}^{commit}" >/dev/null
-        git worktree add --detach "${worktree}" "${source}"
-
-        (
-          cd "${worktree}"
-          git checkout --orphan "${build_branch}"
-          git rm -rf --cached --quiet --ignore-unmatch .
-          git clean -fdx --quiet
-        )
+        if git ls-remote --exit-code "${remote}" "refs/heads/${branch}" >/dev/null 2>&1; then
+          git fetch "${remote}" "+refs/heads/${branch}:${release_ref}"
+          git worktree add -B "${build_branch}" "${worktree}" "${release_ref}"
+          (
+            cd "${worktree}"
+            git rm -rf --quiet --ignore-unmatch .
+            git clean -fdx --quiet
+          )
+        else
+          git worktree add --detach "${worktree}" "${source}"
+          (
+            cd "${worktree}"
+            git checkout --orphan "${build_branch}"
+            git rm -rf --cached --quiet --ignore-unmatch .
+            git clean -fdx --quiet
+          )
+        fi
         BASH
 
       - defer: |
           bash -euo pipefail <<'BASH'
           worktree='{{.RELEASE_WORKTREE}}'
           build_branch='release-build-{{.RELEASE_BRANCH}}-'
+          release_ref='refs/tmp/release-build/{{.RELEASE_BRANCH}}'
           git worktree remove --force "${worktree}" >/dev/null 2>&1 || true
+          git update-ref -d "${release_ref}" >/dev/null 2>&1 || true
           for branch in $(git for-each-ref --format='%(refname:short)' refs/heads/"${build_branch}"'*'); do
             git branch --delete --force "${branch}" >/dev/null 2>&1 || true
           done
@@ -129,14 +143,18 @@ tasks:
         (
           cd "${worktree}"
           git add .
-          git commit -m "chore(release): build submodule release"
+          if git diff --cached --quiet; then
+            printf 'Release branch already matches the source bundle.\n'
+          else
+            git commit -m "chore(release): build submodule release"
+          fi
         )
         commit=$(git -C "${worktree}" rev-parse HEAD)
 
         git branch --force "${branch}" "${commit}"
-        git push --force-with-lease -u "${remote}" "${branch}"
+        git push -u "${remote}" "${branch}"
 
-        printf 'Built orphan release branch: %s\n' "${branch}"
+        printf 'Built release branch: %s\n' "${branch}"
         printf 'Pushed release branch to %s/%s\n' "${remote}" "${branch}"
         BASH
 

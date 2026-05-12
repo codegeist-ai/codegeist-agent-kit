@@ -19,6 +19,11 @@ Use these rules whenever you choose or run commands in this project.
 - Prefer the repo-local `/commit` or `/save` workflow for commit-style tasks
   because those commands already bundle project-memory, learn, rebase, and
   branch-sync steps.
+- Prefer `/add-agent-kit` when a consuming repository needs a generic shared
+  command, rule, or skill added upstream to this agent kit, or when explicitly
+  selected generic `.oc_local/` overlays should move into the shared kit.
+- Do not use `/add-agent-kit` for product-specific behavior; keep that in the
+  consuming repository's `.oc_local/` overlays instead.
 - A plain chat request to commit, save, or record changes is also sufficient in
   this repo when the user is explicitly asking for that git write workflow.
 - When commit-like work is requested outside `/commit` or `/save`, still follow
