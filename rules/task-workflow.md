@@ -43,6 +43,9 @@ Keep task handoff small, traceable, and easy to resume.
 - Capture concrete solution directions, suggestions, and alternatives when they
   help specify the work more clearly, but keep `specify` focused on defining
   the work rather than executing it.
+- Use `/specify-task`, `/plan-task`, `/solve-task`, and `/work-task` when a repo
+  benefits from explicit task phases with phase status recorded in the task file.
+  See `task-phases.md` for the shared phase contract.
 - Use the repo-local `/task` command for `create`, `specify`,
   `solve`, `cancel`, and `backlog` work when that workflow fits the task.
 - Use `/task backlog <title>` when you want to save an idea quickly without

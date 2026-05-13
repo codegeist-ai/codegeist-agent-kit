@@ -13,7 +13,8 @@ configuration while leaving project-specific behavior in the consuming repo.
   documentation, memory-bank updates, task workflow, scripting, and related
   engineering practices.
 - `commands/` contains reusable slash-command workflows such as `/save`,
-  `/commit`, `/learn`, `/update-chat`, `/git-sync`, `/rebase`, `/task`, and
+  `/commit`, `/learn`, `/update-chat`, `/git-sync`, `/rebase`, `/task`,
+  `/specify-task`, `/plan-task`, `/solve-task`, `/work-task`, and
   `/update-submodules`.
 - `skills/` contains targeted reusable workflows, currently `gh-auth`,
   `commit-message-guard`, and `graphify`.
@@ -181,6 +182,10 @@ When working inside a consuming repository that uses this submodule:
   recent result.
 - `/task` manages tracked task files under `docs/tasks/` when the repo uses
   that workflow.
+- `/specify-task`, `/plan-task`, `/solve-task`, and `/work-task` provide a
+  phased task workflow for repositories that want clarification, implementation
+  planning, verified solving, and full orchestration with phase status recorded
+  in task files.
 - `/add-agent-kit` adds reusable shared commands, rules, or skills upstream, or
   moves generic `.oc_local/` overlays into the shared agent kit, then builds a
   new release and updates the consuming repo's `.opencode` submodule.

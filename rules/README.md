@@ -32,6 +32,8 @@ Shared AI rules intended to work across repos.
 - `software-tests.md` - how to write, update, and verify software tests.
 - `taskfile-and-script-creation.md` - how to add wrappers and Taskfiles safely.
 - `task-workflow.md` - lightweight workflow for scoped implementation work.
+- `task-phases.md` - shared specify, plan, solve, and work phase contract for
+  task files.
 - `memory-bank.md` - how to handle repo memory without forcing a heavy system.
 - `session-titles.md` - short, searchable session title conventions.
 - `ai-scripts.md` - policy for future `.opencode/ai-scripts/` helpers.
