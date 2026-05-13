@@ -29,6 +29,11 @@ Shared workflow commands intended to work across repos.
   recent result.
 - `/task` - manage task folders under `docs/tasks/` with the actions `create`,
   `specify`, `solve`, `cancel`, and `backlog`.
+- `/specify-task` - clarify an existing task without implementing it.
+- `/plan-task` - create or sharpen a concrete implementation plan for a task.
+- `/solve-task` - implement a planned task and verify its acceptance criteria.
+- `/work-task` - orchestrate specify, plan, specify, and solve phases for one
+  task.
 - `/update-submodules` - update `.opencode` and `.devcontainer` to their
   configured branches from `.gitmodules`.
 - `/update-documentation` - refresh the docs affected by recent changes.
