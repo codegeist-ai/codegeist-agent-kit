@@ -29,6 +29,24 @@ branch should contain only runtime files needed by consuming repositories:
 `.gitignore`, `README.md`, `opencode.json`, `ai-scripts/`, `commands/`,
 `rules/`, `skills/`, and `plugin/`.
 
+## Changelog
+
+### Current Version
+
+- Added a `## Changelog` section to the released `.opencode/README.md` so
+  consumer-visible changes and upgrade notes are shipped with each release.
+- Removed the source-repository-only `.oc_local/rules/project-release-source.md`
+  instruction from the released `opencode.json`; release configuration now
+  references only files expected to exist in consuming repositories.
+- Added local source-repo guidance for maintaining `README_release.md` and made
+  the local release-build workflow require a changelog review before publishing.
+- Update notes for coding agents: before running the local release-build command,
+  inspect the release-bundle diff, update this changelog with consumer-visible
+  changes, and include migration notes when consuming projects need adjustments.
+- Consumer action: after updating `.opencode`, no project changes are required
+  unless a consuming repository copied the removed `.oc_local` instruction into
+  its own OpenCode configuration; remove that local reference if present.
+
 ## Add To A Consuming Repository
 
 Add this repository as the `.opencode` submodule from its generated `release`
