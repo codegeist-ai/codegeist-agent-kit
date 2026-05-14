@@ -20,7 +20,6 @@
     ".opencode/rules/task-workflow.md",
     ".opencode/rules/taskfile-and-script-creation.md",
     ".opencode/README.md",
-    ".oc_local/rules/project-release-source.md",
     "plugin/graphify.md"
   ],
   "watcher": {

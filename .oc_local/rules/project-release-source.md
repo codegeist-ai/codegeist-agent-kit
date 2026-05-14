@@ -34,7 +34,8 @@ release that consuming repositories mount at `.opencode/`.
   `rules/example.md`, and a root `opencode.json` instruction entry pointing to
   `.opencode/rules/example.md`.
 - Local development-only guidance for this source repo belongs under
-  `.oc_local/rules/` and may be referenced directly from root `opencode.json`.
+  `.oc_local/rules/` and must not be referenced from root `opencode.json`,
+  because that file is copied into the generated release.
 
 ## Before Editing
 
