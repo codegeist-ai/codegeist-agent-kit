@@ -96,7 +96,8 @@ git --no-pager diff --check
 18. Report updated files, discovered hints considered or updated, user context or
     implementation instructions considered, implemented solution, verification
     commands and results, acceptance criteria status, decisions made with the
-    user, affected tasks, and remaining follow-ups.
+    user, affected tasks, remaining follow-ups, and the recommended next phase
+    `/finalize-task`.
 
 ## Rules
 
@@ -107,6 +108,8 @@ git --no-pager diff --check
 - Do not leave the target task without an up-to-date solve status.
 - After a successful pass, the target task must contain top-level
   `status: solved`.
+- Do not treat solving as a replacement for `/finalize-task`; cross-task impact
+  review and documentation refresh happen in the finalization phase.
 - Update the target task when solving changes decisions, scope, acceptance
   criteria, implementation plan, or follow-up work.
 - Keep durable documentation in English unless the repository records a specific
