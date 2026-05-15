@@ -95,7 +95,8 @@ stop and recommend `/specify-task <task-ref> [context/instructions]` first.
       selected option, duplicate check result, discovered hints, related context
       files read, and recommended next phase
 13. Record or update this phase's status in the target implementation task
-    according to @.opencode/rules/task-phases.md.
+    according to @.opencode/rules/task-phases.md, and write top-level
+    `status: planned` after a successful planning pass.
 14. Update `docs/memory-bank/chat.md` when planning changes the active project
     focus, current task set, or durable workflow state.
 15. Run targeted verification after writing the task. At minimum, run:
@@ -114,6 +115,8 @@ git --no-pager diff --check
 - Create or update planning documentation only; do not implement source code or
   tests in this command.
 - Treat repeated runs as plan refinement.
+- After a successful pass, the target implementation task must contain top-level
+  `status: planned`.
 - Create at most one implementation task unless the user explicitly asks for
   more.
 - Do not create broad epic-level follow-ups when one narrow implementation task

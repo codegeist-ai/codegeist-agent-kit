@@ -47,6 +47,18 @@ changes or confirms durable workflow state. A useful phase status names:
 - open decisions or blockers
 - next recommended phase
 
+Each successful phase must also keep a top-level `status:` field in the target
+task synchronized with the latest completed phase:
+
+- `/specify-task` writes `status: specified`
+- `/plan-task` writes `status: planned`
+- `/solve-task` writes `status: solved`
+
+`/work-task` must write the same top-level status after each successful phase it
+orchestrates, including the second `/specify-task` pass after planning. Do not
+write a success status for a blocked or failed phase; record the blocker in the
+phase status instead.
+
 ## Hint Discovery
 
 Each phase should discover applicable hints from task documents instead of

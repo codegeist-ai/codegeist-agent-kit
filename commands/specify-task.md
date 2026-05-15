@@ -74,7 +74,8 @@ planned implementation task.
      acceptance criteria, dependencies, non-goals, or follow-up boundaries need
      to stay current
 10. Record or update this phase's status in the target task according to
-    @.opencode/rules/task-phases.md.
+    @.opencode/rules/task-phases.md, and write top-level `status: specified`
+    after a successful specification pass.
 11. If the task changes central project documentation, update that documentation
     in the same pass so task and docs stay consistent.
 12. Update `docs/memory-bank/chat.md` only when the specification changes durable
@@ -95,6 +96,8 @@ git --no-pager diff --check
 - Do not solve the task.
 - Do record this phase's status in the task file whenever the pass changes or
   confirms durable workflow state.
+- After a successful pass, the target task must contain top-level
+  `status: specified`.
 - Do not split the task unless it is clearly too broad to remain safe or
   executable.
 - Keep durable documentation in English unless the repository records a specific

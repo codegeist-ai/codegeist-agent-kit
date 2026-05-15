@@ -33,6 +33,13 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Clarified the task phase contract so `/specify-task`, `/plan-task`,
+  `/solve-task`, and orchestrated `/work-task` runs write top-level task status
+  values after successful phases: `status: specified`, `status: planned`, and
+  `status: solved`.
+- Update notes for coding agents: when running task phase commands, update the
+  target task's top-level `status:` together with the detailed phase status, and
+  do not write a success status for blocked or failed phases.
 - Added a `## Changelog` section to the released `.opencode/README.md` so
   consumer-visible changes and upgrade notes are shipped with each release.
 - Removed the source-repository-only `.oc_local/rules/project-release-source.md`

@@ -59,20 +59,24 @@ runtime code changes begin.
 3. Read the initial task, parent `task.md` when present, directly relevant child
    tasks, dependencies, and task workflow rules before starting.
 4. Run `/specify-task <task-ref> [context/instructions]` phase semantics on the
-   resolved task and record that phase status.
+   resolved task, record that phase status, and write top-level
+   `status: specified` in the target task after the phase succeeds.
 5. Run `/plan-task <task-ref> [context/instructions]` phase semantics with the
    same task reference and context. If this phase creates or identifies a
    different concrete implementation task, switch the workflow target to that task
-   for the remaining phases.
+   for the remaining phases. After the phase succeeds, write top-level
+   `status: planned` in the concrete implementation task.
 6. Stop and report if planning leaves multiple possible implementation tasks,
    unresolved material decisions, or no safe concrete implementation task.
 7. Run `/specify-task <task-ref> [context/instructions]` phase semantics again on
-   the concrete implementation task selected by planning.
+   the concrete implementation task selected by planning. After the phase
+   succeeds, write top-level `status: specified` in that implementation task.
 8. Stop and report if the implementation task is still missing required planning
    details, open decisions block implementation, or the task status recommends
    another `/plan-task` pass before solving.
 9. Run `/solve-task <task-ref> [context/instructions]` phase semantics on the
-   concrete implementation task.
+   concrete implementation task. After the phase succeeds, write top-level
+   `status: solved` in that implementation task.
 10. Update directly affected task files when decisions change during any phase.
 11. Update `docs/memory-bank/chat.md` only when the workflow changes durable
     project state or future sessions would otherwise miss important context.
@@ -105,7 +109,10 @@ Stop before implementation and report the exact blocker when:
 - Use the same `<task-ref> [context/instructions]` argument contract for every
   phase.
 - Do not bypass the phase commands' requirements. Each phase must discover hints,
-  honor dependencies, and write its own phase status in the target task.
+  honor dependencies, write its own phase status in the target task, and update
+  the task's top-level `status:` after successful completion.
+- Do not write `status: specified`, `status: planned`, or `status: solved` for a
+  phase that stopped on a blocker or failed verification.
 - Do not silently solve a source task when `/plan-task` created or selected a
   different concrete implementation task. Switch to the concrete task and report
   the switch.
