@@ -91,7 +91,8 @@ git --no-pager diff --check
 
 17. Record or update this phase's status in the target task according to
     @.opencode/rules/task-phases.md, including verification and acceptance
-    criteria status.
+    criteria status, and write top-level `status: solved` after a successful
+    solve pass.
 18. Report updated files, discovered hints considered or updated, user context or
     implementation instructions considered, implemented solution, verification
     commands and results, acceptance criteria status, decisions made with the
@@ -104,6 +105,8 @@ git --no-pager diff --check
 - Do not collapse unresolved child tasks into the parent solution unless the user
   explicitly chooses that direction.
 - Do not leave the target task without an up-to-date solve status.
+- After a successful pass, the target task must contain top-level
+  `status: solved`.
 - Update the target task when solving changes decisions, scope, acceptance
   criteria, implementation plan, or follow-up work.
 - Keep durable documentation in English unless the repository records a specific
