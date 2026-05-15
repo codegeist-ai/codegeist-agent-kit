@@ -33,6 +33,15 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Added `/finalize-task` as a post-solve task phase that checks whether solved
+  changes affect other tasks and runs the documentation update workflow before a
+  task is marked `status: finalized`.
+- Updated `/work-task` to orchestrate `/finalize-task` after `/solve-task`; the
+  final phase may only run after a successful solve on the same implementation
+  task.
+- Update notes for coding agents: after solving a task, run finalization to
+  review parent, child, dependency, and adjacent tasks, execute
+  `/update-documentation`, and only then write `status: finalized`.
 - Clarified the task phase contract so `/specify-task`, `/plan-task`,
   `/solve-task`, and orchestrated `/work-task` runs write top-level task status
   values after successful phases: `status: specified`, `status: planned`, and

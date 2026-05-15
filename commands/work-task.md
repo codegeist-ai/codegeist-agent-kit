@@ -1,9 +1,9 @@
 ---
-description: Run the full task workflow through specify, plan, and solve
+description: Run the full task workflow through specify, plan, solve, and finalize
 agent: build
 ---
 
-Run the complete task-to-implementation workflow for one task together with the
+Run the complete task-to-finalization workflow for one task together with the
 user.
 
 Follow @.opencode/rules/task-workflow.md,
@@ -13,7 +13,7 @@ Follow @.opencode/rules/task-workflow.md,
 @.opencode/rules/software-tests.md, and @.opencode/rules/chat.md.
 
 This command orchestrates the shared phase commands. Keep phase-specific behavior
-in `/specify-task`, `/plan-task`, `/solve-task`, and
+in `/specify-task`, `/plan-task`, `/solve-task`, `/finalize-task`, and
 @.opencode/rules/task-phases.md instead of duplicating detailed phase rules here.
 
 User input:
@@ -31,7 +31,8 @@ Expected syntax:
 ## Purpose
 
 Use this command when the user wants the complete workflow to run from task
-clarification through detailed planning and verified implementation.
+clarification through detailed planning, verified implementation, impact review,
+and documentation finalization.
 
 The command runs these phases in order with the same argument contract:
 
@@ -40,6 +41,7 @@ The command runs these phases in order with the same argument contract:
 /plan-task <task-ref> [context/instructions]
 /specify-task <task-ref> [context/instructions]
 /solve-task <task-ref> [context/instructions]
+/finalize-task <task-ref> [context/instructions]
 ```
 
 The second `/specify-task` pass is intentional. It checks the planned
@@ -77,19 +79,25 @@ runtime code changes begin.
 9. Run `/solve-task <task-ref> [context/instructions]` phase semantics on the
    concrete implementation task. After the phase succeeds, write top-level
    `status: solved` in that implementation task.
-10. Update directly affected task files when decisions change during any phase.
-11. Update `docs/memory-bank/chat.md` only when the workflow changes durable
-    project state or future sessions would otherwise miss important context.
-12. Run the verification required by the final solve phase. At minimum, run:
+10. Run `/finalize-task <task-ref> [context/instructions]` phase semantics on
+    the solved implementation task. This phase must check whether the solved
+    changes affect other tasks, must execute
+    @.opencode/commands/update-documentation.md, and after success must write
+    top-level `status: finalized` in the implementation task.
+11. Update directly affected task files when decisions change during any phase.
+12. Update `docs/memory-bank/chat.md` only when the workflow changes durable
+     project state or future sessions would otherwise miss important context.
+13. Run the verification required by the final solve and finalize phases. At
+    minimum, run:
 
 ```bash
 git --no-pager diff --check
 ```
 
-13. Report the initial task, final implementation task, context or instructions
+14. Report the initial task, final implementation task, context or instructions
     used, phase statuses written, discovered hints considered, files changed,
-    verification commands and results, acceptance criteria status, open decisions,
-    and remaining follow-ups.
+    impacted tasks, documentation updates, verification commands and results,
+    acceptance criteria status, open decisions, and remaining follow-ups.
 
 ## Stop Conditions
 
@@ -101,6 +109,8 @@ Stop before implementation and report the exact blocker when:
 - `/plan-task` cannot identify or create a concrete implementation task
 - the planned task is missing files, modules, implementation steps, acceptance
   criteria, or verification details needed by `/solve-task`
+- `/solve-task` did not complete successfully, because `/finalize-task` may only
+  run after a successful solve phase
 - the provided context changes scope enough that another `/specify-task` or
   `/plan-task` pass is required before solving
 
@@ -111,12 +121,15 @@ Stop before implementation and report the exact blocker when:
 - Do not bypass the phase commands' requirements. Each phase must discover hints,
   honor dependencies, write its own phase status in the target task, and update
   the task's top-level `status:` after successful completion.
-- Do not write `status: specified`, `status: planned`, or `status: solved` for a
-  phase that stopped on a blocker or failed verification.
+- Do not write `status: specified`, `status: planned`, `status: solved`, or
+  `status: finalized` for a phase that stopped on a blocker or failed
+  verification.
 - Do not silently solve a source task when `/plan-task` created or selected a
   different concrete implementation task. Switch to the concrete task and report
   the switch.
 - Do not continue into `/solve-task` when `/plan-task` or the second
   `/specify-task` leaves material implementation decisions open.
+- Do not continue into `/finalize-task` unless `/solve-task` completed
+  successfully on the same concrete implementation task.
 - Keep durable documentation in English unless the repository records a specific
   language exception.

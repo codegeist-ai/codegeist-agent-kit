@@ -32,8 +32,9 @@ Shared workflow commands intended to work across repos.
 - `/specify-task` - clarify an existing task without implementing it.
 - `/plan-task` - create or sharpen a concrete implementation plan for a task.
 - `/solve-task` - implement a planned task and verify its acceptance criteria.
-- `/work-task` - orchestrate specify, plan, specify, and solve phases for one
-  task.
+- `/finalize-task` - review task impact after solving and refresh affected docs.
+- `/work-task` - orchestrate specify, plan, specify, solve, and finalize phases
+  for one task.
 - `/update-submodules` - update `.opencode` and `.devcontainer` to their
   configured branches from `.gitmodules`.
 - `/update-documentation` - refresh the docs affected by recent changes.
