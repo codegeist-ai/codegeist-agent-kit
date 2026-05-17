@@ -39,14 +39,13 @@ The command runs these phases in order with the same argument contract:
 ```text
 /specify-task <task-ref> [context/instructions]
 /plan-task <task-ref> [context/instructions]
-/specify-task <task-ref> [context/instructions]
 /solve-task <task-ref> [context/instructions]
 /finalize-task <task-ref> [context/instructions]
 ```
 
-The second `/specify-task` pass is intentional. It checks the planned
-implementation task after `/plan-task` has created or sharpened it, before
-runtime code changes begin.
+If planning discovers that the task's goal, scope, non-goals, or acceptance
+criteria are still ambiguous, stop and run another `/specify-task` pass before
+implementation instead of treating re-specification as an automatic phase.
 
 ## Workflow
 
@@ -70,31 +69,28 @@ runtime code changes begin.
    `status: planned` in the concrete implementation task.
 6. Stop and report if planning leaves multiple possible implementation tasks,
    unresolved material decisions, or no safe concrete implementation task.
-7. Run `/specify-task <task-ref> [context/instructions]` phase semantics again on
-   the concrete implementation task selected by planning. After the phase
-   succeeds, write top-level `status: specified` in that implementation task.
-8. Stop and report if the implementation task is still missing required planning
+7. Stop and report if the implementation task is still missing required planning
    details, open decisions block implementation, or the task status recommends
    another `/plan-task` pass before solving.
-9. Run `/solve-task <task-ref> [context/instructions]` phase semantics on the
+8. Run `/solve-task <task-ref> [context/instructions]` phase semantics on the
    concrete implementation task. After the phase succeeds, write top-level
    `status: solved` in that implementation task.
-10. Run `/finalize-task <task-ref> [context/instructions]` phase semantics on
-    the solved implementation task. This phase must check whether the solved
-    changes affect other tasks, must execute
-    @.opencode/commands/update-documentation.md, and after success must write
-    top-level `status: finalized` in the implementation task.
-11. Update directly affected task files when decisions change during any phase.
-12. Update `docs/memory-bank/chat.md` only when the workflow changes durable
-     project state or future sessions would otherwise miss important context.
-13. Run the verification required by the final solve and finalize phases. At
+9. Run `/finalize-task <task-ref> [context/instructions]` phase semantics on
+   the solved implementation task. This phase must check whether the solved
+   changes affect other tasks, must execute
+   @.opencode/commands/update-documentation.md, and after success must write
+   top-level `status: finalized` in the implementation task.
+10. Update directly affected task files when decisions change during any phase.
+11. Update `docs/memory-bank/chat.md` only when the workflow changes durable
+    project state or future sessions would otherwise miss important context.
+12. Run the verification required by the final solve and finalize phases. At
     minimum, run:
 
 ```bash
 git --no-pager diff --check
 ```
 
-14. Report the initial task, final implementation task, context or instructions
+13. Report the initial task, final implementation task, context or instructions
     used, phase statuses written, discovered hints considered, files changed,
     impacted tasks, documentation updates, verification commands and results,
     acceptance criteria status, open decisions, and remaining follow-ups.
@@ -109,6 +105,8 @@ Stop before implementation and report the exact blocker when:
 - `/plan-task` cannot identify or create a concrete implementation task
 - the planned task is missing files, modules, implementation steps, acceptance
   criteria, or verification details needed by `/solve-task`
+- planning reveals unresolved specification ambiguity that requires another
+  `/specify-task` pass
 - `/solve-task` did not complete successfully, because `/finalize-task` may only
   run after a successful solve phase
 - the provided context changes scope enough that another `/specify-task` or
@@ -127,8 +125,8 @@ Stop before implementation and report the exact blocker when:
 - Do not silently solve a source task when `/plan-task` created or selected a
   different concrete implementation task. Switch to the concrete task and report
   the switch.
-- Do not continue into `/solve-task` when `/plan-task` or the second
-  `/specify-task` leaves material implementation decisions open.
+- Do not continue into `/solve-task` when `/plan-task` leaves material
+  implementation decisions open.
 - Do not continue into `/finalize-task` unless `/solve-task` completed
   successfully on the same concrete implementation task.
 - Keep durable documentation in English unless the repository records a specific

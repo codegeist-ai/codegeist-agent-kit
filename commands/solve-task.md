@@ -29,10 +29,10 @@ Expected syntax:
 
 ## Purpose
 
-Use this command when a task already exists and should move from implementation
-plan to verified solution. It implements the chosen path, runs enough
-verification to prove the acceptance criteria, and updates task state and related
-docs when needed.
+Use this command when a task already has a current implementation plan and should
+move to a verified solution. It executes the chosen plan, runs enough verification
+to prove the acceptance criteria, and updates task state and related docs when
+needed.
 
 Phase dependency: `/plan-task`. Before solving, the target implementation task
 should contain a current implementation plan from `/plan-task`. If the plan is
@@ -75,8 +75,10 @@ recommend `/plan-task <task-ref> [context/instructions]` before implementation.
 12. Implement the chosen solution with the smallest reasonable change. Update
     tests, documentation, task status, and implementation notes according to the
     task's acceptance criteria and repo rules.
-13. When decisions change while solving, update the task plan, acceptance
-    criteria, non-goals, or affected follow-up tasks before continuing.
+13. When implementation reveals new facts, stale assumptions, or contradictions,
+    update the task plan, acceptance criteria, non-goals, or affected follow-up
+    tasks before continuing. Do not re-plan just because another valid approach
+    exists.
 14. If solving reveals a reusable lesson, update the relevant hint file in the
     same pass. Keep hint updates concise and broadly applicable.
 15. Update `docs/memory-bank/chat.md` only when the solution changes durable
@@ -103,6 +105,9 @@ git --no-pager diff --check
 
 - Do not create a new task unless the current task is too broad to solve safely
   and the split is necessary for resumability.
+- Do not replace `/plan-task` with ad hoc planning. If the task lacks a concrete
+  solution direction, target files, ordered steps, acceptance criteria, or
+  verification strategy, return to `/plan-task` before implementation.
 - Do not collapse unresolved child tasks into the parent solution unless the user
   explicitly chooses that direction.
 - Do not leave the target task without an up-to-date solve status.
