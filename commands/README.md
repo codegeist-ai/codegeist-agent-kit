@@ -40,6 +40,8 @@ Shared workflow commands intended to work across repos.
 - `/update-documentation` - refresh the docs affected by recent changes.
 - `/verify-documentation` - audit repo docs and report stale or broken
   references.
+- `/update-index` - create or refresh an agent-owned directory `INDEX.md` for
+  local navigation and search hints.
 - `/create-ai-script` - create a repo-local AI helper script when one is
   justified.
 - `/add-agent-kit` - add reusable shared commands, rules, or skills upstream, or

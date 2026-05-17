@@ -45,6 +45,7 @@ fi
 
 assert_file ".gitignore"
 assert_file "README.md"
+assert_file "INDEX.md"
 assert_file "opencode.json"
 assert_file "plugin/graphify.js"
 assert_file "plugin/graphify.md"
@@ -76,6 +77,7 @@ cmp "${expected_gitignore}" "${target}/.gitignore" \
   || fail "release .gitignore content mismatch"
 
 jq -e '
+  (.instructions | index(".opencode/INDEX.md")) and
   (.instructions | index("plugin/graphify.md")) and
   (.plugin | index("plugin/graphify.js")) and
   (.permission.external_directory["/tmp/**"] == "allow") and

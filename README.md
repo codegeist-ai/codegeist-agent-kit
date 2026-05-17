@@ -17,6 +17,7 @@ multiple repositories via a checked-out `.opencode/` directory.
 - `commands/` - shared slash-command definitions
 - `rules/` - shared durable workflow and editing rules
 - `skills/` - shared reusable skills
+- `INDEX.md` - root agent navigation index copied into `.opencode/INDEX.md`
 - `opencode.json` - OpenCode config for loading the shared rule set
 
 ## Integration Model
@@ -70,6 +71,9 @@ analysis flows should live in local overlays such as:
 - Skills: currently `skills/gh-auth/SKILL.md`,
   `skills/commit-message-guard/SKILL.md`, and
   `skills/graphify/SKILL.md`
+- Directory indexes: `rules/directory-index.md` defines agent-owned `INDEX.md`
+  files for navigable local context in large directories. The root `INDEX.md`
+  lists known directory indexes and is loaded by `opencode.json`.
 
 ## Development Notes
 
