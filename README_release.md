@@ -9,8 +9,8 @@ configuration while leaving project-specific behavior in the consuming repo.
 
 - `opencode.json` loads the shared instructions, MCP servers, plugin files, and
   external-directory permissions expected by OpenCode.
-- `INDEX.md` is the root agent navigation index loaded by `opencode.json`; it
-  lists known directory indexes and high-value shared workspace entrypoints.
+- `opencode.json` can load a repository-root `INDEX.md` owned by the consuming
+  repository; the shared `.opencode` submodule does not ship that file.
 - `rules/` contains durable agent rules for command execution, commits, tests,
   documentation, memory-bank updates, task workflow, scripting, and related
   engineering practices.
@@ -28,7 +28,7 @@ configuration while leaving project-specific behavior in the consuming repo.
 The generated `release` branch is intentionally minimal. During release copy,
 this source file is renamed from `README_release.md` to `README.md`. The release
 branch should contain only runtime files needed by consuming repositories:
-`.gitignore`, `README.md`, `INDEX.md`, `opencode.json`, `ai-scripts/`, `commands/`,
+`.gitignore`, `README.md`, `opencode.json`, `ai-scripts/`, `commands/`,
 `rules/`, `skills/`, and `plugin/`.
 
 ## Changelog
@@ -40,15 +40,17 @@ branch should contain only runtime files needed by consuming repositories:
   create, read, and refresh them.
 - Added `/update-index` to create or refresh a directory `INDEX.md` with local
   search hints, key files, workflows, and update triggers.
-- Added a root `.opencode/INDEX.md` instruction that records shared workspace
-  entrypoints and lists known directory indexes.
+- Added support for a repository-root `INDEX.md` instruction so consuming
+  repositories can keep their agent navigation index outside the `.opencode`
+  submodule.
 - Update notes for coding agents: use the uppercase filename `INDEX.md` for this
   pattern, link related directory indexes when useful, and keep the root
-  `.opencode/INDEX.md` list current whenever directory indexes are added,
-  moved, or removed.
-- Consumer action: after updating `.opencode`, restart OpenCode so the new
-  `.opencode/INDEX.md` and `directory-index.md` instructions are loaded by the
-  running agent session.
+  repository `INDEX.md` list current whenever directory indexes are added, moved,
+  or removed.
+- Consumer action: keep any project-specific root index at `INDEX.md` in the
+  consuming repository root, not inside `.opencode/`. After updating
+  `.opencode`, restart OpenCode so the new `INDEX.md` and
+  `directory-index.md` instructions are loaded by the running agent session.
 - Added `/finalize-task` as a post-solve task phase that checks whether solved
   changes affect other tasks and runs the documentation update workflow before a
   task is marked `status: finalized`.

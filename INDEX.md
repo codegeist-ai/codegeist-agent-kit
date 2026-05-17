@@ -6,8 +6,8 @@ Agent-owned navigation map for the shared OpenCode workspace.
 
 - Read this when starting work in the shared agent kit or when looking for the
   right command, rule, skill, or plugin file.
-- In consuming repositories this file is loaded as `.opencode/INDEX.md` through
-  `.opencode/opencode.json`.
+- In this source repository and consuming repositories, `opencode.json` loads
+  this as the repository-root `INDEX.md`.
 
 ## Directory Map
 
@@ -26,7 +26,7 @@ Agent-owned navigation map for the shared OpenCode workspace.
 
 ## Known Directory Indexes
 
-- `.opencode/INDEX.md` - this root index in consuming repositories.
+- `INDEX.md` - this root index in the repository root.
 
 ## Key Workflows
 
@@ -51,5 +51,5 @@ Agent-owned navigation map for the shared OpenCode workspace.
 ## Agent Notes
 
 - Keep this index compact because it is loaded into OpenCode instructions.
-- Paths in this file should use the consuming repository view when helpful,
-  especially `.opencode/...` for released runtime files.
+- Keep this file outside the `.opencode` release submodule. Consuming
+  repositories own their root `INDEX.md` content.

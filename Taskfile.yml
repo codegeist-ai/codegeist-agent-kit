@@ -20,7 +20,7 @@
 # - TEST_RELEASE_KEEP: set to `1` to keep the temp directory after `test-release`.
 #
 # Related files:
-# - README_release.md copied as README.md, INDEX.md, opencode.json, ai-scripts/,
+# - README_release.md copied as README.md, opencode.json, ai-scripts/,
 #   commands/, rules/, skills/, plugin/
 
 version: '3'
@@ -30,7 +30,7 @@ vars:
   RELEASE_REMOTE: '{{default "origin" .RELEASE_REMOTE}}'
   RELEASE_SOURCE: '{{default "HEAD" .RELEASE_SOURCE}}'
   RELEASE_WORKTREE: '{{default ".release-build" .RELEASE_WORKTREE}}'
-  RELEASE_PATHS: README_release.md INDEX.md opencode.json ai-scripts commands rules skills plugin
+  RELEASE_PATHS: README_release.md opencode.json ai-scripts commands rules skills plugin
   TEST_RELEASE_DIR: '{{default "" .TEST_RELEASE_DIR}}'
 
 tasks:
