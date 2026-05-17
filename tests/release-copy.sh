@@ -56,7 +56,8 @@ assert_dir "plugin"
 
 assert_absent ".git"
 assert_absent ".gitmodules"
-assert_absent "INDEX.md"
+[ ! -e "${target}/INDEX.md" ] \
+  || fail "INDEX.md must stay outside the .opencode release bundle"
 assert_absent ".opencode"
 assert_absent ".devcontainer"
 assert_absent ".oc_local"
@@ -78,6 +79,7 @@ cmp "${expected_gitignore}" "${target}/.gitignore" \
 
 jq -e '
   (.instructions | index("INDEX.md")) and
+  ((.instructions | index(".opencode/INDEX.md")) | not) and
   (.instructions | index("plugin/graphify.md")) and
   (.plugin | index("plugin/graphify.js")) and
   (.permission.external_directory["/tmp/**"] == "allow") and

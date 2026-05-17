@@ -17,7 +17,8 @@ multiple repositories via a checked-out `.opencode/` directory.
 - `commands/` - shared slash-command definitions
 - `rules/` - shared durable workflow and editing rules
 - `skills/` - shared reusable skills
-- `INDEX.md` - root agent navigation index for this source repository
+- `INDEX.md` - root agent navigation index for this source repository; it is not
+  copied into the generated `.opencode` release submodule
 - `opencode.json` - OpenCode config for loading the shared rule set
 
 ## Integration Model
@@ -75,6 +76,9 @@ analysis flows should live in local overlays such as:
   files for navigable local context in large directories. A repository-root
   `INDEX.md` lists known directory indexes and is loaded by `opencode.json`
   when present outside the `.opencode` submodule.
+- Release boundary: `opencode.json` intentionally references `INDEX.md` so a
+  consuming repository can own that root file. Never add `INDEX.md` to
+  `RELEASE_PATHS` or create `.opencode/INDEX.md` in the generated release.
 
 ## Development Notes
 

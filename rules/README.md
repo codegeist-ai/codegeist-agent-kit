@@ -23,8 +23,9 @@ Shared AI rules intended to work across repos.
 
 - `commit-conventions.md` - longer-form commit guidance.
 - `devcontainer-tools.md` - coding-relevant tools available in the devcontainer.
-- `directory-index.md` - agent-owned `INDEX.md` navigation files for large
-  directories.
+- `directory-index.md` - agent-owned, repository-root or directory-local
+  `INDEX.md` navigation files for large directories, outside shared `.opencode`
+  release content.
 - `language-policy.md` - English for code and durable repo text.
 - `ai-ready-documentation.md` - documentation standards for non-trivial files.
 - `bash-scripts.md` - minimal Bash style for repo-owned shell scripts.

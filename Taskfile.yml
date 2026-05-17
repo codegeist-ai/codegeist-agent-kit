@@ -22,6 +22,8 @@
 # Related files:
 # - README_release.md copied as README.md, opencode.json, ai-scripts/,
 #   commands/, rules/, skills/, plugin/
+# - INDEX.md is intentionally excluded from RELEASE_PATHS because it belongs to
+#   the consuming repository root, not the generated .opencode submodule.
 
 version: '3'
 

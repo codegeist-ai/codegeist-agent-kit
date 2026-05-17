@@ -24,6 +24,9 @@ files inside repository directories.
 - Keep the repository-root `INDEX.md` as the top-level index registry when one
   exists. It should list the paths to every known directory `INDEX.md` so agents
   can discover the available local maps quickly.
+- In consuming repositories, the root `INDEX.md` belongs at the repository root,
+  outside the `.opencode/` submodule. The shared `.opencode` release must not
+  ship `.opencode/INDEX.md`.
 - Do not create indexes for tiny or obvious directories unless the directory has
   non-obvious responsibilities, generated files, or safety constraints.
 
@@ -81,6 +84,9 @@ One-line summary of what this directory owns.
   stale.
 - Update the repository-root `INDEX.md` whenever any directory `INDEX.md` is
   added, moved, or removed.
+- When editing OpenCode shared workspace configuration, keep the instruction as
+  `"INDEX.md"` so it resolves to the consuming repository root. Do not change it
+  to `".opencode/INDEX.md"`.
 - Rewrite stale entries instead of appending contradictory notes.
 - Keep indexes concise enough to load into context directly.
 - Keep durable text in English and follow repo-local documentation rules.
@@ -95,3 +101,5 @@ One-line summary of what this directory owns.
   are most likely to need.
 - Do not override human-facing documentation. Link to it when it is the better
   source of truth.
+- Do not add `INDEX.md` to shared `.opencode` release packaging. The file is
+  project-owned context, not shared submodule runtime content.

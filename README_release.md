@@ -11,6 +11,7 @@ configuration while leaving project-specific behavior in the consuming repo.
   external-directory permissions expected by OpenCode.
 - `opencode.json` can load a repository-root `INDEX.md` owned by the consuming
   repository; the shared `.opencode` submodule does not ship that file.
+  Keep project-specific index content outside `.opencode/`.
 - `rules/` contains durable agent rules for command execution, commits, tests,
   documentation, memory-bank updates, task workflow, scripting, and related
   engineering practices.
@@ -51,6 +52,12 @@ branch should contain only runtime files needed by consuming repositories:
   consuming repository root, not inside `.opencode/`. After updating
   `.opencode`, restart OpenCode so the new `INDEX.md` and
   `directory-index.md` instructions are loaded by the running agent session.
+- Release safety: the generated `.opencode` release intentionally excludes
+  `INDEX.md`. Do not add `.opencode/INDEX.md`; `opencode.json` should keep the
+  instruction path as `INDEX.md` so it resolves to the consuming repository root.
+- Hardened the shared rules, `/update-index`, release docs, and release smoke
+  test so future changes keep `INDEX.md` out of the generated `.opencode`
+  submodule while still loading a consumer-owned repository-root `INDEX.md`.
 - Added `/finalize-task` as a post-solve task phase that checks whether solved
   changes affect other tasks and runs the documentation update workflow before a
   task is marked `status: finalized`.

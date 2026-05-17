@@ -15,6 +15,8 @@ Then:
 1. Resolve the target directory from the user's request. If no directory is
    clear, use the current work scope and ask one short clarification question
    only when needed.
+   If the target is the repository root, write `INDEX.md` at the repository root,
+   not inside `.opencode/`.
 2. Inspect the target directory, nearby parent `INDEX.md` files, and directly
    relevant docs or config files before writing.
 3. Create or rewrite the target directory's `INDEX.md` so it is compact,
@@ -30,3 +32,5 @@ Then:
 
 Do not create indexes for tiny directories unless there is a non-obvious reason.
 Do not add secrets, transcripts, raw command output, or speculative plans.
+Do not create `.opencode/INDEX.md`; the shared `.opencode` submodule must not
+own project-specific root navigation context.
