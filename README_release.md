@@ -58,6 +58,17 @@ branch should contain only runtime files needed by consuming repositories:
 - Hardened the shared rules, `/update-index`, release docs, and release smoke
   test so future changes keep `INDEX.md` out of the generated `.opencode`
   submodule while still loading a consumer-owned repository-root `INDEX.md`.
+- Clarified task phase boundaries: `/specify-task` now owns problem definition,
+  `/plan-task` owns concrete implementation planning, and `/solve-task` executes
+  the current plan without ad hoc replanning unless implementation reveals a real
+  contradiction.
+- Updated `/work-task` to orchestrate `specify -> plan -> solve -> finalize`;
+  it now stops for another `/specify-task` pass only when planning reveals
+  unresolved specification ambiguity.
+- Update notes for coding agents: do not use `/specify-task` to select target
+  files or implementation steps, do not use `/solve-task` as a replacement for
+  `/plan-task`, and return to the previous phase when its owned information is
+  missing or stale.
 - Added `/finalize-task` as a post-solve task phase that checks whether solved
   changes affect other tasks and runs the documentation update workflow before a
   task is marked `status: finalized`.

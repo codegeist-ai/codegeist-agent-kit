@@ -30,10 +30,11 @@ Expected syntax:
 
 ## Purpose
 
-Use this command when an existing architecture, planning, backlog, or solution
-task should become one concrete implementation plan. This command creates or
-updates task documentation only. It does not implement runtime code, change build
-files, or solve the planned task.
+Use this command when an existing specified task should become one concrete
+implementation plan. This phase owns the detailed solution direction, target
+files, implementation steps, and verification strategy. It creates or updates
+task documentation only; it does not implement runtime code, change build files,
+or solve the planned task.
 
 Phase dependency: `/specify-task`. Before planning, the source or existing
 implementation task should have a specification pass recorded. If no current
@@ -69,7 +70,10 @@ stop and recommend `/specify-task <task-ref> [context/instructions]` first.
    - dependencies and tradeoffs
 8. Ask focused questions only when the implementation slice, public contract,
    target files, verification depth, or boundary with later tasks is materially
-   unclear. Otherwise choose the smallest correct details from repo conventions.
+   unclear. If the source task's goal, scope, non-goals, or acceptance criteria
+   are still unclear, stop and recommend `/specify-task` instead of planning
+   around the ambiguity. Otherwise choose the smallest correct details from repo
+   conventions.
 9. If the user chooses an option, a variant, or provides a clearer focus, refine
    exactly one implementation task. Do not silently create multiple tasks.
 10. If a matching implementation task already exists, sharpen that task with the
@@ -114,6 +118,8 @@ git --no-pager diff --check
 
 - Create or update planning documentation only; do not implement source code or
   tests in this command.
+- Own concrete implementation-plan details in this phase: solution direction,
+  target files, ordered steps, verification strategy, risks, and tradeoffs.
 - Treat repeated runs as plan refinement.
 - After a successful pass, the target implementation task must contain top-level
   `status: planned`.

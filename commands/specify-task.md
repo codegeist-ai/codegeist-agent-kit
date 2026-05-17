@@ -30,7 +30,8 @@ Expected syntax:
 
 Use this command to run a repeatable specification pass over an existing task.
 The target task must already have a meaningful description, goal, or scope. This
-phase clarifies the task; it does not create, solve, or implement it.
+phase clarifies the task's problem definition, boundaries, and success contract;
+it does not create an implementation plan, solve, or implement it.
 
 Phase dependency: none. This is the normal entry point for the phased task
 workflow and may be repeated later when new information changes the source or
@@ -61,15 +62,15 @@ planned implementation task.
    files when present.
 7. Discover and read applicable hints according to @.opencode/rules/task-phases.md.
    Use hints to clarify scope, boundaries, dependencies, verification, and
-   implementation-readiness questions only; do not solve or implement the task
-   from hint content.
+   planning-readiness questions only; do not turn hint content into concrete file
+   edits, implementation steps, or a solution plan.
 8. Preserve the task's intended scope. Do not add runtime code, change build
    files, or implement the described behavior.
 9. Deepen the task where needed:
    - sharpen goal, context, scope, non-goals, deliverable, acceptance criteria,
      verification, dependencies, and open questions
    - add assumptions, constraints, and decision records when useful
-   - add implementation-readiness questions, but keep them at specification depth
+    - add planning-readiness questions, but keep them at specification depth
    - update the task when decisions changed, new instructions arrived, or
      acceptance criteria, dependencies, non-goals, or follow-up boundaries need
      to stay current
@@ -93,6 +94,9 @@ git --no-pager diff --check
 ## Rules
 
 - Do not create a new task.
+- Do not select a concrete solution path, target file list, implementation order,
+  or verification command beyond what is already part of the task contract; leave
+  those details to `/plan-task`.
 - Do not solve the task.
 - Do record this phase's status in the task file whenever the pass changes or
   confirms durable workflow state.
