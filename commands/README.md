@@ -27,14 +27,8 @@ Shared workflow commands intended to work across repos.
   plus local/remote branch-sync flow.
 - `/session-title` - generate a short session title from the current branch and
   recent result.
-- `/task` - manage task folders under `docs/tasks/` with the actions `create`,
-  `specify`, `solve`, `cancel`, and `backlog`.
-- `/specify-task` - clarify an existing task without implementing it.
-- `/plan-task` - create or sharpen a concrete implementation plan for a task.
-- `/solve-task` - implement a planned task and verify its acceptance criteria.
-- `/finalize-task` - review task impact after solving and refresh affected docs.
-- `/work-task` - orchestrate specify, plan, solve, and finalize phases for one
-  task.
+- `/task` - manage task folders under `docs/tasks/` with the actions `spec`,
+  `impl`, `cancel`, and `backlog`.
 - `/update-submodules` - update `.opencode` and `.devcontainer` to their
   configured branches from `.gitmodules`.
 - `/update-documentation` - refresh the docs affected by recent changes.

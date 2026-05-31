@@ -39,15 +39,19 @@ Keep task handoff small, traceable, and easy to resume.
   field linking back to the owning task.
 - Keep task docs under `docs/` in English, even when the user discussion is in
   another language.
-- Use `specify` to clarify a task with the user in depth before implementation.
-- Capture concrete solution directions, suggestions, and alternatives when they
-  help specify the work more clearly, but keep `specify` focused on defining
-  the work rather than executing it.
-- Use `/specify-task`, `/plan-task`, `/solve-task`, and `/work-task` when a repo
-  benefits from explicit task phases with phase status recorded in the task file.
-  See `task-phases.md` for the shared phase contract.
-- Use the repo-local `/task` command for `create`, `specify`,
-  `solve`, `cancel`, and `backlog` work when that workflow fits the task.
+- Use `/task spec "<title/context>"` to create and specify a task with the user
+  before implementation.
+- Use `/task impl <task-ref> [instructions]` to implement a sufficiently
+  specified task. If the task is too vague, clarify and update the task before
+  editing runtime files.
+- Keep task work iterative: `spec` and `impl` can repeat as new constraints,
+  implementation facts, or user instructions appear.
+- Keep `spec` focused and minimal. Capture direct implementation instructions
+  when useful, but do not build broad option catalogs or implement code.
+- Keep `impl` small and justified. Every changed line should support the task's
+  acceptance criteria or documented implementation notes.
+- Use the repo-local `/task` command for `spec`, `impl`, `cancel`, and `backlog`
+  work when that workflow fits the task.
 - Use `/task backlog <title>` when you want to save an idea quickly without
   turning it into an active task yet.
 - For `/task backlog`, only local `docs/tasks/backlog.md` should be staged and
