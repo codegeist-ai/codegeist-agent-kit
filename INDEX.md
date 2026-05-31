@@ -33,12 +33,15 @@ Agent-owned navigation map for the shared OpenCode workspace.
 - Use `task test` after changing release runtime files or release-copy behavior.
 - Use `task release-build` only after reviewing `README_release.md` changelog
   updates for consumer-visible changes.
+- Use `/task spec "<title/context>"` and `/task impl <task-ref> [instructions]`
+  for tracked task work.
 - Use `/update-index <directory>` to create or refresh directory-local indexes.
 
 ## Search Hints
 
 - `RELEASE_PATHS` - release bundle source paths in `Taskfile.yml`.
 - `/update-index` - command for creating or refreshing directory indexes.
+- `spec`, `impl` - task command actions for specification and implementation.
 - `directory-index.md` - rule that defines the `INDEX.md` pattern.
 - `instructions` - `opencode.json` entries loaded by OpenCode.
 

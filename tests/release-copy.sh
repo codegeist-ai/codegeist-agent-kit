@@ -64,6 +64,12 @@ assert_absent ".oc_local"
 assert_absent "Taskfile.yml"
 assert_absent "compose.local.yml"
 assert_absent "README_release.md"
+assert_absent "commands/specify-task.md"
+assert_absent "commands/plan-task.md"
+assert_absent "commands/solve-task.md"
+assert_absent "commands/finalize-task.md"
+assert_absent "commands/work-task.md"
+assert_absent "rules/task-phases.md"
 
 expected_gitignore=$(mktemp /tmp/opencode-release-gitignore.XXXXXX)
 trap 'rm -f "${expected_gitignore}"' EXIT
@@ -80,6 +86,7 @@ cmp "${expected_gitignore}" "${target}/.gitignore" \
 jq -e '
   (.instructions | index("INDEX.md")) and
   ((.instructions | index(".opencode/INDEX.md")) | not) and
+  ((.instructions | index(".opencode/rules/task-phases.md")) | not) and
   (.instructions | index("plugin/graphify.md")) and
   (.plugin | index("plugin/graphify.js")) and
   (.permission.external_directory["/tmp/**"] == "allow") and

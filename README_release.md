@@ -17,7 +17,6 @@ configuration while leaving project-specific behavior in the consuming repo.
   engineering practices.
 - `commands/` contains reusable slash-command workflows such as `/save`,
   `/commit`, `/learn`, `/update-chat`, `/git-sync`, `/rebase`, `/task`,
-  `/specify-task`, `/plan-task`, `/solve-task`, `/work-task`,
   `/update-index`, and `/update-submodules`.
 - `skills/` contains targeted reusable workflows, currently `gh-auth`,
   `commit-message-guard`, and `graphify`.
@@ -58,33 +57,14 @@ branch should contain only runtime files needed by consuming repositories:
 - Hardened the shared rules, `/update-index`, release docs, and release smoke
   test so future changes keep `INDEX.md` out of the generated `.opencode`
   submodule while still loading a consumer-owned repository-root `INDEX.md`.
-- Clarified task phase boundaries: `/specify-task` now owns problem definition,
-  `/plan-task` owns concrete implementation planning, and `/solve-task` executes
-  the current plan without ad hoc replanning unless implementation reveals a real
-  contradiction.
-- Updated `/work-task` to orchestrate `specify -> plan -> solve -> finalize`;
-  it now stops for another `/specify-task` pass only when planning reveals
-  unresolved specification ambiguity.
-- Update notes for coding agents: do not use `/specify-task` to select target
-  files or implementation steps, do not use `/solve-task` as a replacement for
-  `/plan-task`, and return to the previous phase when its owned information is
-  missing or stale.
-- Added `/finalize-task` as a post-solve task phase that checks whether solved
-  changes affect other tasks and runs the documentation update workflow before a
-  task is marked `status: finalized`.
-- Updated `/work-task` to orchestrate `/finalize-task` after `/solve-task`; the
-  final phase may only run after a successful solve on the same implementation
-  task.
-- Update notes for coding agents: after solving a task, run finalization to
-  review parent, child, dependency, and adjacent tasks, execute
-  `/update-documentation`, and only then write `status: finalized`.
-- Clarified the task phase contract so `/specify-task`, `/plan-task`,
-  `/solve-task`, and orchestrated `/work-task` runs write top-level task status
-  values after successful phases: `status: specified`, `status: planned`, and
-  `status: solved`.
-- Update notes for coding agents: when running task phase commands, update the
-  target task's top-level `status:` together with the detailed phase status, and
-  do not write a success status for blocked or failed phases.
+- Replaced the separate task phase commands with one `/task` workflow that uses
+  only `spec` and `impl`, so task specification and implementation can repeat
+  without juggling separate phase commands.
+- Update notes for coding agents: use `/task spec "<title/context>"` to create
+  and collaboratively specify a focused task, then use
+  `/task impl <task-ref> [instructions]` to implement it. If implementation
+  finds missing specification, clarify with the user and update the same task
+  before editing runtime files.
 - Added a `## Changelog` section to the released `.opencode/README.md` so
   consumer-visible changes and upgrade notes are shipped with each release.
 - Removed the source-repository-only `.oc_local/rules/project-release-source.md`
@@ -250,12 +230,8 @@ When working inside a consuming repository that uses this submodule:
   lightweight project memory.
 - `/session-title` creates a short session title from the current branch and
   recent result.
-- `/task` manages tracked task files under `docs/tasks/` when the repo uses
-  that workflow.
-- `/specify-task`, `/plan-task`, `/solve-task`, and `/work-task` provide a
-  phased task workflow for repositories that want clarification, implementation
-  planning, verified solving, and full orchestration with phase status recorded
-  in task files.
+- `/task` manages tracked task files under `docs/tasks/` with `spec`, `impl`,
+  `cancel`, and `backlog` actions when the repo uses that workflow.
 - `/update-index` creates or refreshes an agent-owned directory `INDEX.md` for
   local navigation and search hints.
 - `/add-agent-kit` adds reusable shared commands, rules, or skills upstream, or
