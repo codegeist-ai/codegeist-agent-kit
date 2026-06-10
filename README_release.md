@@ -35,6 +35,13 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Added a shared `playwright` MCP server that starts `@playwright/mcp@latest`
+  through `npx`, uses Chrome, sets a `1280x900` viewport, and raises the MCP
+  request timeout to 30 seconds for browser automation workflows.
+- Consumer action: no repository migration is required for the new MCP server or
+  tool-access rule. After updating `.opencode`, restart OpenCode so the updated
+  `opencode.json` and `rules/tools.md` are loaded. Playwright browser workflows
+  require `npx` and a Chrome installation in the runtime environment.
 - Added `tools.md` to define Bash and system command access for coding agents:
   built-in OpenCode tools stay preferred for direct file and workflow operations,
   but agents may use any available Bash command, shell script, Python code,

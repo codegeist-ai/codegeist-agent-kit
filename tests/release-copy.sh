@@ -92,6 +92,7 @@ jq -e '
   (.plugin | index("plugin/graphify.js")) and
   (.permission.external_directory["/tmp/**"] == "allow") and
   (.mcp.context7.type == "local") and
+  (.mcp.playwright.type == "local") and
   (.mcp.grep_app.type == "remote") and
   (.mcp.fetch.type == "local") and
   (.mcp.repomix.type == "local")
