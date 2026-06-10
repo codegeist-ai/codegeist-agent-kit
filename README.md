@@ -35,6 +35,28 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Added a shared `playwright` MCP server that starts `@playwright/mcp@latest`
+  through `npx`, uses Chrome, sets a `1280x900` viewport, and raises the MCP
+  request timeout to 30 seconds for browser automation workflows.
+- Consumer action: no repository migration is required for the new MCP server or
+  tool-access rule. After updating `.opencode`, restart OpenCode so the updated
+  `opencode.json` and `rules/tools.md` are loaded. Playwright browser workflows
+  require `npx` and a Chrome installation in the runtime environment.
+- Added `tools.md` to define Bash and system command access for coding agents:
+  built-in OpenCode tools stay preferred for direct file and workflow operations,
+  but agents may use any available Bash command, shell script, Python code,
+  installed CLI, SSH/OpenSSH utility, or task-appropriate system tool without a
+  per-command allowlist. Shell scripts are preferred for command orchestration
+  when they fit, while Python is appropriate when it better matches the problem.
+- Update notes for coding agents: check for already-installed tools before
+  rebuilding equivalent logic; inside a devcontainer, missing packages may be
+  installed with `apt-get` without asking first, while package installation
+  outside a devcontainer requires user approval.
+- Added tool guidance for disposable test repositories and GitHub work: agents
+  may freely manipulate repositories or sandboxes created for the current test,
+  and may run task-scoped `git` and `gh` commands without asking merely because
+  they touch Git or GitHub; direct GitHub state changes still require narrow
+  task scope and careful target inspection.
 - Added the directory index pattern: agent-owned `INDEX.md` files can now be
   used as compact navigation maps for large directories, with rules for when to
   create, read, and refresh them.

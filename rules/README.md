@@ -22,6 +22,8 @@ Shared AI rules intended to work across repos.
 ## Supporting Rules
 
 - `commit-conventions.md` - longer-form commit guidance.
+- `tools.md` - Bash, system command, script, and package-install access rules
+  for coding agents.
 - `devcontainer-tools.md` - coding-relevant tools available in the devcontainer.
 - `directory-index.md` - agent-owned, repository-root or directory-local
   `INDEX.md` navigation files for large directories, outside shared `.opencode`

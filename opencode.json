@@ -8,6 +8,7 @@
     ".opencode/rules/command-execution.md",
     ".opencode/rules/commit-conventions.md",
     ".opencode/rules/commit.md",
+    ".opencode/rules/tools.md",
     ".opencode/rules/devcontainer-tools.md",
     ".opencode/rules/directory-index.md",
     ".opencode/rules/excalidraw.md",
@@ -43,6 +44,20 @@
       ],
       "enabled": true,
       "timeout": 15000
+    },
+    "playwright": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@playwright/mcp@latest",
+        "--browser",
+        "chrome",
+        "--viewport-size",
+        "1280x900"
+      ],
+      "enabled": true,
+      "timeout": 30000
     },
     "grep_app": {
       "type": "remote",
