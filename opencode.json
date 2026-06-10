@@ -8,6 +8,7 @@
     ".opencode/rules/command-execution.md",
     ".opencode/rules/commit-conventions.md",
     ".opencode/rules/commit.md",
+    ".opencode/rules/tools.md",
     ".opencode/rules/devcontainer-tools.md",
     ".opencode/rules/directory-index.md",
     ".opencode/rules/excalidraw.md",

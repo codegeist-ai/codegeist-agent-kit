@@ -87,6 +87,7 @@ jq -e '
   (.instructions | index("INDEX.md")) and
   ((.instructions | index(".opencode/INDEX.md")) | not) and
   ((.instructions | index(".opencode/rules/task-phases.md")) | not) and
+  (.instructions | index(".opencode/rules/tools.md")) and
   (.instructions | index("plugin/graphify.md")) and
   (.plugin | index("plugin/graphify.js")) and
   (.permission.external_directory["/tmp/**"] == "allow") and
