@@ -18,6 +18,8 @@ Agent-owned navigation map for the shared OpenCode workspace.
 - `plugin/` - optional Graphify OpenCode integration.
 - `opencode.json` - runtime configuration that loads shared instructions,
   plugins, MCP servers, and permissions.
+- `playwright-mcp.json` - Playwright MCP browser launch configuration copied
+  into the generated release bundle.
 - `README.md` - source-repository overview for maintainers.
 - `README_release.md` - source file copied to `README.md` on the generated
   `release` branch.
@@ -40,6 +42,7 @@ Agent-owned navigation map for the shared OpenCode workspace.
 ## Search Hints
 
 - `RELEASE_PATHS` - release bundle source paths in `Taskfile.yml`.
+- `playwright-mcp.json` - browser config used by the shared Playwright MCP.
 - `/update-index` - command for creating or refreshing directory indexes.
 - `spec`, `impl` - task command actions for specification and implementation.
 - `directory-index.md` - rule that defines the `INDEX.md` pattern.

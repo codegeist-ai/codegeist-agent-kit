@@ -46,6 +46,7 @@ fi
 assert_file ".gitignore"
 assert_file "README.md"
 assert_file "opencode.json"
+assert_file "playwright-mcp.json"
 assert_file "plugin/graphify.js"
 assert_file "plugin/graphify.md"
 assert_dir "ai-scripts"
@@ -93,11 +94,21 @@ jq -e '
   (.permission.external_directory["/tmp/**"] == "allow") and
   (.mcp.context7.type == "local") and
   (.mcp.playwright.type == "local") and
+  (.mcp.playwright.command == ["npx", "-y", "@playwright/mcp@latest", "--config", ".opencode/playwright-mcp.json"]) and
   (.mcp.grep_app.type == "remote") and
   (.mcp.fetch.type == "local") and
   (.mcp.repomix.type == "local")
 ' "${target}/opencode.json" >/dev/null \
   || fail "release opencode.json is missing expected OpenCode config"
+jq -e '
+  (.browser.browserName == "chromium") and
+  (.browser.launchOptions.executablePath == "/usr/local/bin/chrome") and
+  (.browser.launchOptions.headless == false) and
+  (.browser.launchOptions.ignoreDefaultArgs | index("--disable-blink-features=AutomationControlled")) and
+  (.browser.contextOptions.viewport.width == 1280) and
+  (.browser.contextOptions.viewport.height == 900)
+' "${target}/playwright-mcp.json" >/dev/null \
+  || fail "release playwright-mcp.json is missing expected browser config"
 node --check "${target}/plugin/graphify.js" >/dev/null \
   || fail "release graphify plugin has invalid syntax"
 

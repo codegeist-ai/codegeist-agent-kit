@@ -7,8 +7,8 @@ Review the current repository state and `Taskfile.yml`.
 Then:
 
 1. Compare the latest release branch commit with the current release bundle:
-   - Review `git diff --stat origin/release -- README_release.md opencode.json ai-scripts commands rules skills plugin`.
-   - Review `git diff origin/release -- README_release.md opencode.json ai-scripts commands rules skills plugin`.
+   - Review `git diff --stat origin/release -- README_release.md opencode.json playwright-mcp.json ai-scripts commands rules skills plugin`.
+   - Review `git diff origin/release -- README_release.md opencode.json playwright-mcp.json ai-scripts commands rules skills plugin`.
    - Include mapped `README_release.md` to `README.md` changes when drafting the changelog.
 2. Update `README_release.md` `## Changelog` with consumer-visible changes and
    migration or update notes for consuming repositories and coding agents.

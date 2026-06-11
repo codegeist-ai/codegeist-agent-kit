@@ -11,6 +11,8 @@ release that consuming repositories mount at `.opencode/`.
 - Shared skills belong in `skills/`.
 - Shared helper scripts belong in `ai-scripts/`.
 - Shared plugin source belongs in `plugin/`.
+- Shared MCP runtime config belongs in root release paths such as
+  `playwright-mcp.json` when `opencode.json` references it.
 - Release documentation source belongs in `README_release.md` when it is meant
   to become `.opencode/README.md` in consuming repositories.
 

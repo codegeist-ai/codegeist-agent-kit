@@ -20,6 +20,8 @@ multiple repositories via a checked-out `.opencode/` directory.
 - `INDEX.md` - root agent navigation index for this source repository; it is not
   copied into the generated `.opencode` release submodule
 - `opencode.json` - OpenCode config for loading the shared rule set
+- `playwright-mcp.json` - Playwright MCP browser launch configuration copied
+  into the generated `.opencode` release submodule
 
 ## Integration Model
 
@@ -34,8 +36,8 @@ multiple repositories via a checked-out `.opencode/` directory.
 
 Consuming repositories should add the generated `release` branch as their
 `.opencode` submodule. The release branch contains only the files needed at
-runtime: `.gitignore`, `README.md`, `opencode.json`, `ai-scripts/`,
-`commands/`, `rules/`, and `skills/`.
+runtime: `.gitignore`, `README.md`, `opencode.json`, `playwright-mcp.json`,
+`ai-scripts/`, `commands/`, `rules/`, `skills/`, and `plugin/`.
 
 ```bash
 git submodule add -b release <repository-url> .opencode
