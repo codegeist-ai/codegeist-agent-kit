@@ -51,10 +51,8 @@
         "npx",
         "-y",
         "@playwright/mcp@latest",
-        "--browser",
-        "chrome",
-        "--viewport-size",
-        "1280x900"
+        "--config",
+        ".opencode/playwright-mcp.json"
       ],
       "enabled": true,
       "timeout": 30000

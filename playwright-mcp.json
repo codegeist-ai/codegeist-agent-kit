@@ -1,0 +1,18 @@
+{
+  "browser": {
+    "browserName": "chromium",
+    "launchOptions": {
+      "executablePath": "/usr/local/bin/chrome",
+      "headless": false,
+      "ignoreDefaultArgs": [
+        "--disable-blink-features=AutomationControlled"
+      ]
+    },
+    "contextOptions": {
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      }
+    }
+  }
+}

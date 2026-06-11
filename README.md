@@ -24,24 +24,31 @@ configuration while leaving project-specific behavior in the consuming repo.
   as `commit-message-guard.sh`.
 - `plugin/` contains Graphify OpenCode integration files. Graphify is optional
   and should only build or update graphs when the user explicitly asks for it.
+- `playwright-mcp.json` contains shared browser launch settings used by the
+  `playwright` MCP server in `opencode.json`.
 
 The generated `release` branch is intentionally minimal. During release copy,
 this source file is renamed from `README_release.md` to `README.md`. The release
 branch should contain only runtime files needed by consuming repositories:
-`.gitignore`, `README.md`, `opencode.json`, `ai-scripts/`, `commands/`,
-`rules/`, `skills/`, and `plugin/`.
+`.gitignore`, `README.md`, `opencode.json`, `playwright-mcp.json`,
+`ai-scripts/`, `commands/`, `rules/`, `skills/`, and `plugin/`.
 
 ## Changelog
 
 ### Current Version
 
 - Added a shared `playwright` MCP server that starts `@playwright/mcp@latest`
-  through `npx`, uses Chrome, sets a `1280x900` viewport, and raises the MCP
-  request timeout to 30 seconds for browser automation workflows.
+  through `npx` and loads `.opencode/playwright-mcp.json` for browser launch
+  settings.
+- Added `.opencode/playwright-mcp.json` to start visible Chrome through the
+  `/usr/local/bin/chrome` launcher, set a `1280x900` viewport, and suppress
+  Playwright's unsupported `--disable-blink-features=AutomationControlled`
+  default argument when the installed Chrome build warns about it.
 - Consumer action: no repository migration is required for the new MCP server or
   tool-access rule. After updating `.opencode`, restart OpenCode so the updated
-  `opencode.json` and `rules/tools.md` are loaded. Playwright browser workflows
-  require `npx` and a Chrome installation in the runtime environment.
+  `opencode.json`, `playwright-mcp.json`, and `rules/tools.md` are loaded.
+  Playwright browser workflows require `npx` and a `chrome` launcher at
+  `/usr/local/bin/chrome` in the runtime environment.
 - Added `tools.md` to define Bash and system command access for coding agents:
   built-in OpenCode tools stay preferred for direct file and workflow operations,
   but agents may use any available Bash command, shell script, Python code,
