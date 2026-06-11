@@ -75,9 +75,11 @@ For `move` requests:
 Then perform the upstream source workflow autonomously:
 
 1. Clone `https://github.com/codegeist-ai/codegeist-agent-kit.git` into an
-   explicit temporary directory outside the consuming repository, preferably
-   under `/tmp/opencode`, unless the user or local workflow provides a trusted
-   source checkout.
+   explicit user-owned temporary directory outside the consuming repository,
+   unless the user or local workflow provides a trusted source checkout. Prefer
+   a unique directory created with `mktemp -d "${TMPDIR:-/tmp}/opencode-agent-kit.XXXXXX"`;
+   do not rely on a fixed `/tmp/opencode` path because shared environments may
+   create it as root-owned and unwritable to the workspace user.
 2. In the temporary source checkout, implement the smallest correct shared
    change in the source paths: `commands/`, `rules/`, `skills/`, `ai-scripts/`,
    `plugin/`, `opencode.json`, and `README_release.md` as applicable. For

@@ -110,5 +110,12 @@ jq -e '
   || fail "release playwright-mcp.json is missing expected browser config"
 node --check "${target}/plugin/graphify.js" >/dev/null \
   || fail "release graphify plugin has invalid syntax"
+if ! grep -F 'mktemp -d "${TMPDIR:-/tmp}/opencode-agent-kit.XXXXXX"' \
+    "${target}/commands/add-agent-kit.md" >/dev/null; then
+  fail "add-agent-kit command must recommend a user-owned temp source checkout"
+fi
+if grep -F 'under `/tmp/opencode`' "${target}/commands/add-agent-kit.md" >/dev/null; then
+  fail "add-agent-kit command must not recommend fixed /tmp/opencode checkout path"
+fi
 
 printf 'PASS: release-copy bundle smoke test\n'
