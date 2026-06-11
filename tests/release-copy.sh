@@ -105,8 +105,7 @@ jq -e '
   (.browser.launchOptions.executablePath == "/usr/local/bin/chrome") and
   (.browser.launchOptions.headless == false) and
   (.browser.launchOptions.ignoreDefaultArgs | index("--disable-blink-features=AutomationControlled")) and
-  (.browser.contextOptions.viewport.width == 1280) and
-  (.browser.contextOptions.viewport.height == 900)
+  (.browser.contextOptions | not)
 ' "${target}/playwright-mcp.json" >/dev/null \
   || fail "release playwright-mcp.json is missing expected browser config"
 node --check "${target}/plugin/graphify.js" >/dev/null \

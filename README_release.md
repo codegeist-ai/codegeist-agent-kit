@@ -41,7 +41,7 @@ branch should contain only runtime files needed by consuming repositories:
   through `npx` and loads `.opencode/playwright-mcp.json` for browser launch
   settings.
 - Added `.opencode/playwright-mcp.json` to start visible Chrome through the
-  `/usr/local/bin/chrome` launcher, set a `1280x900` viewport, and suppress
+  `/usr/local/bin/chrome` launcher and suppress
   Playwright's unsupported `--disable-blink-features=AutomationControlled`
   default argument when the installed Chrome build warns about it.
 - Consumer action: no repository migration is required for the new MCP server or
