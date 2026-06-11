@@ -41,9 +41,12 @@ branch should contain only runtime files needed by consuming repositories:
   through `npx` and loads `.opencode/playwright-mcp.json` for browser launch
   settings.
 - Added `.opencode/playwright-mcp.json` to start visible Chrome through the
-  `/usr/local/bin/chrome` launcher, set a `1280x900` viewport, and suppress
+  `/usr/local/bin/chrome` launcher and suppress
   Playwright's unsupported `--disable-blink-features=AutomationControlled`
   default argument when the installed Chrome build warns about it.
+- Updated `/add-agent-kit` guidance to use a unique user-owned temporary source
+  checkout path created with `mktemp` instead of the fixed `/tmp/opencode` path,
+  which can be root-owned and unwritable in shared devcontainer environments.
 - Consumer action: no repository migration is required for the new MCP server or
   tool-access rule. After updating `.opencode`, restart OpenCode so the updated
   `opencode.json`, `playwright-mcp.json`, and `rules/tools.md` are loaded.
@@ -182,9 +185,11 @@ Expected autonomous workflow for the agent:
    is a Git submodule, and is configured to track the `release` branch in
    `.gitmodules`.
 2. Clone `https://github.com/codegeist-ai/codegeist-agent-kit.git` into an
-   explicit temporary directory outside the consuming repository, for example
-   under `/tmp/opencode`, unless the user or local workflow provides a trusted
-   source checkout.
+   explicit user-owned temporary directory outside the consuming repository,
+   unless the user or local workflow provides a trusted source checkout. Prefer
+   a unique directory created with `mktemp -d "${TMPDIR:-/tmp}/opencode-agent-kit.XXXXXX"`;
+   do not rely on a fixed `/tmp/opencode` path because shared environments may
+   create it as root-owned and unwritable to the workspace user.
 3. Implement the requested shared `command`, `rule`, or `skill` in the source
    paths of that temporary checkout: `commands/`, `rules/`, `skills/`,
    `ai-scripts/`, `plugin/`, `opencode.json`, and `README_release.md` as

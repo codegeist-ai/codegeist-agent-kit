@@ -7,12 +7,6 @@
       "ignoreDefaultArgs": [
         "--disable-blink-features=AutomationControlled"
       ]
-    },
-    "contextOptions": {
-      "viewport": {
-        "width": 1280,
-        "height": 900
-      }
     }
   }
 }
