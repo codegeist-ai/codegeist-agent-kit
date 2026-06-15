@@ -44,6 +44,10 @@ branch should contain only runtime files needed by consuming repositories:
   `/usr/local/bin/chrome` launcher and suppress
   Playwright's unsupported `--disable-blink-features=AutomationControlled`
   default argument when the installed Chrome build warns about it.
+- Configured the shared Playwright MCP server with
+  `PLAYWRIGHT_MCP_USER_DATA_DIR=/mnt/codegeist/chrome-cdp-profile` so it can use
+  the same persistent Chrome profile mounted by Codegeist devcontainers and
+  launched by the `chrome` wrapper.
 - Updated `/add-agent-kit` guidance to use a unique user-owned temporary source
   checkout path created with `mktemp` instead of the fixed `/tmp/opencode` path,
   which can be root-owned and unwritable in shared devcontainer environments.
