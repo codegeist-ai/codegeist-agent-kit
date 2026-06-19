@@ -37,6 +37,10 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Updated shared AI-ready documentation guidance to prefer detailed explanatory
+  class and function comments when they help later coding agents understand
+  behavior, inputs, outputs, side effects, failure paths, constraints, and major
+  branches.
 - Added a shared `playwright` MCP server that starts `@playwright/mcp@latest`
   through `npx` and loads `.opencode/playwright-mcp.json` for browser launch
   settings.
