@@ -49,12 +49,20 @@ Use these rules whenever you choose or run commands in this project.
   `docs/memory-bank/chat.md` and any relevant rule updates from the learn step
   in the same commit. If the save workflow refreshes `.opencode` or
   `.devcontainer`, include the resulting parent gitlink updates in that same
-  commit as task state. Then continue through the branch rebase, the final
-  fast-forward update of the local base branch, and when that base branch has
-  an upstream, the final synchronization and push of the local and remote
-  base-branch refs. When the task touches submodules, finish the same local and
-  remote branch synchronization there before recording the parent gitlink
-  whenever those submodule branches have configured upstreams.
+  commit as task state. When the current branch is the local base branch,
+  continue through the base-branch rebase and normal non-force push when that
+  base branch has an upstream. When the current branch is not the local base
+  branch, update the local base branch from its upstream first, rebase the
+  current branch over remote current-branch changes and the updated base branch,
+  and push only the current branch. In that feature-branch path, do not
+  fast-forward or push the local base branch to the current branch. When the
+  task touches submodules, finish the same local and remote branch
+  synchronization there before recording the parent gitlink whenever those
+  submodule branches have configured upstreams.
+- In the feature-branch `@.opencode/commands/save.md` path, `git push
+  --force-with-lease` is allowed only for the current non-base branch, only
+  after fetching that branch's upstream, and only when a rebase rewrote commits
+  already present on that upstream. Never force-push the local base branch.
 - After a successful commit, rebase, push, or branch-sync step, report routine
   completion metadata in the response instead of editing
   `docs/memory-bank/chat.md` and creating a second commit only to store that

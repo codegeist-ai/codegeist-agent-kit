@@ -37,6 +37,12 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Updated `/save` so it is branch-aware: base-branch saves still rebase and push
+  the base branch, while feature-branch saves update the local base branch from
+  upstream first, then rebase and push only the current branch.
+- Added a narrow `/save` safety rule for rebased feature branches: use
+  `--force-with-lease` only for the current non-base branch after fetching its
+  upstream, and never force-push the local base branch.
 - Updated shared AI-ready documentation guidance to prefer detailed explanatory
   class and function comments when they help later coding agents understand
   behavior, inputs, outputs, side effects, failure paths, constraints, and major
@@ -261,8 +267,9 @@ When working inside a consuming repository that uses this submodule:
 ## High-Value Commands For Git Work
 
 - `/save` refreshes memory, learns durable guidance, updates shared submodules,
-  commits, rebases, fast-forwards the local base branch, and pushes the base
-  branch when configured.
+  commits, rebases, and pushes the intended branch. On the local base branch it
+  may push that base branch; on a feature branch it updates the base branch from
+  upstream first, then pushes only the current branch.
 - `/commit` reviews the diff and creates a focused conventional commit.
 - `/git-sync` synchronizes the current branch and local base branch without
   creating a commit.

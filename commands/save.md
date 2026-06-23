@@ -1,8 +1,17 @@
 ---
-description: Refresh memory, commit, rebase, and sync base branch
+description: Refresh memory, commit, rebase, and push the current branch
 agent: build
 ---
 Review the current repository state and the active chat context.
+
+This workflow is branch-aware:
+
+- When the current branch is the resolved local base branch, save that branch by
+  committing, rebasing it onto its refreshed upstream when needed, and pushing it.
+- When the current branch is not the resolved local base branch, keep the work on
+  the current branch: update the local base branch from its upstream first, rebase
+  the current branch, and push only the current branch. Do not fast-forward or
+  push the base branch to the current branch from this feature-branch path.
 
 If this repo uses `docs/memory-bank/chat.md` as lightweight project memory, execute
 @.opencode/commands/update-chat.md first so the memory reflects the current repo
@@ -23,102 +32,120 @@ message:
 $ARGUMENTS
 
 Then:
-1. If the task changed any submodule contents, commit the relevant submodule
+1. Determine the current branch name and stop if `HEAD` is detached.
+2. Determine the local base branch in this order:
+   - a clearly documented local base branch from repo-local docs, if present
+   - the local branch pointed to by `origin/HEAD`, if available
+3. If no suitable local base branch can be determined because the repo has no
+   remote default branch yet, or is a purely local repository created with
+   `git init`, continue as a current-branch-only save and report that no base
+   branch could be resolved.
+4. Record whether the current branch is the local base branch.
+5. If the task changed any submodule contents, commit the relevant submodule
    changes first.
-2. If the task changed submodule configuration such as path or URL, stage the
+6. If the task changed submodule configuration such as path or URL, stage the
    matching `.gitmodules` update together with the intended parent gitlink
    update.
-3. For each touched submodule, determine the intended branch and whether it has
+7. For each touched submodule, determine the intended branch and whether it has
    a configured upstream.
-4. If a touched submodule branch has a configured upstream, verify that the
+8. If a touched submodule branch has a configured upstream, verify that the
    referenced remote exists and can be fetched. Stop and report only when a
    configured upstream remote cannot be reached or refreshed.
-5. For each touched submodule branch with a configured upstream, fast-forward or
+9. For each touched submodule branch with a configured upstream, fast-forward or
    rebase the local branch onto the refreshed upstream when needed, push that
    branch, and verify that the local branch and upstream are synchronized. If a
    normal push is refused because the remote is a checked-out local repo,
    fast-forward that checked-out repo directly and verify the same
    synchronization before continuing.
-6. Only stage the intended parent gitlink update after the submodule commit
-   exists and any configured upstream synchronization for the touched
-   submodules is complete.
-7. Stage the relevant changes for the current task, including any refreshed
-   project-memory or rule updates that belong to the task. If
-   @.opencode/commands/update-submodules.md changed the parent gitlinks for
-   `.opencode` or `.devcontainer`, treat those gitlink updates as task changes
-   and stage them in this same commit.
-8. Draft a commit message that matches the project commit rule.
-9. When `.opencode/ai-scripts/commit-message-guard.sh` exists, create the git
-   commit through that script by setting `ARG_COMMIT_SUBJECT`, optionally
-   `ARG_COMMIT_BODY`, and `ARG_EXECUTE=1`; otherwise use a direct `git commit`
-   command that still follows `@.opencode/rules/commit.md`.
-10. Execute @.opencode/commands/rebase.md on the current branch.
-11. Record the current branch name, the resolved local base branch, and the
-    rebased HEAD commit after the rebase succeeds.
-12. Verify that the local base branch exists.
-13. Determine whether the local base branch has a configured upstream.
-14. If the local base branch has a configured upstream, verify that the
-    referenced remote exists and can be fetched. Stop and report only when a
-    configured upstream remote cannot be reached or refreshed.
-15. If the local base branch has a configured upstream and is not synchronized
-    with the refreshed upstream, update the local base branch with a
-    fast-forward when possible
-    or a rebase when needed.
-16. If refreshing the local base branch changed the base commit for the current
-    branch, execute @.opencode/commands/rebase.md on the current branch again
-    and re-record the current branch name, the resolved base branch, and the
-    rebased HEAD commit.
-17. Determine whether the rebased branch HEAD is already reachable from the
-    local base branch.
-18. If the rebased branch HEAD is not yet on the local base branch, determine
-    whether that base branch is already checked out in another worktree.
-19. If the base branch is checked out elsewhere, record that worktree path and
-    fast-forward the base branch there with
-    `git -C <base-worktree> merge --ff-only <recorded-branch>`.
-20. Otherwise switch to the local base branch in the current worktree.
-21. If you switched to the base branch, fast-forward it with
-    `git merge --ff-only <recorded-branch>`.
-22. If the local base branch has a configured upstream, push the local base
-    branch to that upstream.
-23. If that push is rejected because the upstream moved, fetch that upstream,
-    re-synchronize the local base branch, rebase the recorded branch onto the
-    refreshed base branch, fast-forward the base branch again, and retry the
-    push until the local and remote refs match or the workflow hits a conflict
-    that must be reported.
-24. Verify that the local base branch and `<recorded-branch>` are synchronized
-    by checking that `git rev-list --left-right --count <base-branch>...<recorded-branch>`
-    reports `0 0` in the worktree where the base branch is now checked out.
-25. If the local base branch has a configured upstream, verify that the local
-    base branch and its upstream are synchronized by checking the matching
-    left-right commit counts after the final push.
-26. Stop and report if the base branch and `<recorded-branch>` are still
-    divergent.
-27. Stop and report if the local base branch and its upstream are still
-    divergent when an upstream is configured.
-28. Report the final commit hash, commit message, source branch, whether
-    the base branch was updated in the current worktree or another worktree,
-    and whether the final base-branch push was skipped or succeeded. Do not
-    create another commit only to write those final identifiers or sync results
-    into project memory.
+10. Only stage the intended parent gitlink update after the submodule commit
+    exists and any configured upstream synchronization for the touched submodules
+    is complete.
+11. Stage the relevant changes for the current task, including any refreshed
+    project-memory or rule updates that belong to the task. If
+    @.opencode/commands/update-submodules.md changed the parent gitlinks for
+    `.opencode` or `.devcontainer`, treat those gitlink updates as task changes
+    and stage them in this same commit.
+12. Draft a commit message that matches the project commit rule.
+13. When `.opencode/ai-scripts/commit-message-guard.sh` exists, create the git
+    commit through that script by setting `ARG_COMMIT_SUBJECT`, optionally
+    `ARG_COMMIT_BODY`, and `ARG_EXECUTE=1`; otherwise use a direct `git commit`
+    command that still follows @.opencode/rules/commit.md.
+
+If the current branch is the local base branch:
+
+14. Determine whether the base branch has a configured upstream.
+15. If the base branch has a configured upstream, verify that the referenced
+    remote exists and can be fetched, then fetch that upstream.
+16. Rebase the current base branch onto the refreshed upstream when the upstream
+    contains commits that are not local. If conflicts occur, resolve them only
+    when the intended result is clear; otherwise stop and report.
+17. Push the base branch to its configured upstream with a normal non-force push.
+18. If that push is rejected because the upstream moved, fetch that upstream,
+    rebase the base branch onto the refreshed upstream, and retry the normal push
+    until the local and remote refs match or a conflict must be reported.
+19. Verify that the base branch and its upstream are synchronized when an
+    upstream is configured.
+20. Report the final commit hash, commit message, base branch, and push result.
+
+If the current branch is not the local base branch:
+
+14. Verify that the local base branch exists when one was resolved.
+15. Determine whether the local base branch has a configured upstream.
+16. If the local base branch has a configured upstream, verify that the
+    referenced remote exists and can be fetched, then fetch that upstream.
+17. Update the local base branch before pushing the current branch:
+    - If the base branch is checked out in another worktree, stop and report if
+      that worktree is not clean, then rebase the base branch in that worktree
+      onto its refreshed upstream when needed.
+    - If the base branch is not checked out elsewhere, create a temporary
+      worktree outside the repository for the base branch, rebase it there onto
+      its refreshed upstream when needed, then remove the temporary worktree
+      after the current branch has been rebased.
+    - Do not switch the current worktree away from the current branch.
+    - Do not push the base branch from this feature-branch save path.
+18. Determine whether the current branch has a configured upstream.
+19. If the current branch has a configured upstream, verify that the referenced
+    remote exists and can be fetched, then fetch that upstream.
+20. If the current branch has a configured upstream and the refreshed upstream
+    contains commits that are not local, rebase the current branch onto that
+    upstream first so remote branch changes are preserved.
+21. Rebase the current branch onto the updated local base branch when a base
+    branch was resolved.
+22. If conflicts occur during either current-branch rebase, resolve them only
+    when the intended result is clear; otherwise stop and report.
+23. Push only the current branch:
+    - If the current branch has no upstream and `origin` exists, push with
+      `git push -u origin <current-branch>`.
+    - If the current branch has an upstream and the rebase rewrote commits that
+      are already on the upstream branch, push the current branch with
+      `--force-with-lease` for that current branch only.
+    - Otherwise use a normal push to the current branch upstream.
+24. If the current-branch push is rejected because the upstream moved, fetch the
+    current branch upstream, rebase the current branch onto that refreshed
+    upstream, rebase the current branch onto the updated local base branch again
+    when a base branch was resolved, and retry the current-branch push with the
+    same current-branch-only `--force-with-lease` rule when the rebase rewrote
+    upstream commits.
+25. Verify that the current branch and its upstream are synchronized after the
+    push when an upstream is configured or was created.
+26. Verify that the current worktree is still on the original current branch.
+27. Report the final commit hash, commit message, current branch, updated base
+    branch, whether the base branch push was skipped, and the current-branch push
+    result.
 
 Do not create an empty commit.
 Do not commit secrets or unrelated files.
 Do not ignore task-related submodule changes; either include the intentional
 submodule update or stop and report why it could not be completed safely.
-Do not create a merge commit for the final base-branch update; only a
-fast-forward update is allowed.
-Do not treat the workflow as finished until the local base branch and the
-rebased task branch are synchronized.
-When the local base branch has a configured upstream, do not treat the workflow
-as finished until the local and remote base-branch refs are synchronized too.
-When touched submodules are part of the task, do not treat the workflow as
-finished until their local and remote branches are synchronized when those
-submodule branches have configured upstreams.
-Do not stop after a successful commit or rebase if the local base branch has
-not been updated and, when configured, pushed yet.
+Do not fast-forward the local base branch to the current feature branch.
+Do not push the local base branch when the current branch is not the base branch.
+Do not switch the current worktree away from a feature branch during the
+feature-branch save path.
+Do not create a merge commit; use rebase for branch synchronization.
+Do not force-push the local base branch.
+Use `--force-with-lease` only for the current non-base branch after a rebase and
+only after fetching that branch's upstream.
 Do not update `docs/memory-bank/chat.md` after the commit only to record the
 commit hash, rebased HEAD, push result, or other routine completion metadata.
-Do not force-check out the base branch in the current worktree when another
-worktree already has that branch checked out.
-If commit or rebase fails, stop and report the exact failure.
+If commit, rebase, or push fails, stop and report the exact failure.
 Do not use literal `\n` escape sequences in commit-message inputs.
