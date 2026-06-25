@@ -4,14 +4,19 @@ agent: build
 ---
 Review the current repository state and the active chat context.
 
-This workflow is branch-aware:
+This workflow is branch-aware and uses rebase, not merge:
 
+- In every path where a local base branch is resolved, refresh that local base
+  branch from its configured upstream before it is used as a rebase base.
 - When the current branch is the resolved local base branch, save that branch by
-  committing, rebasing it onto its refreshed upstream when needed, and pushing it.
+  committing, rebasing it onto its refreshed upstream when needed, and pushing it
+  with a normal non-force push.
 - When the current branch is not the resolved local base branch, keep the work on
-  the current branch: update the local base branch from its upstream first, rebase
-  the current branch, and push only the current branch. Do not fast-forward or
-  push the base branch to the current branch from this feature-branch path.
+  the current branch: commit, refresh the local base branch from upstream, rebase
+  the current branch onto its own upstream when needed, then rebase the current
+  branch onto the refreshed local base branch. Push only the current branch. Do
+  not merge, fast-forward the base branch to the current branch, or push the base
+  branch from this feature-branch path.
 
 If this repo uses `docs/memory-bank/chat.md` as lightweight project memory, execute
 @.opencode/commands/update-chat.md first so the memory reflects the current repo
@@ -77,8 +82,10 @@ If the current branch is the local base branch:
 15. If the base branch has a configured upstream, verify that the referenced
     remote exists and can be fetched, then fetch that upstream.
 16. Rebase the current base branch onto the refreshed upstream when the upstream
-    contains commits that are not local. If conflicts occur, resolve them only
-    when the intended result is clear; otherwise stop and report.
+    contains commits that are not local. This is the base-branch save path, so the
+    current branch and the base branch are the same branch. If conflicts occur,
+    resolve them only when the intended result is clear; otherwise stop and
+    report.
 17. Push the base branch to its configured upstream with a normal non-force push.
 18. If that push is rejected because the upstream moved, fetch that upstream,
     rebase the base branch onto the refreshed upstream, and retry the normal push
@@ -93,7 +100,8 @@ If the current branch is not the local base branch:
 15. Determine whether the local base branch has a configured upstream.
 16. If the local base branch has a configured upstream, verify that the
     referenced remote exists and can be fetched, then fetch that upstream.
-17. Update the local base branch before pushing the current branch:
+17. Refresh the local base branch from its upstream before rebasing the current
+    branch:
     - If the base branch is checked out in another worktree, stop and report if
       that worktree is not clean, then rebase the base branch in that worktree
       onto its refreshed upstream when needed.
@@ -101,6 +109,9 @@ If the current branch is not the local base branch:
       worktree outside the repository for the base branch, rebase it there onto
       its refreshed upstream when needed, then remove the temporary worktree
       after the current branch has been rebased.
+    - If the base branch has no configured upstream, use the existing local base
+      branch as the rebase base and report that no base-branch upstream was
+      refreshed.
     - Do not switch the current worktree away from the current branch.
     - Do not push the base branch from this feature-branch save path.
 18. Determine whether the current branch has a configured upstream.
@@ -109,8 +120,9 @@ If the current branch is not the local base branch:
 20. If the current branch has a configured upstream and the refreshed upstream
     contains commits that are not local, rebase the current branch onto that
     upstream first so remote branch changes are preserved.
-21. Rebase the current branch onto the updated local base branch when a base
-    branch was resolved.
+21. Rebase the current branch onto the refreshed local base branch when a base
+    branch was resolved. This is the step that brings the current base branch
+    history into the feature branch; do not use merge for this workflow.
 22. If conflicts occur during either current-branch rebase, resolve them only
     when the intended result is clear; otherwise stop and report.
 23. Push only the current branch:
@@ -129,9 +141,9 @@ If the current branch is not the local base branch:
 25. Verify that the current branch and its upstream are synchronized after the
     push when an upstream is configured or was created.
 26. Verify that the current worktree is still on the original current branch.
-27. Report the final commit hash, commit message, current branch, updated base
-    branch, whether the base branch push was skipped, and the current-branch push
-    result.
+27. Report the final commit hash, commit message, current branch, refreshed local
+    base branch, whether the base branch push was skipped, and the current-branch
+    push result.
 
 Do not create an empty commit.
 Do not commit secrets or unrelated files.
@@ -142,6 +154,8 @@ Do not push the local base branch when the current branch is not the base branch
 Do not switch the current worktree away from a feature branch during the
 feature-branch save path.
 Do not create a merge commit; use rebase for branch synchronization.
+Do not merge the local base branch into the current branch; rebase the current
+branch onto the refreshed local base branch instead.
 Do not force-push the local base branch.
 Use `--force-with-lease` only for the current non-base branch after a rebase and
 only after fetching that branch's upstream.

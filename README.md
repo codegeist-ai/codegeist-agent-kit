@@ -37,12 +37,17 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
-- Updated `/save` so it is branch-aware: base-branch saves still rebase and push
-  the base branch, while feature-branch saves update the local base branch from
-  upstream first, then rebase and push only the current branch.
-- Added a narrow `/save` safety rule for rebased feature branches: use
+- Clarified `/save` branch behavior: when a local base branch is resolved, the
+  workflow refreshes that local base branch from its configured upstream before
+  using it as a rebase base. Base-branch saves can then push the base branch with
+  a normal non-force push.
+- Clarified `/save` feature-branch behavior: the current branch is rebased over
+  its own upstream when needed, then rebased onto the refreshed local base branch,
+  and only the current branch is pushed. The feature-branch path must not merge,
+  fast-forward, push, or force-push the local base branch.
+- Kept the narrow `/save` safety rule for rebased feature branches: use
   `--force-with-lease` only for the current non-base branch after fetching its
-  upstream, and never force-push the local base branch.
+  upstream, and only when a rebase rewrote commits already present upstream.
 - Updated shared AI-ready documentation guidance to prefer detailed explanatory
   class and function comments when they help later coding agents understand
   behavior, inputs, outputs, side effects, failure paths, constraints, and major
