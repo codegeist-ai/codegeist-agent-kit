@@ -24,8 +24,8 @@ Shared workflow commands intended to work across repos.
 - `/rebase` - rebase the current branch onto the repo's local base branch.
 - `/save` - run memory, learn, submodule refresh, commit, branch rebase, and
   push. On the local base branch it may push that base branch; on a feature
-  branch it updates the base branch from its upstream first, then pushes only
-  the current branch.
+  branch it refreshes the local base branch from upstream, rebases the current
+  branch onto that refreshed base, and pushes only the current branch.
 - `/session-title` - generate a short session title from the current branch and
   recent result.
 - `/task` - manage task folders under `docs/tasks/` with the actions `spec`,
