@@ -106,6 +106,7 @@ jq -e '
   (.browser.browserName == "chromium") and
   (.browser.launchOptions.executablePath == "/usr/local/bin/chrome") and
   (.browser.launchOptions.headless == false) and
+  (.browser.launchOptions.chromiumSandbox == true) and
   (.browser.launchOptions.ignoreDefaultArgs | index("--disable-blink-features=AutomationControlled")) and
   (.browser.contextOptions | not)
 ' "${target}/playwright-mcp.json" >/dev/null \
