@@ -60,9 +60,12 @@ branch should contain only runtime files needed by consuming repositories:
   Playwright's unsupported `--disable-blink-features=AutomationControlled`
   default argument when the installed Chrome build warns about it.
 - Configured the shared Playwright MCP server with
-  `PLAYWRIGHT_MCP_USER_DATA_DIR=/mnt/codegeist/chrome-cdp-profile` so it can use
-  the same persistent Chrome profile mounted by Codegeist devcontainers and
-  launched by the `chrome` wrapper.
+  `PLAYWRIGHT_MCP_USER_DATA_DIR=.chrome` so it uses the consuming repository's
+  workspace-local ignored Chrome profile instead of the removed
+  `/mnt/codegeist/chrome-cdp-profile` mount.
+- Updated `/add-agent-kit` to accept `config` as a shared upstream target for
+  repo-agnostic OpenCode configuration changes such as `opencode.json` and
+  `playwright-mcp.json` updates.
 - Updated `/add-agent-kit` guidance to use a unique user-owned temporary source
   checkout path created with `mktemp` instead of the fixed `/tmp/opencode` path,
   which can be root-owned and unwritable in shared devcontainer environments.
@@ -70,7 +73,9 @@ branch should contain only runtime files needed by consuming repositories:
   tool-access rule. After updating `.opencode`, restart OpenCode so the updated
   `opencode.json`, `playwright-mcp.json`, and `rules/tools.md` are loaded.
   Playwright browser workflows require `npx` and a `chrome` launcher at
-  `/usr/local/bin/chrome` in the runtime environment.
+  `/usr/local/bin/chrome` in the runtime environment. No `/mnt/codegeist` mount
+  is required; browser profile state is kept under `.chrome/` in the opened
+  workspace and should stay ignored by Git.
 - Added `tools.md` to define Bash and system command access for coding agents:
   built-in OpenCode tools stay preferred for direct file and workflow operations,
   but agents may use any available Bash command, shell script, Python code,
@@ -187,7 +192,7 @@ to this agent kit instead of only creating local `.oc_local/` overlays. The
 intended command shape is:
 
 ```text
-/add-agent-kit command|rule|skill <description of the shared behavior>
+/add-agent-kit command|rule|skill|config <description of the shared behavior>
 /add-agent-kit move <explicit .oc_local command, rule, or skill path>
 ```
 
@@ -209,10 +214,11 @@ Expected autonomous workflow for the agent:
    a unique directory created with `mktemp -d "${TMPDIR:-/tmp}/opencode-agent-kit.XXXXXX"`;
    do not rely on a fixed `/tmp/opencode` path because shared environments may
    create it as root-owned and unwritable to the workspace user.
-3. Implement the requested shared `command`, `rule`, or `skill` in the source
-   paths of that temporary checkout: `commands/`, `rules/`, `skills/`,
-   `ai-scripts/`, `plugin/`, `opencode.json`, and `README_release.md` as
-   applicable. For `move`, start only from the explicitly selected
+3. Implement the requested shared `command`, `rule`, `skill`, or `config` in the
+   source paths of that temporary checkout: `commands/`, `rules/`, `skills/`,
+   `ai-scripts/`, `plugin/`, `opencode.json`, `playwright-mcp.json`, and
+   `README_release.md` as applicable. For `move`, start only from the explicitly
+   selected
    `.oc_local/commands/`, `.oc_local/rules/`, or `.oc_local/skills/` overlays
    and rewrite them into repo-agnostic shared form before adding them upstream.
    Do not move whole `.oc_local/` directories or infer extra files that the user

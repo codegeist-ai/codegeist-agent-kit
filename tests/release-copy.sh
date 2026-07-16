@@ -95,6 +95,8 @@ jq -e '
   (.mcp.context7.type == "local") and
   (.mcp.playwright.type == "local") and
   (.mcp.playwright.command == ["npx", "-y", "@playwright/mcp@latest", "--config", ".opencode/playwright-mcp.json"]) and
+  (.mcp.playwright.environment.PLAYWRIGHT_MCP_USER_DATA_DIR == ".chrome") and
+  ((.mcp.playwright.environment.PLAYWRIGHT_MCP_USER_DATA_DIR | contains("/mnt/codegeist")) | not) and
   (.mcp.grep_app.type == "remote") and
   (.mcp.fetch.type == "local") and
   (.mcp.repomix.type == "local")
@@ -113,6 +115,10 @@ node --check "${target}/plugin/graphify.js" >/dev/null \
 if ! grep -F 'mktemp -d "${TMPDIR:-/tmp}/opencode-agent-kit.XXXXXX"' \
     "${target}/commands/add-agent-kit.md" >/dev/null; then
   fail "add-agent-kit command must recommend a user-owned temp source checkout"
+fi
+if ! grep -F 'command|rule|skill|config <description of the shared behavior>' \
+    "${target}/commands/add-agent-kit.md" >/dev/null; then
+  fail "add-agent-kit command must support shared config changes"
 fi
 if grep -F 'under `/tmp/opencode`' "${target}/commands/add-agent-kit.md" >/dev/null; then
   fail "add-agent-kit command must not recommend fixed /tmp/opencode checkout path"
