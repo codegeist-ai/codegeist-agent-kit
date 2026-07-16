@@ -13,7 +13,7 @@ $ARGUMENTS
 Expected argument shape:
 
 ```text
-command|rule|skill <description of the shared behavior>
+command|rule|skill|config <description of the shared behavior>
 move <explicit .oc_local command, rule, or skill path>
 ```
 
@@ -33,8 +33,8 @@ Before changing anything:
 4. Stop and report if `.opencode` is missing, is not a Git checkout, or has no
    configured branch.
 5. Confirm from the user request whether the target is `command`, `rule`,
-   `skill`, or `move`; if the type is missing or ambiguous, ask one short
-   clarification question before proceeding.
+   `skill`, `config`, or `move`; if the type is missing or ambiguous, ask one
+   short clarification question before proceeding.
 6. Only continue with an upstream agent-kit change when the requested behavior
    is generic across repositories with unrelated domains, products,
    architectures, and deployment models. Shared additions must not encode
@@ -82,9 +82,10 @@ Then perform the upstream source workflow autonomously:
    create it as root-owned and unwritable to the workspace user.
 2. In the temporary source checkout, implement the smallest correct shared
    change in the source paths: `commands/`, `rules/`, `skills/`, `ai-scripts/`,
-   `plugin/`, `opencode.json`, and `README_release.md` as applicable. For
-   `move`, copy and generalize the local overlay content into the matching
-   source path instead of keeping consumer-specific assumptions.
+   `plugin/`, `opencode.json`, `playwright-mcp.json`, and
+   `README_release.md` as applicable. For `move`, copy and generalize the local
+   overlay content into the matching source path instead of keeping
+   consumer-specific assumptions.
 3. Keep all durable repository text, command text, rule text, comments, commit
    messages, and user-facing help in English.
 4. Update `commands/README.md`, `rules/README.md`, `README_release.md`, or other

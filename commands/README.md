@@ -39,9 +39,10 @@ Shared workflow commands intended to work across repos.
   local navigation and search hints.
 - `/create-ai-script` - create a repo-local AI helper script when one is
   justified.
-- `/add-agent-kit` - add reusable shared commands, rules, or skills upstream, or
-  move generic `.oc_local/` overlays into the shared agent kit, then update the
-  consuming repo's `.opencode` submodule to the new release.
+- `/add-agent-kit` - add reusable shared commands, rules, skills, or OpenCode
+  configuration upstream, or move generic `.oc_local/` overlays into the shared
+  agent kit, then update the consuming repo's `.opencode` submodule to the new
+  release.
 
 ## Local Overlays
 
