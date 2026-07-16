@@ -94,7 +94,7 @@ jq -e '
   (.permission.external_directory["/tmp/**"] == "allow") and
   (.mcp.context7.type == "local") and
   (.mcp.playwright.type == "local") and
-  (.mcp.playwright.command == ["npx", "-y", "@playwright/mcp@latest", "--config", ".opencode/playwright-mcp.json"]) and
+  (.mcp.playwright.command == ["npx", "-y", "@playwright/mcp@latest", "--sandbox", "--config", ".opencode/playwright-mcp.json"]) and
   (.mcp.playwright.environment.PLAYWRIGHT_MCP_USER_DATA_DIR == ".chrome") and
   ((.mcp.playwright.environment.PLAYWRIGHT_MCP_USER_DATA_DIR | contains("/mnt/codegeist")) | not) and
   (.mcp.grep_app.type == "remote") and

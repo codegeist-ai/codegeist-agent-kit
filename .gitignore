@@ -3,3 +3,6 @@ bun.lock
 package.json
 package-lock.json
 .local.env
+/.worktrees/
+/.codegeist/.local.env
+/.chrome/
