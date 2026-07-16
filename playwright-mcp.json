@@ -4,6 +4,7 @@
     "launchOptions": {
       "executablePath": "/usr/local/bin/chrome",
       "headless": false,
+      "chromiumSandbox": true,
       "ignoreDefaultArgs": [
         "--disable-blink-features=AutomationControlled"
       ]
