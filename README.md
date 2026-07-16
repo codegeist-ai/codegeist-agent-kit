@@ -37,8 +37,9 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
-- Enabled Playwright's Chromium sandbox so its MCP browser launch no longer
-  adds the unsupported `--no-sandbox` Chrome argument.
+- Explicitly pass Playwright MCP's `--sandbox` CLI override in addition to the
+  browser launch option so current `@playwright/mcp@latest` releases no longer
+  add the unsupported `--no-sandbox` Chrome argument during config merging.
 - Clarified `/save` branch behavior: when a local base branch is resolved, the
   workflow refreshes that local base branch from its configured upstream before
   using it as a rebase base. Base-branch saves can then push the base branch with

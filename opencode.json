@@ -51,6 +51,7 @@
         "npx",
         "-y",
         "@playwright/mcp@latest",
+        "--sandbox",
         "--config",
         ".opencode/playwright-mcp.json"
       ],
