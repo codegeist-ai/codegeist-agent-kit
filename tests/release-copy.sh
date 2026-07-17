@@ -103,6 +103,7 @@ jq -e '
 ' "${target}/opencode.json" >/dev/null \
   || fail "release opencode.json is missing expected OpenCode config"
 jq -e '
+  (.outputDir == ".chrome/playwright-mcp") and
   (.browser.browserName == "chromium") and
   (.browser.launchOptions.executablePath == "/usr/local/bin/chrome") and
   (.browser.launchOptions.headless == false) and

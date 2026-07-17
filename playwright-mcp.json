@@ -1,4 +1,5 @@
 {
+  "outputDir": ".chrome/playwright-mcp",
   "browser": {
     "browserName": "chromium",
     "launchOptions": {

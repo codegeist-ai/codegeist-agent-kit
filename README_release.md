@@ -37,6 +37,9 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Moved Playwright MCP snapshots, console logs, screenshots, and related output
+  under the workspace-local ignored `.chrome/playwright-mcp/` directory instead
+  of creating `.playwright-mcp/` at the workspace root.
 - Explicitly pass Playwright MCP's `--sandbox` CLI override in addition to the
   browser launch option so current `@playwright/mcp@latest` releases no longer
   add the unsupported `--no-sandbox` Chrome argument during config merging.
