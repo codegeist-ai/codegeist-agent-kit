@@ -82,8 +82,8 @@ Then perform the upstream source workflow autonomously:
    create it as root-owned and unwritable to the workspace user.
 2. In the temporary source checkout, implement the smallest correct shared
    change in the source paths: `commands/`, `rules/`, `skills/`, `ai-scripts/`,
-   `plugin/`, `opencode.json`, `playwright-mcp.json`, and
-   `README_release.md` as applicable. For `move`, copy and generalize the local
+   `opencode.json`, `playwright-mcp.json`, and `README_release.md` as applicable.
+   For `move`, copy and generalize the local
    overlay content into the matching source path instead of keeping
    consumer-specific assumptions.
 3. Keep all durable repository text, command text, rule text, comments, commit

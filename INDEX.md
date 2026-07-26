@@ -5,7 +5,7 @@ Agent-owned navigation map for the shared OpenCode workspace.
 ## When To Read This
 
 - Read this when starting work in the shared agent kit or when looking for the
-  right command, rule, skill, or plugin file.
+  right command, rule, or skill file.
 - In this source repository and consuming repositories, `opencode.json` loads
   this as the repository-root `INDEX.md`.
 
@@ -15,12 +15,11 @@ Agent-owned navigation map for the shared OpenCode workspace.
 - `commands/` - reusable slash-command workflow definitions.
 - `rules/` - durable instructions loaded by `opencode.json`.
 - `skills/` - specialized workflows that can be loaded on demand.
-- `plugin/` - optional Graphify OpenCode integration.
 - `docs/tasks/` - source-repository task guide and local implementation specs for
   accepted work.
 - `.github/workflows/ci.yml` - read-only contributor CI that runs `task test`.
 - `opencode.json` - runtime configuration that loads shared instructions,
-  plugins, MCP servers, and permissions.
+  MCP servers, and permissions.
 - `playwright-mcp.json` - Playwright MCP browser launch configuration copied
   into the generated release bundle.
 - `README.md` - source-repository overview for maintainers.

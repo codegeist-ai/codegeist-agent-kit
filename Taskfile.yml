@@ -21,7 +21,7 @@
 #
 # Related files:
 # - README_release.md copied as README.md, LICENSE, opencode.json,
-#   playwright-mcp.json, ai-scripts/, commands/, rules/, skills/, plugin/
+#   playwright-mcp.json, ai-scripts/, commands/, rules/, skills/
 # - INDEX.md is intentionally excluded from RELEASE_PATHS because it belongs to
 #   the consuming repository root, not the generated .opencode submodule.
 
@@ -32,7 +32,7 @@ vars:
   RELEASE_REMOTE: '{{default "origin" .RELEASE_REMOTE}}'
   RELEASE_SOURCE: '{{default "HEAD" .RELEASE_SOURCE}}'
   RELEASE_WORKTREE: '{{default ".release-build" .RELEASE_WORKTREE}}'
-  RELEASE_PATHS: README_release.md LICENSE opencode.json playwright-mcp.json ai-scripts commands rules skills plugin
+  RELEASE_PATHS: README_release.md LICENSE opencode.json playwright-mcp.json ai-scripts commands rules skills
   TEST_RELEASE_DIR: '{{default "" .TEST_RELEASE_DIR}}'
 
 tasks:

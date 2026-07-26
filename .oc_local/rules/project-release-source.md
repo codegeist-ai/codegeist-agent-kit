@@ -10,7 +10,6 @@ release that consuming repositories mount at `.opencode/`.
 - Shared commands belong in `commands/`.
 - Shared skills belong in `skills/`.
 - Shared helper scripts belong in `ai-scripts/`.
-- Shared plugin source belongs in `plugin/`.
 - Shared MCP runtime config belongs in root release paths such as
   `playwright-mcp.json` when `opencode.json` references it.
 - Release documentation source belongs in `README_release.md` when it is meant
@@ -23,7 +22,7 @@ release that consuming repositories mount at `.opencode/`.
 - Do not add or update `.opencode/rules/*`, `.opencode/commands/*`,
   `.opencode/skills/*`, or `.opencode/ai-scripts/*` unless the task explicitly
   targets the release/submodule state.
-- When a shared rule, command, skill, script, or plugin changes, make the source
+- When a shared rule, command, skill, or script changes, make the source
   change in the matching root directory and let the release workflow propagate
   it to `.opencode/`.
 

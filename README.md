@@ -45,8 +45,7 @@ multiple repositories via a checked-out `.opencode/` directory.
 Consuming repositories should add the generated `release` branch as their
 `.opencode` submodule. The release branch contains only the files needed at
 runtime: `.gitignore`, `LICENSE`, `README.md`, `opencode.json`,
-`playwright-mcp.json`, `ai-scripts/`, `commands/`, `rules/`, `skills/`, and
-`plugin/`.
+`playwright-mcp.json`, `ai-scripts/`, `commands/`, `rules/`, and `skills/`.
 
 ```bash
 git submodule add -b release <repository-url> .opencode
@@ -110,8 +109,7 @@ analysis flows should live in local overlays such as:
 - Commands: see `commands/README.md`
 - Rules: see `rules/README.md`
 - Skills: currently `skills/gh-auth/SKILL.md`,
-  `skills/commit-message-guard/SKILL.md`, and
-  `skills/graphify/SKILL.md`
+  `skills/commit-message-guard/SKILL.md`
 - Directory indexes: `rules/directory-index.md` defines agent-owned `INDEX.md`
   files for navigable local context in large directories. A repository-root
   `INDEX.md` lists known directory indexes and is loaded by `opencode.json`

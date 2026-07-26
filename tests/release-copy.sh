@@ -48,13 +48,10 @@ assert_file "LICENSE"
 assert_file "README.md"
 assert_file "opencode.json"
 assert_file "playwright-mcp.json"
-assert_file "plugin/graphify.js"
-assert_file "plugin/graphify.md"
 assert_dir "ai-scripts"
 assert_dir "commands"
 assert_dir "rules"
 assert_dir "skills"
-assert_dir "plugin"
 
 assert_absent ".git"
 assert_absent ".gitmodules"
@@ -75,6 +72,8 @@ assert_absent "commands/solve-task.md"
 assert_absent "commands/finalize-task.md"
 assert_absent "commands/work-task.md"
 assert_absent "rules/task-phases.md"
+assert_absent "plugin"
+assert_absent "skills/graphify"
 
 cmp "LICENSE" "${target}/LICENSE" \
   || fail "release LICENSE content mismatch"
@@ -96,8 +95,8 @@ jq -e '
   ((.instructions | index(".opencode/INDEX.md")) | not) and
   ((.instructions | index(".opencode/rules/task-phases.md")) | not) and
   (.instructions | index(".opencode/rules/tools.md")) and
-  (.instructions | index("plugin/graphify.md")) and
-  (.plugin | index("plugin/graphify.js")) and
+  ((.instructions | map(select(test("graphify"; "i"))) | length) == 0) and
+  ((has("plugin")) | not) and
   (.permission.external_directory["/tmp/**"] == "allow") and
   (.mcp.context7.type == "local") and
   (.mcp.playwright.type == "local") and
@@ -119,8 +118,6 @@ jq -e '
   (.browser.contextOptions | not)
 ' "${target}/playwright-mcp.json" >/dev/null \
   || fail "release playwright-mcp.json is missing expected browser config"
-node --check "${target}/plugin/graphify.js" >/dev/null \
-  || fail "release graphify plugin has invalid syntax"
 if ! grep -F 'mktemp -d "${TMPDIR:-/tmp}/opencode-agent-kit.XXXXXX"' \
     "${target}/commands/add-agent-kit.md" >/dev/null; then
   fail "add-agent-kit command must recommend a user-owned temp source checkout"

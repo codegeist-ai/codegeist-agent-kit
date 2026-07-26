@@ -45,8 +45,6 @@ the smallest direct way to inspect, edit, build, test, or document the repo.
 ## AI And Research Helpers
 
 - `opencode-ai` provides the OpenCode CLI runtime used by this workspace.
-- `graphifyy` supports knowledge-graph extraction and analysis when graph work
-  is explicitly requested.
 - `ddgr` performs DuckDuckGo searches from the command line.
 - `trafilatura` extracts main text content from web pages and HTML documents.
 - `lxml_html_clean` supports HTML cleaning workflows used by Python tooling.
