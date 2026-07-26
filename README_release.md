@@ -48,6 +48,9 @@ branch should contain only runtime files needed by consuming repositories:
   of creating `.playwright-mcp/` at the workspace root.
 - Removed the Graphify OpenCode plugin, instruction, and skill from the shared
   runtime bundle.
+- Consumer action: after updating `.opencode`, restart OpenCode. Consumers that
+  relied on Graphify must move that behavior to a repo-local overlay or external
+  tool; consumers that did not use Graphify require no migration.
 - Explicitly pass Playwright MCP's `--sandbox` CLI override in addition to the
   browser launch option so current `@playwright/mcp@latest` releases no longer
   add the unsupported `--no-sandbox` Chrome argument during config merging.
