@@ -2,7 +2,11 @@
 
 Status: open
 
-Public Tracking: pending issue creation
+Public Tracking: https://github.com/codegeist-ai/codegeist-agent-kit/issues/2
+
+Contribution Level: beginner (`good first issue`)
+
+Effort: small
 
 ## Goal
 
