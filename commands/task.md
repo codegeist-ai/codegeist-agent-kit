@@ -98,7 +98,7 @@ implementation pass.
 git --no-pager diff --check
 ```
 
-9. Use status `implemented` when verification passes. Use `blocked` when a user
+9. Use status `solved` when verification passes. Use `blocked` when a user
    decision, failing dependency, or unresolved specification gap prevents safe
    implementation.
 

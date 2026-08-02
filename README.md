@@ -17,6 +17,13 @@ multiple repositories via a checked-out `.opencode/` directory.
 - `commands/` - shared slash-command definitions
 - `rules/` - shared durable workflow and editing rules
 - `skills/` - shared reusable skills
+- `docs/tasks/` - local implementation specifications linked from public Issues
+- `CONTRIBUTING.md` - repository-specific source contribution workflow
+- `LICENSE` - Zero-Clause BSD license for Codegeist-owned material
+- `README.md` - this source repository's contributor and maintainer guide; it is
+  not copied into the generated release
+- `README_release.md` - release consumer guide copied to `README.md` in the
+  generated `.opencode` bundle
 - `INDEX.md` - root agent navigation index for this source repository; it is not
   copied into the generated `.opencode` release submodule
 - `opencode.json` - OpenCode config for loading the shared rule set
@@ -36,8 +43,9 @@ multiple repositories via a checked-out `.opencode/` directory.
 
 Consuming repositories should add the generated `release` branch as their
 `.opencode` submodule. The release branch contains only the files needed at
-runtime: `.gitignore`, `README.md`, `opencode.json`, `playwright-mcp.json`,
-`ai-scripts/`, `commands/`, `rules/`, `skills/`, and `plugin/`.
+runtime: `.gitignore`, `LICENSE`, `README.md`, `opencode.json`,
+`playwright-mcp.json`, `ai-scripts/`, `commands/`, `rules/`, `skills/`, and
+`plugin/`.
 
 ```bash
 git submodule add -b release <repository-url> .opencode
@@ -50,11 +58,40 @@ To update an existing consuming repository to the latest release branch commit:
 git submodule update --remote .opencode
 ```
 
-Maintainers build and push the release branch from this repository with:
+After source review, maintainers build and push the release branch from this
+repository with:
 
 ```bash
 task release-build
 ```
+
+## Contributing
+
+Source work starts from `main` and a topic branch, never from the generated
+`release` branch or a consuming repository's `.opencode/` checkout. Read the
+[local contribution guide](CONTRIBUTING.md), find public work in
+[Issues](https://github.com/codegeist-ai/codegeist-agent-kit/issues) and the
+[Codegeist roadmap](https://github.com/users/codegeist-ai/projects/1), and use the
+[local task guide](docs/tasks/README.md) for accepted implementation
+specifications.
+
+The canonical normal check is non-publishing:
+
+```bash
+task test
+```
+
+Effective account-wide guidance is provided by the shared
+[contribution policy](https://github.com/codegeist-ai/.github/blob/main/CONTRIBUTING.md),
+[Code of Conduct](https://github.com/codegeist-ai/.github/blob/main/CODE_OF_CONDUCT.md),
+[security policy](https://github.com/codegeist-ai/.github/blob/main/SECURITY.md),
+and [support guide](https://github.com/codegeist-ai/.github/blob/main/SUPPORT.md).
+Codegeist-owned material is available under the [0BSD license](LICENSE).
+
+The visible [Codegeist account profile](https://github.com/codegeist-ai) is
+sourced from [`codegeist-ai/codegeist-ai`](https://github.com/codegeist-ai/codegeist-ai).
+The separate [`codegeist-ai/.github`](https://github.com/codegeist-ai/.github)
+repository remains the source of shared community defaults.
 
 ## Shared Vs Local
 
@@ -84,6 +121,9 @@ analysis flows should live in local overlays such as:
 
 ## Development Notes
 
+- Run `task test` after source changes. It validates a temporary release copy
+  without creating or publishing a release branch.
+- Release publication is maintainer-only after review.
 - `node_modules/` is ignored.
 - `package.json` and `package-lock.json` are local-only plugin files and are
   ignored because consuming workspaces do not require pinned plugin versions.

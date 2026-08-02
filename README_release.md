@@ -26,17 +26,25 @@ configuration while leaving project-specific behavior in the consuming repo.
   and should only build or update graphs when the user explicitly asks for it.
 - `playwright-mcp.json` contains shared browser launch settings used by the
   `playwright` MCP server in `opencode.json`.
+- `LICENSE` carries the Zero-Clause BSD terms for Codegeist-owned material in
+  this distribution.
 
 The generated `release` branch is intentionally minimal. During release copy,
 this source file is renamed from `README_release.md` to `README.md`. The release
 branch should contain only runtime files needed by consuming repositories:
-`.gitignore`, `README.md`, `opencode.json`, `playwright-mcp.json`,
+`.gitignore`, `LICENSE`, `README.md`, `opencode.json`, `playwright-mcp.json`,
 `ai-scripts/`, `commands/`, `rules/`, `skills/`, and `plugin/`.
 
 ## Changelog
 
 ### Current Version
 
+- Changed `/task impl` to record successfully verified work as `solved` instead
+  of `implemented`, aligning generated task updates with the documented local
+  task lifecycle.
+- Added the canonical `0BSD` `LICENSE` to generated release bundles so the
+  distributed Codegeist-owned runtime content carries its license. No consumer
+  action is required beyond receiving a future submodule update.
 - Moved Playwright MCP snapshots, console logs, screenshots, and related output
   under the workspace-local ignored `.chrome/playwright-mcp/` directory instead
   of creating `.playwright-mcp/` at the workspace root.
@@ -190,6 +198,38 @@ Project-specific behavior belongs outside this shared submodule, typically in:
 Do not add product-specific deployment steps, architecture assumptions, branch
 names, or planning rules to the shared `.opencode` submodule unless they are
 intended to apply across all consuming repositories.
+
+## Contributing Upstream
+
+This checkout is generated distribution content. Propose generic shared
+OpenCode behavior in the
+[`codegeist-agent-kit` source repository](https://github.com/codegeist-ai/codegeist-agent-kit)
+from a topic branch based on source `main`; do not implement it on `release` or
+inside a consuming `.opencode/` checkout. Project-specific behavior belongs in
+the consuming repository's `.oc_local/` overlay.
+
+Use the source repository's
+[contribution guide](https://github.com/codegeist-ai/codegeist-agent-kit/blob/main/CONTRIBUTING.md),
+[Issues](https://github.com/codegeist-ai/codegeist-agent-kit/issues),
+[local task guide](https://github.com/codegeist-ai/codegeist-agent-kit/blob/main/docs/tasks/README.md),
+and the [Codegeist roadmap](https://github.com/users/codegeist-ai/projects/1).
+These links deliberately target source `main`; contributor docs and local task
+specifications are not files in this generated release bundle.
+The effective shared policies are the Codegeist
+[contribution policy](https://github.com/codegeist-ai/.github/blob/main/CONTRIBUTING.md),
+[Code of Conduct](https://github.com/codegeist-ai/.github/blob/main/CODE_OF_CONDUCT.md),
+[security policy](https://github.com/codegeist-ai/.github/blob/main/SECURITY.md),
+and [support guide](https://github.com/codegeist-ai/.github/blob/main/SUPPORT.md).
+The distributed files are licensed under [0BSD](LICENSE).
+
+The canonical source check is:
+
+```bash
+task test
+```
+
+It validates a temporary release copy without publishing. Release publication
+is maintainer-only after source review.
 
 ## Extending This Agent Kit
 
