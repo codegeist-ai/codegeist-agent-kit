@@ -2,7 +2,7 @@
 
 Status: open
 
-Public Tracking: pending issue creation
+Public Tracking: https://github.com/codegeist-ai/codegeist-agent-kit/issues/4
 
 Contribution Level: intermediate
 
