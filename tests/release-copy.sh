@@ -44,6 +44,7 @@ if [ ! -d "${target}" ]; then
 fi
 
 assert_file ".gitignore"
+assert_file "LICENSE"
 assert_file "README.md"
 assert_file "opencode.json"
 assert_file "playwright-mcp.json"
@@ -62,6 +63,9 @@ assert_absent ".gitmodules"
 assert_absent ".opencode"
 assert_absent ".devcontainer"
 assert_absent ".oc_local"
+assert_absent ".github"
+assert_absent "CONTRIBUTING.md"
+assert_absent "docs"
 assert_absent "Taskfile.yml"
 assert_absent "compose.local.yml"
 assert_absent "README_release.md"
@@ -71,6 +75,9 @@ assert_absent "commands/solve-task.md"
 assert_absent "commands/finalize-task.md"
 assert_absent "commands/work-task.md"
 assert_absent "rules/task-phases.md"
+
+cmp "LICENSE" "${target}/LICENSE" \
+  || fail "release LICENSE content mismatch"
 
 expected_gitignore=$(mktemp /tmp/opencode-release-gitignore.XXXXXX)
 trap 'rm -f "${expected_gitignore}"' EXIT
