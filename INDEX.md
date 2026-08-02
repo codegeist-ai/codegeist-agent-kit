@@ -16,8 +16,8 @@ Agent-owned navigation map for the shared OpenCode workspace.
 - `rules/` - durable instructions loaded by `opencode.json`.
 - `skills/` - specialized workflows that can be loaded on demand.
 - `plugin/` - optional Graphify OpenCode integration.
-- `docs/tasks/` - source-repository task guide and local implementation specs
-  linked from public Issues.
+- `docs/tasks/` - source-repository task guide and local implementation specs for
+  accepted work.
 - `.github/workflows/ci.yml` - read-only contributor CI that runs `task test`.
 - `opencode.json` - runtime configuration that loads shared instructions,
   plugins, MCP servers, and permissions.
