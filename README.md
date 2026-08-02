@@ -17,7 +17,8 @@ multiple repositories via a checked-out `.opencode/` directory.
 - `commands/` - shared slash-command definitions
 - `rules/` - shared durable workflow and editing rules
 - `skills/` - shared reusable skills
-- `docs/tasks/` - local implementation specifications linked from public Issues
+- `docs/tasks/` - local task guide and implementation specifications for accepted
+  repository work
 - `CONTRIBUTING.md` - repository-specific source contribution workflow
 - `LICENSE` - Zero-Clause BSD license for Codegeist-owned material
 - `README.md` - this source repository's contributor and maintainer guide; it is
