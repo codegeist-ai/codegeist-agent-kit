@@ -22,8 +22,7 @@
     ".opencode/rules/software-tests.md",
     ".opencode/rules/task-workflow.md",
     ".opencode/rules/taskfile-and-script-creation.md",
-    ".opencode/README.md",
-    "plugin/graphify.md"
+    ".opencode/README.md"
   ],
   "watcher": {
     "ignore": [
@@ -75,20 +74,8 @@
       ],
       "enabled": true,
       "timeout": 15000
-    },
-    "repomix": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "repomix",
-        "--mcp"
-      ]
     }
   },
-  "plugin": [
-    "plugin/graphify.js"
-  ],
   "permission": {
     "external_directory": {
       "/tmp/**": "allow"

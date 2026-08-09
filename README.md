@@ -2,12 +2,12 @@
 
 This repository provides a reusable OpenCode workspace that consuming git
 repositories mount as a `.opencode` submodule. It gives an LLM coding agent a
-shared set of rules, commands, skills, helper scripts, and OpenCode plugin
+shared set of rules, commands, skills, helper scripts, and OpenCode runtime
 configuration while leaving project-specific behavior in the consuming repo.
 
 ## What This Submodule Provides
 
-- `opencode.json` loads the shared instructions, MCP servers, plugin files, and
+- `opencode.json` loads the shared instructions, MCP servers, and
   external-directory permissions expected by OpenCode.
 - `opencode.json` can load a repository-root `INDEX.md` owned by the consuming
   repository; the shared `.opencode` submodule does not ship that file.
@@ -18,12 +18,10 @@ configuration while leaving project-specific behavior in the consuming repo.
 - `commands/` contains reusable slash-command workflows such as `/save`,
   `/commit`, `/learn`, `/update-chat`, `/git-sync`, `/rebase`, `/task`,
   `/update-index`, and `/update-submodules`.
-- `skills/` contains targeted reusable workflows, currently `gh-auth`,
-  `commit-message-guard`, and `graphify`.
+- `skills/` contains targeted reusable workflows, currently `gh-auth` and
+  `commit-message-guard`.
 - `ai-scripts/` contains helper scripts used by the commands and skills, such
   as `commit-message-guard.sh`.
-- `plugin/` contains Graphify OpenCode integration files. Graphify is optional
-  and should only build or update graphs when the user explicitly asks for it.
 - `playwright-mcp.json` contains shared browser launch settings used by the
   `playwright` MCP server in `opencode.json`.
 
@@ -31,15 +29,35 @@ The generated `release` branch is intentionally minimal. During release copy,
 this source file is renamed from `README_release.md` to `README.md`. The release
 branch should contain only runtime files needed by consuming repositories:
 `.gitignore`, `README.md`, `opencode.json`, `playwright-mcp.json`,
-`ai-scripts/`, `commands/`, `rules/`, `skills/`, and `plugin/`.
+`ai-scripts/`, `commands/`, `rules/`, and `skills/`.
 
 ## Changelog
 
 ### Current Version
 
+- Removed the shared `repomix` MCP server while keeping the Repomix CLI
+  available as a standalone analysis tool.
+- Consumer action: after updating `.opencode`, restart OpenCode. Workflows that
+  relied on Repomix MCP tools must use the CLI or a repo-local MCP configuration;
+  standalone Repomix CLI usage is unchanged.
+- Expanded AI-ready source guidance so non-trivial modules, classes, functions,
+  and blocks carry contract-level comments or docstrings and may link to focused
+  repo-owned Markdown documentation for deeper context.
+- Added operation-boundary logging guidance for scripts and source code, with
+  stable structured events, separate diagnostic and payload streams, and
+  explicit requirements for output evaluated by LLMs or automation.
+- Consumer action: after updating `.opencode`, restart OpenCode so coding agents
+  load the new reviewability rules. No repository migration is required; apply
+  the comment, documentation, and logging contract when creating or changing
+  non-trivial behavior.
 - Moved Playwright MCP snapshots, console logs, screenshots, and related output
   under the workspace-local ignored `.chrome/playwright-mcp/` directory instead
   of creating `.playwright-mcp/` at the workspace root.
+- Removed the Graphify OpenCode plugin, instruction, and skill from the shared
+  runtime bundle.
+- Consumer action: after updating `.opencode`, restart OpenCode. Consumers that
+  relied on Graphify must move that behavior to a repo-local overlay or external
+  tool; consumers that did not use Graphify require no migration.
 - Explicitly pass Playwright MCP's `--sandbox` CLI override in addition to the
   browser launch option so current `@playwright/mcp@latest` releases no longer
   add the unsupported `--no-sandbox` Chrome argument during config merging.
@@ -54,10 +72,6 @@ branch should contain only runtime files needed by consuming repositories:
 - Kept the narrow `/save` safety rule for rebased feature branches: use
   `--force-with-lease` only for the current non-base branch after fetching its
   upstream, and only when a rebase rewrote commits already present upstream.
-- Updated shared AI-ready documentation guidance to prefer detailed explanatory
-  class and function comments when they help later coding agents understand
-  behavior, inputs, outputs, side effects, failure paths, constraints, and major
-  branches.
 - Added a shared `playwright` MCP server that starts `@playwright/mcp@latest`
   through `npx` and loads `.opencode/playwright-mcp.json` for browser launch
   settings.
@@ -222,7 +236,7 @@ Expected autonomous workflow for the agent:
    create it as root-owned and unwritable to the workspace user.
 3. Implement the requested shared `command`, `rule`, `skill`, or `config` in the
    source paths of that temporary checkout: `commands/`, `rules/`, `skills/`,
-   `ai-scripts/`, `plugin/`, `opencode.json`, `playwright-mcp.json`, and
+   `ai-scripts/`, `opencode.json`, `playwright-mcp.json`, and
    `README_release.md` as applicable. For `move`, start only from the explicitly
    selected
    `.oc_local/commands/`, `.oc_local/rules/`, or `.oc_local/skills/` overlays
@@ -346,16 +360,6 @@ authentication.
   important context.
 - Use `/learn` for reusable guidance that should become a durable rule.
 - Prefer updating an existing rule over adding broad or duplicative guidance.
-
-## Graphify Notes
-
-Graphify is available as an optional OpenCode aid. For normal coding tasks:
-
-- Read existing graph reports under `docs/graphify/` when they are relevant.
-- Prefer graph queries only when a matching existing `graph.json` is available.
-- Do not run graph-building commands such as `graphify install`,
-  `graphify update`, or `graphify extract` unless the user explicitly requests
-  graph generation.
 
 ## Maintaining This Shared Repository
 

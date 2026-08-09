@@ -88,8 +88,11 @@ implementation pass.
 5. Outside plan mode, implement the smallest correct change. Every line of code
    must earn its place; avoid speculative abstractions, boilerplate, and broad
    rewrites.
-6. Document why non-obvious code changes exist in task notes or nearby durable
-   docs. Add code comments only when they materially improve understanding.
+6. Make changed behavior reviewable as required by the documentation and
+   scripting rules. Add or update contract-level comments and docstrings for
+   non-trivial modules, classes, functions, and blocks; link focused repo-owned
+   Markdown docs for deeper context; and add meaningful operation-boundary logs
+   where runtime behavior must be reconstructed by humans, LLMs, or automation.
 7. Update tests, documentation, task status, and implementation notes according
    to the task's acceptance criteria and repo rules.
 8. Run enough verification to prove the acceptance criteria. At minimum, run:

@@ -39,14 +39,12 @@ the smallest direct way to inspect, edit, build, test, or document the repo.
 - `ast-grep` from `@ast-grep/cli` performs syntax-aware code search and rewrite
   work when text search is not precise enough.
 - `scc` summarizes code size, languages, and file statistics.
-- `repomix` packages local or remote codebases for AI analysis and MCP use.
+- `repomix` packages local or remote codebases for AI analysis.
 - `tiktoken-cli` estimates token usage for prompts, docs, or packed code.
 
 ## AI And Research Helpers
 
 - `opencode-ai` provides the OpenCode CLI runtime used by this workspace.
-- `graphifyy` supports knowledge-graph extraction and analysis when graph work
-  is explicitly requested.
 - `ddgr` performs DuckDuckGo searches from the command line.
 - `trafilatura` extracts main text content from web pages and HTML documents.
 - `lxml_html_clean` supports HTML cleaning workflows used by Python tooling.

@@ -16,8 +16,10 @@ Then:
    rule, or built-in tool.
 2. If a script is justified, create the smallest useful implementation under
    `.opencode/ai-scripts/`.
-3. Keep the script non-interactive by default and make its output structured and
-   easy for future AI sessions to scan.
+3. Keep the script non-interactive by default. Emit stable structured logs for
+   start, important decisions, side effects, completion, and failures so future
+   AI sessions can reconstruct the run; keep parseable payloads separate from
+   diagnostics.
 4. Add or update `.opencode/ai-scripts/README.md` when the directory changes.
 5. Refresh `@.opencode/rules/ai-scripts.md` if the new script changes durable
    guidance.

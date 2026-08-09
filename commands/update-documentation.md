@@ -20,9 +20,13 @@ Then:
    directly affected docs under `docs/` if that tree exists.
 3. Refresh counts, command lists, and file-path references when they are now
    stale.
-4. Keep documentation proportional; do not create a large new docs structure
+4. Create a focused Markdown document when rationale, diagrams, examples, log
+   fields, or operational detail would overload source comments. Add stable
+   repository-relative links from the source and a backlink to the relevant
+   implementation files.
+5. Keep documentation proportional; do not create a large new docs structure
    unless the change truly requires it.
-5. Report which files were updated, what changed, and any remaining manual
+6. Report which files were updated, what changed, and any remaining manual
    follow-up.
 
 Do not rewrite unrelated documentation just to make it look uniform.
