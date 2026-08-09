@@ -29,9 +29,11 @@ Shared AI rules intended to work across repos.
   `INDEX.md` navigation files for large directories, outside shared `.opencode`
   release content.
 - `language-policy.md` - English for code and durable repo text.
-- `ai-ready-documentation.md` - documentation standards for non-trivial files.
-- `bash-scripts.md` - minimal Bash style for repo-owned shell scripts.
-- `scripting-best-practices.md` - shell and automation guidance.
+- `ai-ready-documentation.md` - source comments, diagnostics, and documentation
+  standards for reviewable non-trivial behavior.
+- `bash-scripts.md` - direct, documented, and observable Bash style.
+- `scripting-best-practices.md` - shell automation and structured logging
+  guidance, including output consumed by LLMs.
 - `software-documentation.md` - how repo-local software documentation should be
   structured and maintained.
 - `software-tests.md` - how to write, update, and verify software tests.

@@ -43,6 +43,21 @@ branch should contain only runtime files needed by consuming repositories:
 - Added the canonical `0BSD` `LICENSE` to generated release bundles so the
   distributed Codegeist-owned runtime content carries its license. No consumer
   action is required beyond receiving a future submodule update.
+- Removed the shared `repomix` MCP server while keeping the Repomix CLI
+  available as a standalone analysis tool.
+- Consumer action: after updating `.opencode`, restart OpenCode. Workflows that
+  relied on Repomix MCP tools must use the CLI or a repo-local MCP configuration;
+  standalone Repomix CLI usage is unchanged.
+- Expanded AI-ready source guidance so non-trivial modules, classes, functions,
+  and blocks carry contract-level comments or docstrings and may link to focused
+  repo-owned Markdown documentation for deeper context.
+- Added operation-boundary logging guidance for scripts and source code, with
+  stable structured events, separate diagnostic and payload streams, and
+  explicit requirements for output evaluated by LLMs or automation.
+- Consumer action: after updating `.opencode`, restart OpenCode so coding agents
+  load the new reviewability rules. No repository migration is required; apply
+  the comment, documentation, and logging contract when creating or changing
+  non-trivial behavior.
 - Moved Playwright MCP snapshots, console logs, screenshots, and related output
   under the workspace-local ignored `.chrome/playwright-mcp/` directory instead
   of creating `.playwright-mcp/` at the workspace root.
@@ -65,10 +80,6 @@ branch should contain only runtime files needed by consuming repositories:
 - Kept the narrow `/save` safety rule for rebased feature branches: use
   `--force-with-lease` only for the current non-base branch after fetching its
   upstream, and only when a rebase rewrote commits already present upstream.
-- Updated shared AI-ready documentation guidance to prefer detailed explanatory
-  class and function comments when they help later coding agents understand
-  behavior, inputs, outputs, side effects, failure paths, constraints, and major
-  branches.
 - Added a shared `playwright` MCP server that starts `@playwright/mcp@latest`
   through `npx` and loads `.opencode/playwright-mcp.json` for browser launch
   settings.
