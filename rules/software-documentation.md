@@ -17,6 +17,8 @@ documentation.
 - Important entrypoints, commands, file paths, and related files.
 - Inputs, outputs, dependencies, and relevant configuration.
 - Constraints, failure modes, and operational sharp edges.
+- Important runtime events, log fields, and diagnostic conventions when
+  operators, tests, LLMs, or automation depend on them.
 - Real workflows or examples when they make usage clearer.
 
 ## Recommended Structure
@@ -26,6 +28,11 @@ documentation.
 - Use short command examples or file references when they improve clarity.
 - Name related files and entrypoints explicitly when readers need to move
   between them.
+- Use stable repository-relative links and section anchors when source comments
+  or other docs need deeper rationale, diagrams, examples, or operational detail.
+- Prefer a focused Markdown document when the explanation would make source
+  comments hard to scan. Keep a short contract summary in the source and link
+  the document back to the relevant implementation files.
 - Keep background material short unless it changes implementation or usage.
 
 ## Diagrams
@@ -47,6 +54,8 @@ documentation.
 - Document the current truth, not an aspirational future state.
 - Prefer concise, high-signal sections over long prose.
 - Explain why and constraints; avoid paraphrasing obvious code.
+- Make source-to-document relationships explicit enough that a reviewer can
+  move in either direction without searching by guesswork.
 - Rewrite stale sections instead of appending contradictory updates.
 - Keep examples minimal and realistic.
 - Call out assumptions or open gaps explicitly when they still matter.
@@ -56,6 +65,7 @@ documentation.
 - Update documentation in the same task when behavior changes.
 - Remove or rewrite obsolete statements promptly.
 - Keep documentation proportional to the complexity of the software.
+- Validate repo-relative source and documentation links when either side moves.
 - Refresh related diagrams when the documented architecture or behavior changes.
 - Follow repo-local path, structure, and language rules when a repo defines
   them.

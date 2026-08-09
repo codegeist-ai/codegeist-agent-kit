@@ -74,15 +74,6 @@
       ],
       "enabled": true,
       "timeout": 15000
-    },
-    "repomix": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "repomix",
-        "--mcp"
-      ]
     }
   },
   "permission": {

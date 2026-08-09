@@ -42,12 +42,29 @@ Guidance for repo-owned automation scripts and shell entrypoints.
 
 ## Comments And Logging
 
-- Comments stay in English and explain why or sharp edges, not obvious shell
-  syntax.
+- Comments stay in English and explain the script contract, important branches,
+  rationale, or sharp edges rather than narrating obvious shell syntax.
+- Non-trivial scripts and functions should name related repo-owned Markdown docs
+  when those files contain deeper workflow, safety, or operational context. Keep
+  a concise local summary beside the relevant code.
 - Reuse shared logging or helper libraries when the repo already has them
   instead of creating one-off wrappers.
+- Emit meaningful logs at each operation boundary: start, selected non-secret
+  inputs or targets, important decisions, externally visible side effects,
+  completion summary, and failures with actionable context.
+- Prefer stable, line-oriented records with explicit fields such as
+  `level=info event=release_copy status=started target=...`. Use JSON when it is
+  the established downstream contract.
+- When an LLM or automation will inspect output, use stable event names, preserve
+  expected-versus-actual values on failures, and include useful paths, counts,
+  and result summaries. Avoid spinners, ANSI-only state, and transient progress
+  output that cannot be reviewed later.
+- Send diagnostic logs to stderr and reserve stdout for the command's documented
+  payload when callers may parse it.
 - Keep raw `printf` only for exact command output, help text, or
   machine-readable data that must stay unprefixed.
+- Do not log every loop iteration or trivial helper call. Log enough operation
+  boundaries to reconstruct what ran and why without producing noise.
 - Never print secrets or credentials.
 
 ## Script Review
@@ -63,9 +80,12 @@ Guidance for repo-owned automation scripts and shell entrypoints.
   copied across multiple scripts.
 - Review whether repo shell scripts use the available shared helpers instead of
   custom status output.
+- Review whether the logs make the successful path, selected branches, side
+  effects, and failure point understandable without reading the implementation.
 
 ## Verification
 
 - Re-run the affected repo script after changing it.
 - Prefer short assertions over broad environment dumps.
-- Keep output easy to scan and focused on the contract being verified.
+- Keep output structured, easy to scan, and focused on the contract being
+  verified.

@@ -39,7 +39,7 @@ the smallest direct way to inspect, edit, build, test, or document the repo.
 - `ast-grep` from `@ast-grep/cli` performs syntax-aware code search and rewrite
   work when text search is not precise enough.
 - `scc` summarizes code size, languages, and file statistics.
-- `repomix` packages local or remote codebases for AI analysis and MCP use.
+- `repomix` packages local or remote codebases for AI analysis.
 - `tiktoken-cli` estimates token usage for prompts, docs, or packed code.
 
 ## AI And Research Helpers

@@ -52,6 +52,14 @@ assert_dir "ai-scripts"
 assert_dir "commands"
 assert_dir "rules"
 assert_dir "skills"
+assert_file "commands/create-ai-script.md"
+assert_file "commands/task.md"
+assert_file "commands/update-documentation.md"
+assert_file "commands/verify-documentation.md"
+assert_file "rules/ai-ready-documentation.md"
+assert_file "rules/bash-scripts.md"
+assert_file "rules/scripting-best-practices.md"
+assert_file "rules/software-documentation.md"
 
 assert_absent ".git"
 assert_absent ".gitmodules"
@@ -105,7 +113,7 @@ jq -e '
   ((.mcp.playwright.environment.PLAYWRIGHT_MCP_USER_DATA_DIR | contains("/mnt/codegeist")) | not) and
   (.mcp.grep_app.type == "remote") and
   (.mcp.fetch.type == "local") and
-  (.mcp.repomix.type == "local")
+  ((.mcp | has("repomix")) | not)
 ' "${target}/opencode.json" >/dev/null \
   || fail "release opencode.json is missing expected OpenCode config"
 jq -e '
