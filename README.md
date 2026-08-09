@@ -13,28 +13,43 @@ configuration while leaving project-specific behavior in the consuming repo.
   repository; the shared `.opencode` submodule does not ship that file.
   Keep project-specific index content outside `.opencode/`.
 - `rules/` contains durable agent rules for command execution, commits, tests,
-  documentation, memory-bank updates, task workflow, scripting, and related
-  engineering practices.
+  documentation, task workflow, scripting, and related engineering practices.
 - `commands/` contains reusable slash-command workflows such as `/save`,
-  `/commit`, `/learn`, `/update-chat`, `/git-sync`, `/rebase`, `/task`,
-  `/update-index`, and `/update-submodules`.
+  `/commit`, `/learn`, `/git-sync`, `/rebase`, `/task`, `/update-index`, and
+  `/update-submodules`.
 - `skills/` contains targeted reusable workflows, currently `gh-auth` and
   `commit-message-guard`.
 - `ai-scripts/` contains helper scripts used by the commands and skills, such
   as `commit-message-guard.sh`.
 - `playwright-mcp.json` contains shared browser launch settings used by the
   `playwright` MCP server in `opencode.json`.
+- `LICENSE` carries the Zero-Clause BSD terms for Codegeist-owned material in
+  this distribution.
 
 The generated `release` branch is intentionally minimal. During release copy,
 this source file is renamed from `README_release.md` to `README.md`. The release
 branch should contain only runtime files needed by consuming repositories:
-`.gitignore`, `README.md`, `opencode.json`, `playwright-mcp.json`,
+`.gitignore`, `LICENSE`, `README.md`, `opencode.json`, `playwright-mcp.json`,
 `ai-scripts/`, `commands/`, `rules/`, and `skills/`.
 
 ## Changelog
 
 ### Current Version
 
+- Removed the shared `/memory-bank` and `/update-chat` commands together with
+  the `chat.md` and `memory-bank.md` instructions. Shared workflows no longer
+  read or update `docs/memory-bank/chat.md`; `/learn` continues to capture
+  durable guidance in rule files.
+- Consumer action: after updating `.opencode`, restart OpenCode so the removed
+  instructions and commands leave the active configuration. Consumer-owned
+  files under `docs/memory-bank/` are not part of the submodule update and can be
+  removed separately when no repo-local workflow still uses them.
+- Changed `/task impl` to record successfully verified work as `solved` instead
+  of `implemented`, aligning generated task updates with the documented local
+  task lifecycle.
+- Added the canonical `0BSD` `LICENSE` to generated release bundles so the
+  distributed Codegeist-owned runtime content carries its license. No consumer
+  action is required beyond receiving a future submodule update.
 - Removed the shared `repomix` MCP server while keeping the Repomix CLI
   available as a standalone analysis tool.
 - Consumer action: after updating `.opencode`, restart OpenCode. Workflows that
@@ -199,11 +214,43 @@ Project-specific behavior belongs outside this shared submodule, typically in:
 - `.oc_local/commands/*.md`
 - `.oc_local/rules/*.md`
 - `.oc_local/skills/*/SKILL.md`
-- repo-owned docs such as `docs/memory-bank/chat.md` or `docs/tasks/`
+- repo-owned docs such as `docs/tasks/`
 
 Do not add product-specific deployment steps, architecture assumptions, branch
 names, or planning rules to the shared `.opencode` submodule unless they are
 intended to apply across all consuming repositories.
+
+## Contributing Upstream
+
+This checkout is generated distribution content. Propose generic shared
+OpenCode behavior in the
+[`codegeist-agent-kit` source repository](https://github.com/codegeist-ai/codegeist-agent-kit)
+from a topic branch based on source `main`; do not implement it on `release` or
+inside a consuming `.opencode/` checkout. Project-specific behavior belongs in
+the consuming repository's `.oc_local/` overlay.
+
+Use the source repository's
+[contribution guide](https://github.com/codegeist-ai/codegeist-agent-kit/blob/main/CONTRIBUTING.md),
+[Issues](https://github.com/codegeist-ai/codegeist-agent-kit/issues),
+[local task guide](https://github.com/codegeist-ai/codegeist-agent-kit/blob/main/docs/tasks/README.md),
+and the [Codegeist roadmap](https://github.com/users/codegeist-ai/projects/1).
+These links deliberately target source `main`; contributor docs and local task
+specifications are not files in this generated release bundle.
+The effective shared policies are the Codegeist
+[contribution policy](https://github.com/codegeist-ai/.github/blob/main/CONTRIBUTING.md),
+[Code of Conduct](https://github.com/codegeist-ai/.github/blob/main/CODE_OF_CONDUCT.md),
+[security policy](https://github.com/codegeist-ai/.github/blob/main/SECURITY.md),
+and [support guide](https://github.com/codegeist-ai/.github/blob/main/SUPPORT.md).
+The distributed files are licensed under [0BSD](LICENSE).
+
+The canonical source check is:
+
+```bash
+task test
+```
+
+It validates a temporary release copy without publishing. Release publication
+is maintainer-only after source review.
 
 ## Extending This Agent Kit
 
@@ -286,28 +333,24 @@ unrelated parent-repo changes as part of this workflow.
 
 When working inside a consuming repository that uses this submodule:
 
-1. Read any active repo memory file, usually `docs/memory-bank/chat.md`, when it
-   exists.
-2. Read relevant shared rules under `.opencode/rules/` and any local overlays
+1. Read relevant shared rules under `.opencode/rules/` and any local overlays
    under `.oc_local/rules/`.
-3. Inspect the affected repository files directly before making assumptions.
-4. Prefer repo-local commands and overlays when they define a more specific
+2. Inspect the affected repository files directly before making assumptions.
+3. Prefer repo-local commands and overlays when they define a more specific
    workflow than the shared default.
-5. Treat `.opencode` as a submodule gitlink, not as ordinary parent-repo files.
+4. Treat `.opencode` as a submodule gitlink, not as ordinary parent-repo files.
 
 ## High-Value Commands For Git Work
 
-- `/save` refreshes memory, learns durable guidance, updates shared submodules,
-  commits, rebases, and pushes the intended branch. On the local base branch it
-  may push that base branch; on a feature branch it updates the base branch from
-  upstream first, then pushes only the current branch.
+- `/save` learns durable guidance, updates shared submodules, commits, rebases,
+  and pushes the intended branch. On the local base branch it may push that base
+  branch; on a feature branch it updates the base branch from upstream first,
+  then pushes only the current branch.
 - `/commit` reviews the diff and creates a focused conventional commit.
 - `/git-sync` synchronizes the current branch and local base branch without
   creating a commit.
 - `/rebase` rebases the current branch onto the local base branch.
 - `/learn` captures durable workflow guidance in rule files.
-- `/update-chat` refreshes `docs/memory-bank/chat.md` when the repo uses it as
-  lightweight project memory.
 - `/session-title` creates a short session title from the current branch and
   recent result.
 - `/task` manages tracked task files under `docs/tasks/` with `spec`, `impl`,
@@ -351,13 +394,11 @@ If the session is not authenticated, use the `gh-auth` skill. Do not ask the
 user to paste tokens into chat when the browser login flow can complete the
 authentication.
 
-## Documentation, Memory, And Local Rules
+## Documentation And Local Rules
 
 - Keep durable repo-owned docs and comments in English. User conversations may
   use the user's preferred language, but committed project text stays English.
 - Update docs in the same task when behavior changes.
-- Update `docs/memory-bank/chat.md` when future sessions would otherwise miss
-  important context.
 - Use `/learn` for reusable guidance that should become a durable rule.
 - Prefer updating an existing rule over adding broad or duplicative guidance.
 

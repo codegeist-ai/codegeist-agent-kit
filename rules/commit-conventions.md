@@ -11,7 +11,7 @@ Detailed commit guidance that complements `commit.md`.
 - Keep the subject in English, imperative, and without a trailing period.
 - Keep the subject concise and ideally within 72 characters.
 - Use a short scope that matches the changed area, for example `run`, `build`,
-  `image`, `tests`, `opencode`, `rules`, or `chat`.
+  `image`, `tests`, `opencode`, or `rules`.
 
 ## Body
 
@@ -31,8 +31,8 @@ Detailed commit guidance that complements `commit.md`.
   message consistent with that work.
 - When a task includes submodule work, keep the submodule commit or commits and
   the parent gitlink update aligned within the same unit of work.
-- If repo memory or workflow rules change as part of the same task, include the
-  matching project-memory or `.opencode/rules/*.md` updates in that commit.
+- If workflow rules change as part of the same task, include the matching
+  documentation or `.opencode/rules/*.md` updates in that commit.
 - Do not use commit messages as a substitute for task planning; keep planning in
   repo-local planning docs and rule files.
 

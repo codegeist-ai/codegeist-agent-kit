@@ -7,7 +7,7 @@ Use English for code and all durable repo-local project text.
 - Code comments and identifiers.
 - Rule files, README-style docs, and script help text.
 - Repo-owned documentation under `docs/`, including user docs, developer docs,
-  task docs, and memory-bank summaries.
+  and task docs.
 - Repo-owned source files, configuration files, comments, identifiers, and
   examples.
 - Commit messages.

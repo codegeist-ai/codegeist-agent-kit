@@ -5,8 +5,8 @@ agent: build
 Review the current repository state and existing task docs.
 Follow @.opencode/rules/task-workflow.md,
 @.opencode/rules/language-policy.md,
-@.opencode/rules/software-documentation.md,
-@.opencode/rules/software-tests.md, and @.opencode/rules/chat.md.
+@.opencode/rules/software-documentation.md, and
+@.opencode/rules/software-tests.md.
 
 User input:
 $ARGUMENTS
@@ -101,7 +101,7 @@ implementation pass.
 git --no-pager diff --check
 ```
 
-9. Use status `implemented` when verification passes. Use `blocked` when a user
+9. Use status `solved` when verification passes. Use `blocked` when a user
    decision, failing dependency, or unresolved specification gap prevents safe
    implementation.
 
@@ -123,8 +123,7 @@ git --no-pager diff --check
 4. Append exactly one new `* <idea>` line to `docs/tasks/backlog.md`.
 5. Stage and commit only `docs/tasks/backlog.md`, even when other worktree
    changes exist.
-6. Do not update `docs/memory-bank/chat.md`, task files, or other docs for this
-   quick-capture path.
+6. Do not update task files or other docs for this quick-capture path.
 7. Push the current branch only when that push would publish just the new
    backlog-only commit; if the branch was already ahead before the new commit,
    stop and report that the push would include unrelated commits.
@@ -135,9 +134,6 @@ git --no-pager diff --check
    creating the local backlog commit.
 10. After the backlog-only commit and push attempt, stop and report the result
     without treating the backlog item as the new active task context.
-
-Update `docs/memory-bank/chat.md` when the task set changes the current focus or
-durable repo memory.
 
 Report the created or updated task files, final statuses, implementation result,
 verification commands, and any follow-up.

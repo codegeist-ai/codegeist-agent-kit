@@ -25,8 +25,8 @@ Use these rules whenever you create a git commit for this project.
   `.opencode` and `.devcontainer` as real task changes when they were refreshed
   by the task workflow; include them in the same commit instead of saving them
   separately.
-- When workflow behavior changes, include matching project-memory or rule
-  updates in the same commit when they belong to that change.
+- When workflow behavior changes, include matching documentation or rule updates
+  in the same commit when they belong to that change.
 - Do not include unrelated files, secrets, or generated noise.
 
 ## Body

@@ -3,18 +3,15 @@ description: Verify documentation completeness and consistency
 agent: build
 ---
 Review the current repository state.
-Follow @.opencode/rules/chat.md,
-@.opencode/rules/language-policy.md,
-@.opencode/rules/ai-ready-documentation.md, and
-@.opencode/rules/memory-bank.md.
+Follow @.opencode/rules/language-policy.md and
+@.opencode/rules/ai-ready-documentation.md.
 
 If the user provided extra focus, use it as a hint:
 $ARGUMENTS
 
 Then:
 1. Inventory the repo's current documentation surface, including `README.md`,
-   source comments and docstrings, any project-memory file such as
-   `docs/memory-bank/chat.md`, `.opencode/rules/*.md`,
+   source comments and docstrings, `.opencode/rules/*.md`,
    `.opencode/commands/*.md`, and `docs/` content if present.
 2. Verify that command, rule, source-comment, and Markdown references point to
    real files and useful sections.

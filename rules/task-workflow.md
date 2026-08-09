@@ -5,8 +5,6 @@ Keep task handoff small, traceable, and easy to resume.
 ## Before You Change Code
 
 - Read the relevant rules and repo docs.
-- Read the project memory file when the repo keeps one, often
-  `docs/memory-bank/chat.md`.
 - Inspect the current scripts, docs, and dirty worktree directly.
 - Choose the smallest reasonable scope for the change.
 
@@ -16,8 +14,7 @@ Keep task handoff small, traceable, and easy to resume.
 - Keep one task focused on one behavior or workflow change.
 - Use repo-local commands, docs, and reference material when they already
   exist.
-- When behavior changes, update the matching docs and project memory in the same
-  task when the repo keeps them.
+- When behavior changes, update the matching docs in the same task.
 
 ## Repo Task Files
 
@@ -62,10 +59,8 @@ Keep task handoff small, traceable, and easy to resume.
 - Run targeted verification for the changed behavior.
 - Capture durable rule changes in `.opencode/rules/` when they belong in the
   shared workflow.
-- Refresh project memory when future sessions would otherwise miss important
-  context.
-- Use `@.opencode/commands/update-chat.md`, `@.opencode/commands/learn.md`, or
-  `@.opencode/commands/save.md` when that workflow fits the repo.
+- Use `@.opencode/commands/learn.md` or `@.opencode/commands/save.md` when that
+  workflow fits the repo.
 
 ## Future Expansion
 
