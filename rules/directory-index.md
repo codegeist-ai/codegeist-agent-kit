@@ -93,8 +93,7 @@ One-line summary of what this directory owns.
 
 ## Boundaries
 
-- Do not use `INDEX.md` as a transcript, task tracker, changelog, or replacement
-  for project memory such as `docs/memory-bank/chat.md`.
+- Do not use `INDEX.md` as a transcript, task tracker, or changelog.
 - Do not store secrets, raw command output, large generated dumps, or temporary
   debugging notes.
 - Do not duplicate every file in a directory; focus on the files future agents

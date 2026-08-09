@@ -1,5 +1,5 @@
 ---
-description: Refresh memory, commit, rebase, and push the current branch
+description: Learn, refresh submodules, commit, rebase, and push the current branch
 agent: build
 ---
 Review the current repository state and the active chat context.
@@ -17,10 +17,6 @@ This workflow is branch-aware and uses rebase, not merge:
   branch onto the refreshed local base branch. Push only the current branch. Do
   not merge, fast-forward the base branch to the current branch, or push the base
   branch from this feature-branch path.
-
-If this repo uses `docs/memory-bank/chat.md` as lightweight project memory, execute
-@.opencode/commands/update-chat.md first so the memory reflects the current repo
-state and chat context.
 
 Then execute @.opencode/commands/learn.md so durable project guidance from the
 current repository state and chat context is captured before the commit.
@@ -65,8 +61,8 @@ Then:
 10. Only stage the intended parent gitlink update after the submodule commit
     exists and any configured upstream synchronization for the touched submodules
     is complete.
-11. Stage the relevant changes for the current task, including any refreshed
-    project-memory or rule updates that belong to the task. If
+11. Stage the relevant changes for the current task, including any rule updates
+    that belong to the task. If
     @.opencode/commands/update-submodules.md changed the parent gitlinks for
     `.opencode` or `.devcontainer`, treat those gitlink updates as task changes
     and stage them in this same commit.
@@ -159,7 +155,5 @@ branch onto the refreshed local base branch instead.
 Do not force-push the local base branch.
 Use `--force-with-lease` only for the current non-base branch after a rebase and
 only after fetching that branch's upstream.
-Do not update `docs/memory-bank/chat.md` after the commit only to record the
-commit hash, rebased HEAD, push result, or other routine completion metadata.
 If commit, rebase, or push fails, stop and report the exact failure.
 Do not use literal `\n` escape sequences in commit-message inputs.

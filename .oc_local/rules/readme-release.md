@@ -24,10 +24,10 @@ Use this rule when creating or updating `README_release.md`.
 - The upstream workflow for adding generic shared commands, rules, skills,
   scripts, config files, or release documentation to this agent kit.
 - Agent startup guidance that applies inside consuming repositories.
-- High-value shared commands that consumers should prefer for git, memory, task,
+- High-value shared commands that consumers should prefer for git, task,
   submodule, and release-related workflows.
-- Commit, git safety, GitHub CLI, documentation, memory, and local-rule guidance
-  that consumers need immediately.
+- Commit, git safety, GitHub CLI, documentation, and local-rule guidance that
+  consumers need immediately.
 - Maintainer notes for this source repository only when they explain how the
   release branch is generated, tested, or synchronized.
 - Troubleshooting entries for common release-submodule issues.

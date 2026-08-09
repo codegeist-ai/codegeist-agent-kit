@@ -13,11 +13,10 @@ configuration while leaving project-specific behavior in the consuming repo.
   repository; the shared `.opencode` submodule does not ship that file.
   Keep project-specific index content outside `.opencode/`.
 - `rules/` contains durable agent rules for command execution, commits, tests,
-  documentation, memory-bank updates, task workflow, scripting, and related
-  engineering practices.
+  documentation, task workflow, scripting, and related engineering practices.
 - `commands/` contains reusable slash-command workflows such as `/save`,
-  `/commit`, `/learn`, `/update-chat`, `/git-sync`, `/rebase`, `/task`,
-  `/update-index`, and `/update-submodules`.
+  `/commit`, `/learn`, `/git-sync`, `/rebase`, `/task`, `/update-index`, and
+  `/update-submodules`.
 - `skills/` contains targeted reusable workflows, currently `gh-auth` and
   `commit-message-guard`.
 - `ai-scripts/` contains helper scripts used by the commands and skills, such
@@ -37,6 +36,14 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Removed the shared `/memory-bank` and `/update-chat` commands together with
+  the `chat.md` and `memory-bank.md` instructions. Shared workflows no longer
+  read or update `docs/memory-bank/chat.md`; `/learn` continues to capture
+  durable guidance in rule files.
+- Consumer action: after updating `.opencode`, restart OpenCode so the removed
+  instructions and commands leave the active configuration. Consumer-owned
+  files under `docs/memory-bank/` are not part of the submodule update and can be
+  removed separately when no repo-local workflow still uses them.
 - Changed `/task impl` to record successfully verified work as `solved` instead
   of `implemented`, aligning generated task updates with the documented local
   task lifecycle.
@@ -207,7 +214,7 @@ Project-specific behavior belongs outside this shared submodule, typically in:
 - `.oc_local/commands/*.md`
 - `.oc_local/rules/*.md`
 - `.oc_local/skills/*/SKILL.md`
-- repo-owned docs such as `docs/memory-bank/chat.md` or `docs/tasks/`
+- repo-owned docs such as `docs/tasks/`
 
 Do not add product-specific deployment steps, architecture assumptions, branch
 names, or planning rules to the shared `.opencode` submodule unless they are
@@ -326,28 +333,24 @@ unrelated parent-repo changes as part of this workflow.
 
 When working inside a consuming repository that uses this submodule:
 
-1. Read any active repo memory file, usually `docs/memory-bank/chat.md`, when it
-   exists.
-2. Read relevant shared rules under `.opencode/rules/` and any local overlays
+1. Read relevant shared rules under `.opencode/rules/` and any local overlays
    under `.oc_local/rules/`.
-3. Inspect the affected repository files directly before making assumptions.
-4. Prefer repo-local commands and overlays when they define a more specific
+2. Inspect the affected repository files directly before making assumptions.
+3. Prefer repo-local commands and overlays when they define a more specific
    workflow than the shared default.
-5. Treat `.opencode` as a submodule gitlink, not as ordinary parent-repo files.
+4. Treat `.opencode` as a submodule gitlink, not as ordinary parent-repo files.
 
 ## High-Value Commands For Git Work
 
-- `/save` refreshes memory, learns durable guidance, updates shared submodules,
-  commits, rebases, and pushes the intended branch. On the local base branch it
-  may push that base branch; on a feature branch it updates the base branch from
-  upstream first, then pushes only the current branch.
+- `/save` learns durable guidance, updates shared submodules, commits, rebases,
+  and pushes the intended branch. On the local base branch it may push that base
+  branch; on a feature branch it updates the base branch from upstream first,
+  then pushes only the current branch.
 - `/commit` reviews the diff and creates a focused conventional commit.
 - `/git-sync` synchronizes the current branch and local base branch without
   creating a commit.
 - `/rebase` rebases the current branch onto the local base branch.
 - `/learn` captures durable workflow guidance in rule files.
-- `/update-chat` refreshes `docs/memory-bank/chat.md` when the repo uses it as
-  lightweight project memory.
 - `/session-title` creates a short session title from the current branch and
   recent result.
 - `/task` manages tracked task files under `docs/tasks/` with `spec`, `impl`,
@@ -391,13 +394,11 @@ If the session is not authenticated, use the `gh-auth` skill. Do not ask the
 user to paste tokens into chat when the browser login flow can complete the
 authentication.
 
-## Documentation, Memory, And Local Rules
+## Documentation And Local Rules
 
 - Keep durable repo-owned docs and comments in English. User conversations may
   use the user's preferred language, but committed project text stays English.
 - Update docs in the same task when behavior changes.
-- Update `docs/memory-bank/chat.md` when future sessions would otherwise miss
-  important context.
 - Use `/learn` for reusable guidance that should become a durable rule.
 - Prefer updating an existing rule over adding broad or duplicative guidance.
 

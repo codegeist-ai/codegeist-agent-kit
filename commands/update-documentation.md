@@ -3,10 +3,8 @@ description: Refresh documentation affected by recent changes
 agent: build
 ---
 Review the current repository state, recent git changes, and existing docs.
-Follow @.opencode/rules/chat.md,
-@.opencode/rules/learn.md,
-@.opencode/rules/ai-ready-documentation.md, and
-@.opencode/rules/memory-bank.md.
+Follow @.opencode/rules/learn.md and
+@.opencode/rules/ai-ready-documentation.md.
 
 If the user provided extra focus, use it as a hint:
 $ARGUMENTS
@@ -14,10 +12,9 @@ $ARGUMENTS
 Then:
 1. Identify which docs actually need updates based on the recent changes.
 2. Prefer updating the small set of repo-owned docs most likely to drift, for
-   example `README.md`, a project-memory file such as
-   `docs/memory-bank/chat.md`,
-   `.opencode/rules/README.md`, `.opencode/commands/README.md`, and any
-   directly affected docs under `docs/` if that tree exists.
+   example `README.md`, `.opencode/rules/README.md`,
+   `.opencode/commands/README.md`, and any directly affected docs under `docs/`
+   if that tree exists.
 3. Refresh counts, command lists, and file-path references when they are now
    stale.
 4. Create a focused Markdown document when rationale, diagrams, examples, log

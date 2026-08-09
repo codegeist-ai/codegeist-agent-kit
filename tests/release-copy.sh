@@ -79,9 +79,19 @@ assert_absent "commands/plan-task.md"
 assert_absent "commands/solve-task.md"
 assert_absent "commands/finalize-task.md"
 assert_absent "commands/work-task.md"
+assert_absent "commands/memory-bank.md"
+assert_absent "commands/update-chat.md"
 assert_absent "rules/task-phases.md"
+assert_absent "rules/chat.md"
+assert_absent "rules/memory-bank.md"
 assert_absent "plugin"
 assert_absent "skills/graphify"
+
+if grep -R -E \
+    'rules/(chat|memory-bank)\.md|commands/(update-chat|memory-bank)\.md|docs/memory-bank/chat\.md' \
+    "${target}/commands" "${target}/rules" >/dev/null; then
+  fail "release commands or rules still reference removed memory-bank files"
+fi
 
 cmp "LICENSE" "${target}/LICENSE" \
   || fail "release LICENSE content mismatch"
@@ -102,6 +112,8 @@ jq -e '
   (.instructions | index("INDEX.md")) and
   ((.instructions | index(".opencode/INDEX.md")) | not) and
   ((.instructions | index(".opencode/rules/task-phases.md")) | not) and
+  ((.instructions | index(".opencode/rules/chat.md")) | not) and
+  ((.instructions | index(".opencode/rules/memory-bank.md")) | not) and
   (.instructions | index(".opencode/rules/tools.md")) and
   ((.instructions | map(select(test("graphify"; "i"))) | length) == 0) and
   ((has("plugin")) | not) and

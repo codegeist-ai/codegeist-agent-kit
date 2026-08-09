@@ -18,7 +18,7 @@ Then:
    `.devcontainer` are refreshed to their configured branches after the release
    branch push.
 6. Execute @.opencode/commands/save.md with release-build context so any updated
-   parent gitlinks, docs, memory, or workflow changes are committed, rebased,
+   parent gitlinks, docs, or workflow changes are committed, rebased,
    synchronized with the local base branch, and pushed when configured.
 7. Report the release branch commit, any parent repository commit created by
    `save`, and final synchronization status.

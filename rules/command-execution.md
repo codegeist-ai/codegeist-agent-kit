@@ -4,8 +4,7 @@ Use these rules whenever you choose or run commands in this project.
 
 ## Preference Order
 
-- Prefer repo-local memory and workflow commands:
-  `@.opencode/commands/update-chat.md`, `@.opencode/commands/learn.md`,
+- Prefer repo-local workflow commands: `@.opencode/commands/learn.md`,
   `@.opencode/commands/save.md`, `@.opencode/commands/rebase.md`, and
   `@.opencode/commands/git-sync.md`.
 - When a repo-local skill already defines a specialized workflow, prefer
@@ -17,8 +16,7 @@ Use these rules whenever you choose or run commands in this project.
 - Prefer non-interactive command forms whenever a tool might prompt or open a
   pager.
 - Prefer the repo-local `/commit` or `/save` workflow for commit-style tasks
-  because those commands already bundle project-memory, learn, rebase, and
-  branch-sync steps.
+  because those commands already bundle learn, rebase, and branch-sync steps.
 - Prefer `/add-agent-kit` when a consuming repository needs a generic shared
   command, rule, or skill added upstream to this agent kit, or when explicitly
   selected generic `.oc_local/` overlays should move into the shared kit.
@@ -27,8 +25,8 @@ Use these rules whenever you choose or run commands in this project.
 - A plain chat request to commit, save, or record changes is also sufficient in
   this repo when the user is explicitly asking for that git write workflow.
 - When commit-like work is requested outside `/commit` or `/save`, still follow
-  the same project commit, memory, learn, rebase, and branch-sync rules instead
-  of refusing only because the request came from normal chat.
+  the same project commit, learn, rebase, and branch-sync rules instead of
+  refusing only because the request came from normal chat.
 - Apply the same allowance and the same safety checks to submodule commits,
   parent gitlink updates, and any other git steps whose purpose is to create or
   record a commit.
@@ -45,12 +43,12 @@ Use these rules whenever you choose or run commands in this project.
   only because the repository has no remote default branch yet, or is a purely
   local `git init` repository, treat that step as a valid no-op instead of a
   failure.
-- When using `@.opencode/commands/save.md`, include the refreshed
-  `docs/memory-bank/chat.md` and any relevant rule updates from the learn step
-  in the same commit. If the save workflow refreshes `.opencode` or
-  `.devcontainer`, include the resulting parent gitlink updates in that same
-  commit as task state. When a local base branch is resolved, refresh that local
-  base branch from its configured upstream before it is used as a rebase base.
+- When using `@.opencode/commands/save.md`, include any relevant rule updates
+  from the learn step in the same commit. If the save workflow refreshes
+  `.opencode` or `.devcontainer`, include the resulting parent gitlink updates in
+  that same commit as task state. When a local base branch is resolved, refresh
+  that local base branch from its configured upstream before it is used as a
+  rebase base.
   When the current branch is the local base branch, continue through the
   base-branch rebase and normal non-force push when that base branch has an
   upstream. When the current branch is not the local base branch, refresh the
@@ -66,9 +64,7 @@ Use these rules whenever you choose or run commands in this project.
   after fetching that branch's upstream, and only when a rebase rewrote commits
   already present on that upstream. Never force-push the local base branch.
 - After a successful commit, rebase, push, or branch-sync step, report routine
-  completion metadata in the response instead of editing
-  `docs/memory-bank/chat.md` and creating a second commit only to store that
-  metadata.
+  completion metadata in the response.
 - Prefer `@.opencode/commands/git-sync.md` when you want to synchronize the
   current branch and the local base branch without creating a commit.
 - Never use `git reset` or `git revert` unless the user explicitly asks for

@@ -12,9 +12,6 @@ Shared AI rules intended to work across repos.
 
 ## Core Rules
 
-- `chat.md` - how to maintain `docs/memory-bank/chat.md` when a repo uses it as
-  lightweight
-  project memory.
 - `learn.md` - capture durable project guidance in the right rule file.
 - `command-execution.md` - how commands should be chosen and run.
 - `commit.md` - concise commit requirements used by repo workflows.
@@ -40,7 +37,6 @@ Shared AI rules intended to work across repos.
 - `taskfile-and-script-creation.md` - how to add wrappers and Taskfiles safely.
 - `task-workflow.md` - lightweight two-action task workflow for scoped
   specification and implementation work.
-- `memory-bank.md` - how to handle repo memory without forcing a heavy system.
 - `session-titles.md` - short, searchable session title conventions.
 - `ai-scripts.md` - policy for future `.opencode/ai-scripts/` helpers.
 - `excalidraw.md` - editable `.excalidraw.svg` export requirements.
