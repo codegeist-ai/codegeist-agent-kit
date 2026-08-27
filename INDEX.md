@@ -37,23 +37,28 @@ Agent-owned navigation map for the shared OpenCode workspace.
 
 ## Key Workflows
 
-- Start source contributions from `main`, use the linked Issue and local task,
-  and never implement changes in generated `release` or `.opencode/` checkouts.
+- Start source contributions from `main`, keep the local task authoritative, use
+  its linked GitHub mirror Issue, and never implement changes in generated
+  `release` or `.opencode/` checkouts.
 - Use `task test` after changing release runtime files or release-copy behavior.
 - Maintainers use `task release-build` only after source review and
   `README_release.md` changelog updates for consumer-visible changes.
 - Use `/task spec "<title/context>"` and `/task impl <task-ref> [instructions]`
-  for tracked task work.
+  for tracked task work; eligible `.opencode` consumers with a GitHub mirror use
+  linked Issues, and creating a new Issue requires explicit approval of its exact
+  preview.
 - Use `/update-index <directory>` to create or refresh directory-local indexes.
 
 ## Search Hints
 
 - `RELEASE_PATHS` - release bundle source paths in `Taskfile.yml`.
-- `docs/tasks/README.md` - Issue-to-task-to-PR linkage and status conventions.
+- `docs/tasks/README.md` - GitHub mirror declaration plus Issue-to-task-to-PR
+  linkage and status conventions.
 - `LICENSE` - 0BSD terms that must remain in source and release output.
 - `playwright-mcp.json` - browser config used by the shared Playwright MCP.
 - `/update-index` - command for creating or refreshing directory indexes.
-- `spec`, `impl` - task command actions for specification and implementation.
+- `GitHub Mirror`, `GH_TOKEN`, `spec`, `impl` - task tracking and implementation
+  workflow terms.
 - `directory-index.md` - rule that defines the `INDEX.md` pattern.
 - `instructions` - `opencode.json` entries loaded by OpenCode.
 

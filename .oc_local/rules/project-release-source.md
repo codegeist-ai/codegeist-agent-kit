@@ -45,3 +45,13 @@ release that consuming repositories mount at `.opencode/`.
   changes.
 - Check the root directory layout before creating new OpenCode rules or
   workflow files.
+
+## Public Documentation Boundary
+
+- Keep public source and release documentation focused on workflows and resources
+  that GitHub contributors can access.
+- Avoid naming internal repository hosts or linking internal repositories unless
+  that detail is technically required for the documented operation.
+- When an internal source distinction matters, describe it minimally as an
+  internal source repository without exposing inaccessible URLs or unrelated
+  hosting details.

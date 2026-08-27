@@ -7,7 +7,7 @@ multiple repositories via a checked-out `.opencode/` directory.
 
 - keep a small reusable command set for common repository workflows
 - keep durable rules that guide editing, documentation, testing, and git usage
-- provide shared skills for targeted workflows such as GitHub CLI
+- provide shared skills for targeted workflows such as commit-message validation
 - leave project-specific behavior to local overlays instead of baking it into
   the shared core
 
@@ -73,7 +73,12 @@ Source work starts from `main` and a topic branch, never from the generated
 [Issues](https://github.com/codegeist-ai/codegeist-agent-kit/issues) and the
 [Codegeist roadmap](https://github.com/users/codegeist-ai/projects/1), and use the
 [local task guide](docs/tasks/README.md) for accepted implementation
-specifications.
+specifications. In projects that mount this kit as `.opencode`, `/task spec`
+keeps the local task authoritative and creates one concise Issue only after
+confirming the declared GitHub mirror and receiving explicit approval for the
+exact preview; existing Issues may be reused. GitHub CLI work requires
+`GH_TOKEN` in the OpenCode process environment. A verified implementation closes
+its validated Issue as completed before the local task becomes `solved`.
 
 The canonical normal check is non-publishing:
 
@@ -108,8 +113,7 @@ analysis flows should live in local overlays such as:
 
 - Commands: see `commands/README.md`
 - Rules: see `rules/README.md`
-- Skills: currently `skills/gh-auth/SKILL.md`,
-  `skills/commit-message-guard/SKILL.md`
+- Skills: currently `skills/commit-message-guard/SKILL.md`
 - Directory indexes: `rules/directory-index.md` defines agent-owned `INDEX.md`
   files for navigable local context in large directories. A repository-root
   `INDEX.md` lists known directory indexes and is loaded by `opencode.json`

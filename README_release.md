@@ -17,7 +17,7 @@ configuration while leaving project-specific behavior in the consuming repo.
 - `commands/` contains reusable slash-command workflows such as `/save`,
   `/commit`, `/learn`, `/git-sync`, `/rebase`, `/task`, `/update-index`, and
   `/update-submodules`.
-- `skills/` contains targeted reusable workflows, currently `gh-auth` and
+- `skills/` contains targeted reusable workflows, currently
   `commit-message-guard`.
 - `ai-scripts/` contains helper scripts used by the commands and skills, such
   as `commit-message-guard.sh`.
@@ -36,6 +36,41 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Extended `/task spec` so every project that mounts `codegeist-agent-kit` as an
+  initialized `.opencode` Git submodule gets one concise Issue per top-level or
+  child task after its GitHub mirror is confirmed and the user explicitly
+  approves the exact repository, title, and complete body preview. A task request
+  is not approval; declined or deferred approval creates no Issue and leaves the
+  task blocked. Backlog entries and ineligible repositories remain local, and
+  repositories without a mirror do not require GitHub access.
+- Added an optional Tea `v0.12.0` push-mirror discovery fallback for eligible
+  repositories without a mirror declaration or GitHub root remote. Unknown or
+  inaccessible results block public tracking until the repository declares
+  `GitHub Mirror: <URL|none>`; Tea runs without `GH_TOKEN` and never starts login
+  setup or exposes the raw source-forge response.
+- Kept each local task file authoritative for scope, acceptance criteria, status,
+  files, and verification. The linked Issue contains only the Goal, canonical
+  task path, and source-of-truth notice. `/task` does not synchronize labels,
+  projects, readiness, cancellation, or intermediate statuses, but it closes a
+  validated linked Issue as completed before persisting local status `solved`.
+- Preserved existing Issue URLs across later eligibility and no-mirror results,
+  preventing a linked task from bypassing completion closure. Existing Issues
+  that are unmarked or incomplete require an approved linkage edit, newly
+  supplied exact cross-author links require approval before storage, and pull
+  requests are rejected.
+- Consumer action: declare `GitHub Mirror: <URL|none>` in `docs/tasks/README.md`
+  when contributors cannot inspect the source repository's configured push
+  mirrors. A declaration keeps Tea optional and prevents an unknown mirror from
+  blocking task tracking.
+- Replaced interactive GitHub CLI authentication with the `GH_TOKEN` environment
+  variable and removed the shared `gh-auth` skill. Shared workflows no longer
+  use `gh auth login`, `gh auth status`, stored GitHub CLI credentials, or any
+  token environment variable other than `GH_TOKEN`, and every `gh` invocation
+  forces `GH_HOST=github.com`.
+- Consumer action: provide a valid `GH_TOKEN` to the OpenCode process before any
+  workflow that runs `gh`, then restart OpenCode after updating `.opencode` or
+  changing its environment. The token needs repository metadata read access and
+  permissions for the requested GitHub mutation; never commit it to the repo.
 - Removed the shared `/memory-bank` and `/update-chat` commands together with
   the `chat.md` and `memory-bank.md` instructions. Shared workflows no longer
   read or update `docs/memory-bank/chat.md`; `/learn` continues to capture
@@ -353,8 +388,12 @@ When working inside a consuming repository that uses this submodule:
 - `/learn` captures durable workflow guidance in rule files.
 - `/session-title` creates a short session title from the current branch and
   recent result.
-- `/task` manages tracked task files under `docs/tasks/` with `spec`, `impl`,
-  `cancel`, and `backlog` actions when the repo uses that workflow.
+- `/task` manages authoritative task files under `docs/tasks/` with `spec`,
+  `impl`, `cancel`, and `backlog`. In projects that mount this kit as `.opencode`
+  and have a confirmed GitHub mirror, each top-level or child task gets one
+  concise Issue through `GH_TOKEN` only after the user approves its exact
+  preview. Verified implementation closes that Issue as completed before the
+  task becomes `solved`; backlog entries do not.
 - `/update-index` creates or refreshes an agent-owned directory `INDEX.md` for
   local navigation and search hints.
 - `/add-agent-kit` adds reusable shared commands, rules, or skills upstream, or
@@ -384,15 +423,20 @@ especially for commits, saves, submodule updates, and base-branch sync.
 
 ## GitHub CLI Work
 
-When a task needs GitHub CLI access, verify authentication before using `gh`:
+Every GitHub CLI workflow requires `GH_TOKEN` in the OpenCode process
+environment. Check its presence and validity without printing it, and disable
+interactive prompts:
 
 ```bash
-gh auth status
+test -n "${GH_TOKEN:-}" && \
+  GH_HOST=github.com GH_PROMPT_DISABLED=1 gh api user >/dev/null
 ```
 
-If the session is not authenticated, use the `gh-auth` skill. Do not ask the
-user to paste tokens into chat when the browser login flow can complete the
-authentication.
+`GH_TOKEN` is the only supported token environment variable. Do not use stored
+GitHub CLI credentials, `gh auth login`, or a browser flow. Do not ask the user
+to paste the token into chat or print, inspect, or persist its value. If
+`GH_TOKEN` is missing or invalid, stop the GitHub operation and report the
+non-secret failure.
 
 ## Documentation And Local Rules
 

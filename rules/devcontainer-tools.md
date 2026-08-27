@@ -29,7 +29,8 @@ the smallest direct way to inspect, edit, build, test, or document the repo.
 
 - `git` handles repository inspection, diffs, branches, rebases, and commits.
 - `gh` handles GitHub issues, pull requests, checks, releases, and API calls;
-  verify authentication before using it for GitHub operations.
+  require a valid `GH_TOKEN`, force `GH_HOST=github.com`, and disable interactive
+  prompting before using it.
 - `lazygit` is available for local interactive Git inspection, but prefer
   non-interactive `git` commands during agent workflows.
 

@@ -35,8 +35,9 @@ Shared AI rules intended to work across repos.
   structured and maintained.
 - `software-tests.md` - how to write, update, and verify software tests.
 - `taskfile-and-script-creation.md` - how to add wrappers and Taskfiles safely.
-- `task-workflow.md` - lightweight two-action task workflow for scoped
-  specification and implementation work.
+- `task-workflow.md` - canonical local task workflow with `spec`, `impl`,
+  `cancel`, and `backlog`, plus Issue linkage and verified completion closure for
+  confirmed GitHub mirrors.
 - `session-titles.md` - short, searchable session title conventions.
 - `ai-scripts.md` - policy for future `.opencode/ai-scripts/` helpers.
 - `excalidraw.md` - editable `.excalidraw.svg` export requirements.
