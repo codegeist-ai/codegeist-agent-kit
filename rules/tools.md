@@ -52,6 +52,10 @@ coding agent may run.
 - Direct changes in GitHub need extra care because they affect shared remote
   state. Inspect the target, prefer non-interactive commands, and keep changes
   narrowly tied to the user's task.
+- Run `gh` only when `GH_TOKEN` is present and valid, force
+  `GH_HOST=github.com`, and disable interactive prompting. Never expose the token
+  or fall back to another token variable, stored GitHub CLI credentials, or an
+  interactive login flow.
 - Follow the repository's commit and command-execution rules for commits,
   pushes, branch rewrites, pull-request creation, and other history-changing
   operations in non-disposable repositories.

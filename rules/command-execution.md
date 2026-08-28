@@ -10,9 +10,21 @@ Use these rules whenever you choose or run commands in this project.
 - When a repo-local skill already defines a specialized workflow, prefer
   invoking that skill from commands instead of duplicating its step-by-step
   procedure in the command file.
-- When a task needs GitHub CLI access, check `gh auth status` first. If the
-  current session is not authenticated, use
-  `@.opencode/skills/gh-auth/SKILL.md` before continuing with `gh` commands.
+- Before any GitHub CLI command, require a non-empty `GH_TOKEN` environment
+  variable, force `GH_HOST=github.com`, and set `GH_PROMPT_DISABLED=1`. Validate
+  the token non-interactively with a read-only `gh api user` request before
+  performing GitHub work.
+- Use `GH_TOKEN` as the only supported GitHub token environment variable. Never
+  print, inspect, persist, or ask the user to paste its value. Do not use stored
+  GitHub CLI credentials, `gh auth login`, `gh auth status`, or browser
+  authentication. Stop with a concise error when `GH_TOKEN` is missing or
+  invalid.
+- When `/task` uses `tea api` to inspect source-repository push mirrors, remove
+  `GH_TOKEN` from the Tea process environment, keep the call non-interactive,
+  and use only an already configured Tea login. Never invoke `tea login add` or
+  expose the raw push-mirror response. Missing Tea capability, login, or access
+  leaves mirror tracking blocked until the repository declares `GitHub Mirror:
+  <URL|none>`.
 - Prefer non-interactive command forms whenever a tool might prompt or open a
   pager.
 - Prefer the repo-local `/commit` or `/save` workflow for commit-style tasks

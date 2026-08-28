@@ -97,8 +97,10 @@ Then perform the upstream source workflow autonomously:
    the source change. Do not commit secrets, unrelated files, generated noise,
    or temporary clone paths.
 7. Push the source branch when the remote is configured and the authenticated
-   session has permission. If authentication is required for GitHub, verify it
-   with `gh auth status` and use the `gh-auth` skill when needed.
+   session has permission. Before any GitHub CLI command, require a non-empty
+   `GH_TOKEN`, force `GH_HOST=github.com`, set `GH_PROMPT_DISABLED=1`, and
+   validate it with a read-only `gh api user` request. Never use stored
+   credentials or an interactive login.
 8. Run `task release-build` in the source checkout so a normal commit is added
    to the generated `release` branch and pushed. The release branch history must
    stay reviewable; do not force-recreate it when the remote branch already
