@@ -46,6 +46,26 @@ release that consuming repositories mount at `.opencode/`.
 - Check the root directory layout before creating new OpenCode rules or
   workflow files.
 
+## Internal Git Authentication
+
+- For HTTPS Git access to the configured internal `origin`, use the username
+  `codegeist` and the token from the exported `GITEA_TOKEN` environment
+  variable.
+- Pass the credential through a command-scoped helper so the token is not
+  embedded in a remote URL, persisted in Git configuration, or printed:
+
+  ```bash
+  GIT_TERMINAL_PROMPT=0 git \
+    -c credential.helper= \
+    -c 'credential.helper=!f() { test -n "$GITEA_TOKEN" || exit 1; printf "%s\n" "username=codegeist" "password=$GITEA_TOKEN"; }; f' \
+    fetch origin main
+  ```
+
+- Apply the same helper to authenticated `push` commands. If the user
+  explicitly authorizes bypassing a broken internal TLS trust chain, add
+  `-c http.sslVerify=false` only to the affected Git invocation; never persist
+  that setting.
+
 ## Public Documentation Boundary
 
 - Keep public source and release documentation focused on workflows and resources
