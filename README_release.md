@@ -62,6 +62,11 @@ branch should contain only runtime files needed by consuming repositories:
   when contributors cannot inspect the source repository's configured push
   mirrors. A declaration keeps Tea optional and prevents an unknown mirror from
   blocking task tracking.
+- Update notes for coding agents: existing task files do not require a bulk
+  migration. After updating `.opencode` and restarting OpenCode, let the next
+  `/task spec` or `/task impl` repair missing `Public Tracking` and immutable
+  `Tracking Key` fields. Do not create Issues without exact preview approval or
+  mark a linked task `solved` before completed closure is verified.
 - Replaced interactive GitHub CLI authentication with the `GH_TOKEN` environment
   variable and removed the shared `gh-auth` skill. Shared workflows no longer
   use `gh auth login`, `gh auth status`, stored GitHub CLI credentials, or any
