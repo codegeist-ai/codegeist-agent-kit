@@ -36,6 +36,14 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Added a shared temporary-storage rule for consuming repositories. New
+  disposable artifacts belong under the workspace `.tmp/` link when available,
+  or another operating-system temporary directory outside the repository;
+  persistent non-test secrets belong under ignored `.codegeist/secrets/`.
+- Consumer action: devcontainer-kit workspaces create `.tmp` and
+  `.codegeist/secrets/` automatically after their runtime kit is updated. Other
+  consumers should provide equivalent ignored paths when they adopt this
+  convention. Existing temporary and secret paths are not migrated.
 - Extended `/task spec` so every project that mounts `codegeist-agent-kit` as an
   initialized `.opencode` Git submodule gets one concise Issue per top-level or
   child task after its GitHub mirror is confirmed and the user explicitly
