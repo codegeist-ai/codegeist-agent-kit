@@ -35,6 +35,8 @@ Shared AI rules intended to work across repos.
   structured and maintained.
 - `software-tests.md` - how to write, update, and verify software tests.
 - `taskfile-and-script-creation.md` - how to add wrappers and Taskfiles safely.
+- `temporary-storage.md` - keep disposable artifacts outside persistent
+  workspaces and persistent secrets under `.codegeist/secrets/`.
 - `task-workflow.md` - canonical local task workflow with `spec`, `impl`,
   `cancel`, and `backlog`, plus Issue linkage and verified completion closure for
   confirmed GitHub mirrors.

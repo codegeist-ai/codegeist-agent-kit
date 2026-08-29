@@ -20,6 +20,7 @@
     ".opencode/rules/software-tests.md",
     ".opencode/rules/task-workflow.md",
     ".opencode/rules/taskfile-and-script-creation.md",
+    ".opencode/rules/temporary-storage.md",
     ".opencode/README.md"
   ],
   "watcher": {

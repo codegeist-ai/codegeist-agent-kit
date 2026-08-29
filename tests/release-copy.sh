@@ -146,6 +146,7 @@ jq -e '
   ((.instructions | index(".opencode/rules/chat.md")) | not) and
   ((.instructions | index(".opencode/rules/memory-bank.md")) | not) and
   (.instructions | index(".opencode/rules/tools.md")) and
+  (.instructions | index(".opencode/rules/temporary-storage.md")) and
   ((.instructions | map(select(test("graphify"; "i"))) | length) == 0) and
   ((has("plugin")) | not) and
   (.permission.external_directory["/tmp/**"] == "allow") and
@@ -159,6 +160,10 @@ jq -e '
   ((.mcp | has("repomix")) | not)
 ' "${target}/opencode.json" >/dev/null \
   || fail "release opencode.json is missing expected OpenCode config"
+if ! grep -F 'Store persistent secrets that are not disposable test fixtures under the' \
+    "${target}/rules/temporary-storage.md" >/dev/null; then
+  fail "temporary-storage rule is missing from the release"
+fi
 jq -e '
   (.outputDir == ".chrome/playwright-mcp") and
   (.browser.browserName == "chromium") and
