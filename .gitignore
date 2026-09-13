@@ -6,3 +6,5 @@ package-lock.json
 /.worktrees/
 /.codegeist/.local.env
 /.chrome/
+/.codegeist/secrets/
+/.tmp
