@@ -17,6 +17,8 @@ Agent-owned navigation map for the shared OpenCode workspace.
 - `skills/` - specialized workflows that can be loaded on demand.
 - `docs/tasks/` - source-repository task guide and local implementation specs for
   accepted work.
+- `.oc_local/rules/gitea-git.md` - source-only Tea authentication and Git
+  fetch/pull/push guidance for the internal Gitea remote.
 - `.github/workflows/ci.yml` - read-only contributor CI that runs `task test`.
 - `opencode.json` - runtime configuration that loads shared instructions,
   MCP servers, and permissions.
@@ -48,6 +50,8 @@ Agent-owned navigation map for the shared OpenCode workspace.
   linked Issues, and creating a new Issue requires explicit approval of its exact
   preview.
 - Use `/update-index <directory>` to create or refresh directory-local indexes.
+- For the internal Gitea `origin`, follow `.oc_local/rules/gitea-git.md`; Tea
+  supplies credentials while Git performs fetch, pull, and push.
 
 ## Search Hints
 
@@ -59,6 +63,8 @@ Agent-owned navigation map for the shared OpenCode workspace.
 - `/update-index` - command for creating or refreshing directory indexes.
 - `GitHub Mirror`, `GH_TOKEN`, `spec`, `impl` - task tracking and implementation
   workflow terms.
+- `GITEA_TOKEN`, `tea login helper`, `git.codegeist.ai`, `sslVerify` - internal
+  source Git authentication and TLS troubleshooting.
 - `directory-index.md` - rule that defines the `INDEX.md` pattern.
 - `instructions` - `opencode.json` entries loaded by OpenCode.
 

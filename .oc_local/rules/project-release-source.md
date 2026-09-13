@@ -48,23 +48,10 @@ release that consuming repositories mount at `.opencode/`.
 
 ## Internal Git Authentication
 
-- For HTTPS Git access to the configured internal `origin`, use the username
-  `codegeist` and the token from the exported `GITEA_TOKEN` environment
-  variable.
-- Pass the credential through a command-scoped helper so the token is not
-  embedded in a remote URL, persisted in Git configuration, or printed:
-
-  ```bash
-  GIT_TERMINAL_PROMPT=0 git \
-    -c credential.helper= \
-    -c 'credential.helper=!f() { test -n "$GITEA_TOKEN" || exit 1; printf "%s\n" "username=codegeist" "password=$GITEA_TOKEN"; }; f' \
-    fetch origin main
-  ```
-
-- Apply the same helper to authenticated `push` commands. If the user
-  explicitly authorizes bypassing a broken internal TLS trust chain, add
-  `-c http.sslVerify=false` only to the affected Git invocation; never persist
-  that setting.
+- Follow `@.oc_local/rules/gitea-git.md` for internal `origin` fetch, pull, and
+  push operations. That focused rule owns Tea login setup, `GITEA_TOKEN`
+  handling, repository-local TLS configuration, credential-helper ordering, and
+  failure diagnosis.
 
 ## Public Documentation Boundary
 
