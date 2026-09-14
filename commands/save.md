@@ -1,5 +1,5 @@
 ---
-description: Learn, refresh submodules, commit, rebase, and push the current branch
+description: Learn, refresh submodules and docs, commit, rebase, and push
 agent: build
 ---
 Review the current repository state and the active chat context.
@@ -23,6 +23,12 @@ current repository state and chat context is captured before the commit.
 
 Then execute @.opencode/commands/update-submodules.md so `.opencode` and
 `.devcontainer` are refreshed to their configured branches before the commit.
+
+When the repository root contains a `docs/` directory, then execute
+@.opencode/commands/update-documentation.md so `docs/index.html` and other
+affected documentation reflect the final pre-commit repository state. Run this
+after the submodule refresh and before reviewing or staging changes. When the
+root `docs/` directory is absent, skip this step without creating it.
 
 Then review the current git status, staged and unstaged changes, and recent
 commit messages. Follow @.opencode/rules/commit.md and

@@ -3,7 +3,7 @@
 - **ID:** T005
 - **Type:** feature
 - **Parent:** none
-- **Status:** specified
+- **Status:** solved
 - **Public Tracking:** https://github.com/codegeist-ai/codegeist-agent-kit/issues/12
 - **Tracking Key:** 6f7b2d49-1c8e-4a73-9d05-b2e61f84c390
 
@@ -16,9 +16,9 @@ current navigation, commands, and test setup.
 ## Context
 
 The shared documentation workflows currently maintain Markdown documentation but
-do not provide a directly openable project landing page. Users should be able to
-open one local HTML file and quickly understand the project, find important
-files, run common commands, and start its test workflow.
+do not provide a directly openable developer map. Users should be able to open
+one local HTML file and quickly understand the project, find important files,
+run common commands, and start its test workflow.
 
 ## Scope
 
@@ -51,7 +51,9 @@ files, run common commands, and start its test workflow.
 - JavaScript provides useful progressive enhancement such as local search,
   filtering, or compact section navigation.
 - The page is semantic, keyboard-accessible, responsive on desktop and mobile,
-  and visually tailored to the project rather than using a generic dashboard.
+  and uses a restrained, project-specific information structure.
+- Information density and navigation take priority over decorative presentation;
+  the page reads as a developer map rather than a marketing website.
 - Relative links resolve from `docs/index.html` to existing project files.
 - Existing graphics may be reused when useful; a compact inline SVG may be added
   when it clarifies project structure without introducing an asset pipeline.
@@ -59,7 +61,8 @@ files, run common commands, and start its test workflow.
   identifies `task test` as the normal non-publishing verification command.
 - `docs/index.html` remains excluded from the generated `.opencode` release;
   consumers receive the shared rules and commands that create their own page.
-- `task test` and a direct-file browser smoke test pass.
+- `task test` passes, and the source page is manually verified through a direct
+  `file://` open.
 
 ## Files
 
@@ -74,7 +77,6 @@ files, run common commands, and start its test workflow.
 - `README_release.md`
 - `INDEX.md`
 - `Taskfile.yml`
-- `tests/docs-index.sh`
 - `tests/release-copy.sh`
 
 ## Non-Goals
@@ -95,6 +97,8 @@ files, run common commands, and start its test workflow.
   the final pre-commit repository state.
 - Keep the source page compact and use an inline project-flow diagram only if it
   improves navigation or understanding.
+- Prefer restrained typography, lists, and tables over oversized hero sections,
+  decorative cards, animation, gradients, or ornamental effects.
 
 ## Verification
 

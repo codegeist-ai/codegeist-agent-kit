@@ -31,8 +31,9 @@ Shared AI rules intended to work across repos.
 - `bash-scripts.md` - direct, documented, and observable Bash style.
 - `scripting-best-practices.md` - shell automation and structured logging
   guidance, including output consumed by LLMs.
-- `software-documentation.md` - how repo-local software documentation should be
-  structured and maintained.
+- `software-documentation.md` - how repo-local software documentation and a
+  self-contained `docs/index.html` developer map should be structured and
+  maintained.
 - `software-tests.md` - how to write, update, and verify software tests.
 - `taskfile-and-script-creation.md` - how to add wrappers and Taskfiles safely.
 - `temporary-storage.md` - keep disposable artifacts outside persistent

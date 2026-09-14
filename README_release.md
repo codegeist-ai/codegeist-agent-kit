@@ -15,8 +15,8 @@ configuration while leaving project-specific behavior in the consuming repo.
 - `rules/` contains durable agent rules for command execution, commits, tests,
   documentation, task workflow, scripting, and related engineering practices.
 - `commands/` contains reusable slash-command workflows such as `/save`,
-  `/commit`, `/learn`, `/git-sync`, `/rebase`, `/task`, `/update-index`, and
-  `/update-submodules`.
+  `/commit`, `/learn`, `/git-sync`, `/rebase`, `/task`, `/update-index`,
+  `/update-documentation`, `/verify-documentation`, and `/update-submodules`.
 - `skills/` contains targeted reusable workflows, currently
   `commit-message-guard`.
 - `ai-scripts/` contains helper scripts used by the commands and skills, such
@@ -36,6 +36,20 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Added a shared developer-map convention for repositories that already have a
+  root `docs/` directory. `/update-documentation` now creates or refreshes a
+  compact, project-specific, self-contained `docs/index.html`, and
+  `/verify-documentation` classifies missing, stale, broken, or
+  file-incompatible pages. The convention treats the map as documentation and
+  does not require a dedicated automated page test.
+- Updated `/save` to run `/update-documentation` after shared submodules are
+  refreshed and before changes are reviewed or staged. Repositories without a
+  root `docs/` directory are skipped and do not receive a new documentation tree.
+- Consumer action: after updating `.opencode` and restarting OpenCode, the next
+  `/update-documentation` or `/save` run will maintain `docs/index.html` when
+  `docs/` exists. The page must open directly through `file://` without a server
+  or runtime network dependency. The agent-kit source reference page is not
+  shipped in the release bundle.
 - Added a shared temporary-storage rule for consuming repositories. New
   disposable artifacts belong under the workspace `.tmp/` link when available,
   or another operating-system temporary directory outside the repository;
@@ -388,12 +402,12 @@ When working inside a consuming repository that uses this submodule:
    workflow than the shared default.
 4. Treat `.opencode` as a submodule gitlink, not as ordinary parent-repo files.
 
-## High-Value Commands For Git Work
+## High-Value Commands
 
-- `/save` learns durable guidance, updates shared submodules, commits, rebases,
-  and pushes the intended branch. On the local base branch it may push that base
-  branch; on a feature branch it updates the base branch from upstream first,
-  then pushes only the current branch.
+- `/save` learns durable guidance, updates shared submodules and documentation,
+  commits, rebases, and pushes the intended branch. On the local base branch it
+  may push that base branch; on a feature branch it updates the base branch from
+  upstream first, then pushes only the current branch.
 - `/commit` reviews the diff and creates a focused conventional commit.
 - `/git-sync` synchronizes the current branch and local base branch without
   creating a commit.
@@ -407,14 +421,20 @@ When working inside a consuming repository that uses this submodule:
   concise Issue through `GH_TOKEN` only after the user approves its exact
   preview. Verified implementation closes that Issue as completed before the
   task becomes `solved`; backlog entries do not.
+- `/update-documentation` refreshes affected docs and creates or maintains a
+  self-contained `docs/index.html` when the repository already has a root
+  `docs/` directory.
+- `/verify-documentation` audits documentation and reports missing, stale,
+  broken, or file-incompatible developer maps without editing them.
 - `/update-index` creates or refreshes an agent-owned directory `INDEX.md` for
   local navigation and search hints.
 - `/add-agent-kit` adds reusable shared commands, rules, or skills upstream, or
   moves generic `.oc_local/` overlays into the shared agent kit, then builds a
   new release and updates the consuming repo's `.opencode` submodule.
 
-Prefer these commands over reimplementing their shell and git logic in chat,
-especially for commits, saves, submodule updates, and base-branch sync.
+Prefer these commands over reimplementing their documentation, shell, and git
+logic in chat, especially for documentation refreshes, commits, saves,
+submodule updates, and base-branch sync.
 
 ## Commit And Git Safety
 
@@ -456,6 +476,9 @@ non-secret failure.
 - Keep durable repo-owned docs and comments in English. User conversations may
   use the user's preferred language, but committed project text stays English.
 - Update docs in the same task when behavior changes.
+- When a repository-root `docs/` directory exists, keep its self-contained
+  `docs/index.html` current through `/update-documentation`; the browser page and
+  an agent-owned root `INDEX.md` serve separate audiences.
 - Use `/learn` for reusable guidance that should become a durable rule.
 - Prefer updating an existing rule over adding broad or duplicative guidance.
 

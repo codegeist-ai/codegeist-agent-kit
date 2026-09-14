@@ -53,6 +53,7 @@ assert_dir "commands"
 assert_dir "rules"
 assert_dir "skills"
 assert_file "commands/create-ai-script.md"
+assert_file "commands/save.md"
 assert_file "commands/task.md"
 assert_file "commands/update-documentation.md"
 assert_file "commands/verify-documentation.md"
@@ -73,6 +74,7 @@ assert_absent ".oc_local"
 assert_absent ".github"
 assert_absent "CONTRIBUTING.md"
 assert_absent "docs"
+assert_absent "tests"
 assert_absent "Taskfile.yml"
 assert_absent "compose.local.yml"
 assert_absent "README_release.md"
@@ -122,6 +124,17 @@ cmp "README_release.md" "${target}/README.md" \
   || fail "release README content mismatch"
 cmp "commands/task.md" "${target}/commands/task.md" \
   || fail "release task command content mismatch"
+cmp "commands/save.md" "${target}/commands/save.md" \
+  || fail "release save command content mismatch"
+cmp "commands/update-documentation.md" \
+  "${target}/commands/update-documentation.md" \
+  || fail "release documentation update command content mismatch"
+cmp "commands/verify-documentation.md" \
+  "${target}/commands/verify-documentation.md" \
+  || fail "release documentation verification command content mismatch"
+cmp "rules/software-documentation.md" \
+  "${target}/rules/software-documentation.md" \
+  || fail "release software documentation rule content mismatch"
 cmp "rules/task-workflow.md" "${target}/rules/task-workflow.md" \
   || fail "release task workflow rule content mismatch"
 cmp "rules/command-execution.md" "${target}/rules/command-execution.md" \

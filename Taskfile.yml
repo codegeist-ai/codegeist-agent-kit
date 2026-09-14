@@ -8,6 +8,7 @@
 #   temporary worktree, updates the local release ref, and pushes it so the
 #   current branch and dirty worktree stay untouched while release history stays
 #   reviewable. The first release for a new remote is bootstrapped as an orphan.
+# - `task test` validates a disposable release copy without publishing it.
 # - `task test-release` builds the same file bundle in a temporary directory and
 #   starts OpenCode from there without creating commits, branches, or pushes.
 #
@@ -37,7 +38,7 @@ vars:
 
 tasks:
   test:
-    desc: Run the repository test suite
+    desc: Validate the generated release file set
     vars:
       TEST_RELEASE_COPY_TARGET:
         sh: mktemp -d /tmp/opencode-release-copy-test.XXXXXX
