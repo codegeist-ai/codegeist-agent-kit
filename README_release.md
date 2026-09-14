@@ -36,20 +36,12 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
-- Added a shared developer-map convention for repositories that already have a
-  root `docs/` directory. `/update-documentation` now creates or refreshes a
-  compact, project-specific, self-contained `docs/index.html`, and
-  `/verify-documentation` classifies missing, stale, broken, or
-  file-incompatible pages. The convention treats the map as documentation and
-  does not require a dedicated automated page test.
-- Updated `/save` to run `/update-documentation` after shared submodules are
-  refreshed and before changes are reviewed or staged. Repositories without a
-  root `docs/` directory are skipped and do not receive a new documentation tree.
-- Consumer action: after updating `.opencode` and restarting OpenCode, the next
-  `/update-documentation` or `/save` run will maintain `docs/index.html` when
-  `docs/` exists. The page must open directly through `file://` without a server
-  or runtime network dependency. The agent-kit source reference page is not
-  shipped in the release bundle.
+- Removed the shared `docs/index.html` developer-map convention and the automatic
+  documentation refresh from `/save`. `/update-documentation` and
+  `/verify-documentation` remain available for general repository documentation.
+- Consumer action: updating `.opencode` stops creating or maintaining a developer
+  map. Existing project-owned `docs/index.html` files are not part of the
+  submodule and must be retained or removed by the consuming repository.
 - Added a shared temporary-storage rule for consuming repositories. New
   disposable artifacts belong under the workspace `.tmp/` link when available,
   or another operating-system temporary directory outside the repository;
@@ -404,10 +396,10 @@ When working inside a consuming repository that uses this submodule:
 
 ## High-Value Commands
 
-- `/save` learns durable guidance, updates shared submodules and documentation,
-  commits, rebases, and pushes the intended branch. On the local base branch it
-  may push that base branch; on a feature branch it updates the base branch from
-  upstream first, then pushes only the current branch.
+- `/save` learns durable guidance, updates shared submodules, commits, rebases,
+  and pushes the intended branch. On the local base branch it may push that base
+  branch; on a feature branch it updates the base branch from upstream first,
+  then pushes only the current branch.
 - `/commit` reviews the diff and creates a focused conventional commit.
 - `/git-sync` synchronizes the current branch and local base branch without
   creating a commit.
@@ -421,11 +413,9 @@ When working inside a consuming repository that uses this submodule:
   concise Issue through `GH_TOKEN` only after the user approves its exact
   preview. Verified implementation closes that Issue as completed before the
   task becomes `solved`; backlog entries do not.
-- `/update-documentation` refreshes affected docs and creates or maintains a
-  self-contained `docs/index.html` when the repository already has a root
-  `docs/` directory.
-- `/verify-documentation` audits documentation and reports missing, stale,
-  broken, or file-incompatible developer maps without editing them.
+- `/update-documentation` refreshes documentation affected by recent changes.
+- `/verify-documentation` audits documentation and reports stale or broken
+  references without editing them.
 - `/update-index` creates or refreshes an agent-owned directory `INDEX.md` for
   local navigation and search hints.
 - `/add-agent-kit` adds reusable shared commands, rules, or skills upstream, or
@@ -476,9 +466,6 @@ non-secret failure.
 - Keep durable repo-owned docs and comments in English. User conversations may
   use the user's preferred language, but committed project text stays English.
 - Update docs in the same task when behavior changes.
-- When a repository-root `docs/` directory exists, keep its self-contained
-  `docs/index.html` current through `/update-documentation`; the browser page and
-  an agent-owned root `INDEX.md` serve separate audiences.
 - Use `/learn` for reusable guidance that should become a durable rule.
 - Prefer updating an existing rule over adding broad or duplicative guidance.
 

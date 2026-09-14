@@ -17,8 +17,6 @@ multiple repositories via a checked-out `.opencode/` directory.
 - `commands/` - shared slash-command definitions
 - `rules/` - shared durable workflow and editing rules
 - `skills/` - shared reusable skills
-- `docs/index.html` - self-contained developer map for this source repository and
-  reference implementation for the shared documentation map contract
 - `docs/tasks/` - local task guide and implementation specifications for accepted
   repository work
 - `CONTRIBUTING.md` - repository-specific source contribution workflow
@@ -116,10 +114,6 @@ analysis flows should live in local overlays such as:
 - Commands: see `commands/README.md`
 - Rules: see `rules/README.md`
 - Skills: currently `skills/commit-message-guard/SKILL.md`
-- Browser guide: open `docs/index.html` directly without a server for project
-  navigation, important paths, common commands, and test setup. The source page
-  is not released; shared documentation workflows create a project-specific page
-  in consuming repositories that already have a root `docs/` directory.
 - Directory indexes: `rules/directory-index.md` defines agent-owned `INDEX.md`
   files for navigable local context in large directories. A repository-root
   `INDEX.md` lists known directory indexes and is loaded by `opencode.json`

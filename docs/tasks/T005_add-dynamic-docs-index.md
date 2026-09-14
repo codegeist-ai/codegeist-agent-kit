@@ -3,7 +3,7 @@
 - **ID:** T005
 - **Type:** feature
 - **Parent:** none
-- **Status:** solved
+- **Status:** finalized
 - **Public Tracking:** https://github.com/codegeist-ai/codegeist-agent-kit/issues/12
 - **Tracking Key:** 6f7b2d49-1c8e-4a73-9d05-b2e61f84c390
 
@@ -12,6 +12,14 @@
 Ensure every repository with a `docs/` directory has a concise, self-contained
 `docs/index.html` that OpenCode creates and keeps aligned with the project's
 current navigation, commands, and test setup.
+
+## Outcome
+
+This task was implemented and released, then withdrawn. The active shared
+developer-map contract, source page, and automatic maintenance behavior were
+removed after remote VS Code workspaces proved unable to open the page directly
+in the integrated browser and the project chose not to retain an HTTP preview
+fallback. The original specification below remains only as historical context.
 
 ## Context
 

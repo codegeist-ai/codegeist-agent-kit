@@ -18,11 +18,10 @@ Shared workflow commands intended to work across repos.
   fast-forward that base branch, and verify that both refs end on the same
   commit.
 - `/rebase` - rebase the current branch onto the repo's local base branch.
-- `/save` - run `/learn`, refresh submodules, update documentation when `docs/`
-  exists, commit, rebase, and push. On the local base branch it may push that
-  base branch; on a feature branch it refreshes the local base branch from
-  upstream, rebases the current branch onto that refreshed base, and pushes only
-  the current branch.
+- `/save` - run `/learn`, refresh submodules, commit, rebase, and push. On the
+  local base branch it may push that base branch; on a feature branch it
+  refreshes the local base branch from upstream, rebases the current branch onto
+  that refreshed base, and pushes only the current branch.
 - `/session-title` - generate a short session title from the current branch and
   recent result.
 - `/task` - manage canonical task files under `docs/tasks/` with the actions
@@ -33,12 +32,9 @@ Shared workflow commands intended to work across repos.
   that Issue as completed before local status becomes `solved`.
 - `/update-submodules` - update `.opencode` and `.devcontainer` to their
   configured branches from `.gitmodules`.
-- `/update-documentation` - refresh docs affected by recent changes and create or
-  maintain the self-contained `docs/index.html` when a root `docs/` directory
-  exists.
-- `/verify-documentation` - audit repo docs and classify a missing, stale,
-  broken, or file-incompatible `docs/index.html` alongside other documentation
-  findings.
+- `/update-documentation` - refresh the docs affected by recent changes.
+- `/verify-documentation` - audit repo docs and report stale or broken
+  references.
 - `/update-index` - create or refresh an agent-owned directory `INDEX.md` for
   local navigation and search hints.
 - `/create-ai-script` - create a repo-local AI helper script when one is

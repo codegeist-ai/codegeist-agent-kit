@@ -15,8 +15,6 @@ Agent-owned navigation map for the shared OpenCode workspace.
 - `commands/` - reusable slash-command workflow definitions.
 - `rules/` - durable instructions loaded by `opencode.json`.
 - `skills/` - specialized workflows that can be loaded on demand.
-- `docs/index.html` - self-contained developer map and source reference for the
-  shared documentation map contract.
 - `docs/tasks/` - source-repository task guide and local implementation specs for
   accepted work.
 - `.oc_local/rules/gitea-git.md` - source-only Tea authentication and Git
@@ -53,9 +51,6 @@ Agent-owned navigation map for the shared OpenCode workspace.
   linked Issues, and creating a new Issue requires explicit approval of its exact
   preview.
 - Use `/update-index <directory>` to create or refresh directory-local indexes.
-- Use `/update-documentation` to create or refresh `docs/index.html` when the
-  repository already has a root `docs/` directory; use
-  `/verify-documentation` for the read-only audit.
 - For the internal Gitea `origin`, follow `.oc_local/rules/gitea-git.md`; Tea
   supplies credentials while Git performs fetch, pull, and push.
 
@@ -67,8 +62,6 @@ Agent-owned navigation map for the shared OpenCode workspace.
 - `LICENSE` - 0BSD terms that must remain in source and release output.
 - `playwright-mcp.json` - browser config used by the shared Playwright MCP.
 - `/update-index` - command for creating or refreshing directory indexes.
-- `docs/index.html`, `/update-documentation`, `/verify-documentation`, `file://`
-  - browser-readable developer-map contract and maintenance workflows.
 - `GitHub Mirror`, `GH_TOKEN`, `spec`, `impl` - task tracking and implementation
   workflow terms.
 - `GITEA_TOKEN`, `tea login helper`, `git.codegeist.ai`, `sslVerify` - internal
@@ -81,8 +74,6 @@ Agent-owned navigation map for the shared OpenCode workspace.
 - Update this file when a new `INDEX.md` is added, moved, or removed.
 - Update this file when top-level directories, release paths, or major shared
   entrypoints change.
-- Refresh `docs/index.html` when the source repository's navigation, important
-  paths, commands, setup, or test workflow changes.
 
 ## Agent Notes
 
