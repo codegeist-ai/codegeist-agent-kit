@@ -35,6 +35,50 @@ documentation.
   the document back to the relevant implementation files.
 - Keep background material short unless it changes implementation or usage.
 
+## Documentation Developer Map
+
+- When a repository-root `docs/` directory exists, maintain a concise
+  `docs/index.html` as a human-readable developer map of the project's
+  documentation, important paths, commands, and workflows. Do not create a new
+  `docs/` tree solely to add this page.
+- Apply this contract only to documentation owned by the active source
+  repository. Do not update generated, vendored, mounted, or dependency
+  checkouts such as `.opencode/` or `.devcontainer/` as a side effect.
+- Keep the page self-contained and directly usable through `file://`: place its
+  essential content, CSS, and classic JavaScript in the HTML file. Do not require
+  a server, runtime file reads, fetch or XHR requests, module imports, external
+  scripts, styles, fonts, images, analytics, or a `<base>` URL.
+- Use a restrictive inline content security policy that permits the page's
+  embedded styles and classic script while denying runtime connections and
+  external assets.
+- Put the core documentation in semantic HTML so it remains readable without
+  JavaScript. Use JavaScript only for progressive enhancements such as local
+  search, filtering, or compact section navigation.
+- Derive the project overview, starting points, important paths, documentation
+  links, common commands, setup steps, and canonical test command from current
+  authoritative repository files. Omit unavailable details instead of inventing
+  them, and never include secrets or machine-specific absolute paths.
+- Use repository-relative links from `docs/index.html` and verify that local
+  targets and fragments exist. External navigation links are allowed, but the
+  initial page load must not depend on network access.
+- Treat the page as a functional map, not a marketing site or decorative
+  dashboard. Prioritize information density, scan-friendly path and command
+  lists, restrained typography, and clear navigation. Avoid oversized hero
+  sections, ornamental cards, gradients, shadows, or animation unless a concrete
+  project need makes one useful. Preserve useful map-oriented styling during
+  refreshes; reuse graphics only when they clarify the project and embed required
+  visuals directly, for example as inline SVG.
+- Keep the page semantic, keyboard-accessible, responsive, and consistent with
+  any intentional project visual language that does not compromise its role as a
+  developer map.
+- Treat the map as maintained documentation rather than a web application. Do
+  not add a dedicated automated page test by default; use documentation review
+  and a direct `file://` open, adding only a focused regression check when a
+  concrete defect justifies one.
+- Keep `docs/index.html` distinct from an agent-owned repository `INDEX.md`: the
+  HTML page is a browser-readable developer map, while `INDEX.md` is a compact
+  navigation map loaded as agent context.
+
 ## Diagrams
 
 - Use diagrams when they give a faster overview than prose alone.
@@ -63,6 +107,8 @@ documentation.
 ## Maintenance
 
 - Update documentation in the same task when behavior changes.
+- Refresh `docs/index.html` when project entrypoints, important paths, common
+  commands, setup, tests, or linked documentation change.
 - Remove or rewrite obsolete statements promptly.
 - Keep documentation proportional to the complexity of the software.
 - Validate repo-relative source and documentation links when either side moves.
