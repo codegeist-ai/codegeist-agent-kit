@@ -1,5 +1,5 @@
 ---
-description: Manage local tasks and GitHub mirror Issues
+description: Manage local tasks with optional GitHub mirror Issues
 agent: build
 ---
 Review the current repository state and existing task docs.
@@ -33,15 +33,52 @@ Then:
    standalone `<parent-id>_NN_<slug>.md` files and move to `task.md` only when
    they gain their own child tasks.
 
-## GitHub Mirror Tracking
+## Optional GitHub Issue Tracking
 
-The local task file is always the source of truth. Apply this section to every
-top-level or child task created by `spec`, and repair missing tracking before
-`impl`. Do not apply it to `backlog` entries.
+The local task file is always the source of truth. Every top-level or child task
+keeps a random immutable `Tracking Key` so public tracking can be added later,
+but a GitHub Issue is optional. Do not apply this section to `backlog` entries.
+
+### Activation
+
+1. Generate one random UUID as `Tracking Key` when a task does not already have
+   one, and never change or recycle it. For a new task or a missing `Public
+   Tracking` field, use `Public Tracking: not requested`.
+2. For a task without a full GitHub Issue URL, enter Project Eligibility and the
+   rest of this tracking workflow only when the user explicitly requests public
+   Issue tracking in the current conversation. A task request, `/task spec`, or
+   `/task impl` invocation alone is not a public-tracking request. A pending value
+   left by an earlier attempt also does not authorize mirror discovery,
+   authentication, or GitHub access by itself.
+3. When no full Issue URL exists, the user has not explicitly requested public
+   tracking in the current conversation, and `Public Tracking` is `not requested`,
+   records declined Issue creation, or is a not-applicable result, do not inspect
+   project eligibility, GitHub mirrors, Tea, or `GH_TOKEN`, and do not run `gh`.
+   Continue `spec` or `impl` using only the authoritative local task. Do not treat
+   a pending value as one of these inactive local states.
+4. When an unlinked task has `Public Tracking: pending user approval for GitHub
+   Issue creation` but the current request does not say whether to resume
+   tracking or continue locally, ask one focused question without performing
+   mirror or GitHub access. If the user explicitly chooses implementation
+   without an Issue, set `Public Tracking: not requested (user declined GitHub
+   Issue creation)`, restore the status the task would have without the tracking
+   blocker, and continue the local workflow. Do not overwrite an unrelated
+   specification, dependency, or user-decision blocker.
+5. Preserve and keep `blocked` any other unlinked pending value from an earlier
+   invocation. It may represent an uncertain Issue creation or linkage result,
+   so it cannot be downgraded to `not requested`. Ask the user to explicitly
+   resume public tracking so the existing lookup and reconciliation safeguards
+   can establish whether an Issue exists. A pending value alone still does not
+   authorize remote access.
+6. A full Issue URL in `Public Tracking` always activates the existing linked
+   Issue validation and completion workflow. Never discard or replace that URL
+   with an unlinked value to bypass validation or closure.
+7. An explicit request for public tracking is not approval to create or edit an
+   Issue. Keep the exact-preview and single-use approval gates below.
 
 ### Project Eligibility
 
-Apply GitHub Mirror Tracking automatically only when the repository uses
+After public tracking is activated, apply it only when the repository uses
 `codegeist-agent-kit` as an initialized `.opencode` Git submodule:
 
 1. Before mirror discovery or any `GH_TOKEN` or `gh` check, require `.gitmodules`
@@ -66,11 +103,11 @@ Apply GitHub Mirror Tracking automatically only when the repository uses
 
 ### Mirror Discovery
 
-1. Write the canonical local task before any remote action. For a new task or
-   missing tracking, use `Public Tracking: pending GitHub mirror verification`
-   and status `blocked`. Generate one random UUID as `Tracking Key` when the task
-   does not already have one, and never change or recycle it. Preserve an
-   existing full Issue URL until it has been validated or deliberately replaced.
+1. Write the canonical local task before any remote action. For an explicit
+   public-tracking request without an Issue URL, use `Public Tracking: pending
+   GitHub mirror verification` and status `blocked` while tracking setup is
+   unresolved. Preserve an existing full Issue URL until it has been validated;
+   optional tracking is not an Issue unlinking or replacement workflow.
 2. Resolve a mirror candidate before checking `GH_TOKEN` or running any `gh`
    command:
    - When `Public Tracking` already contains a full GitHub Issue URL, preserve it
@@ -213,9 +250,12 @@ Apply GitHub Mirror Tracking automatically only when the repository uses
    requires a new preview and approval. For multiple new Issues, obtain approval
    for each exact preview. Existing Issue reuse does not create an Issue and does
    not use this creation gate.
-15. If the user declines or defers approval, keep the task `blocked`, set `Public
-    Tracking` to `pending user approval for GitHub Issue creation`, report that no
-    Issue was created, and stop the creation path.
+15. If the user declines or defers approval, set `Public Tracking: not requested
+    (user declined GitHub Issue creation)`, restore the status the task would have
+    without the tracking blocker, report that no Issue was created, and stop only
+    the public-tracking path. Continue the local `spec` or `impl` workflow. Do not
+    use this opt-out after an Issue may have been created or when a full Issue URL
+    is already stored; preserve and reconcile uncertain or linked remote state.
 16. Only after approval, invoke `gh issue create` with `GH_HOST=github.com`,
     `GH_PROMPT_DISABLED=1`, explicit `--repo "<owner>/<repository>"`, `--title`,
     and `--body-file -`, then capture its returned URL. Repeat the paginated
@@ -231,12 +271,13 @@ Apply GitHub Mirror Tracking automatically only when the repository uses
     completed immediately before `impl` persists `solved` is the only automatic
     task-status projection to GitHub; the local task otherwise remains
     authoritative.
-19. If mirror discovery, token validation, mirror validation, Issue lookup,
-    Issue creation, linkage update, URL persistence, completion closure, or
-    completion verification fails, keep the local task `blocked`, preserve its
-    existing Issue URL or pending tracking value, and report the exact non-secret
-    failure. A later `/task spec <task-ref>` or `/task impl <task-ref>` must retry
-    safely without duplicating an Issue or repeating implementation side effects.
+19. Once public tracking is explicitly requested or an Issue URL exists, if
+    mirror discovery, token validation, mirror validation, Issue lookup, Issue
+    creation, linkage update, URL persistence, completion closure, or completion
+    verification fails, keep the local task `blocked`, preserve its existing
+    Issue URL or pending tracking value, and report the exact non-secret failure.
+    A later `/task spec <task-ref>` or `/task impl <task-ref>` must retry safely
+    without duplicating an Issue or repeating implementation side effects.
 
 ## `spec`
 
@@ -258,7 +299,9 @@ Use `spec` to create and specify a task together with the user.
    clearly request `under <task-ref>`. For child tasks, resolve the parent first
    and use the recursive task-directory rules above.
 3. Create one canonical task document from the task template when available,
-   then apply GitHub Mirror Tracking before reporting the task as specified.
+   ensure its immutable Tracking Key, and evaluate Optional GitHub Issue Tracking
+   before reporting the task as specified. A new task remains local with `Public
+   Tracking: not requested` unless the user explicitly opts in.
 4. Keep the task minimal and focused. Do not produce a broad option catalog or a
    speculative architecture proposal.
 5. Work interactively with the user. Ask focused follow-up questions when scope,
@@ -268,10 +311,11 @@ Use `spec` to create and specify a task together with the user.
 7. Fill or sharpen title, id, type, parent, status, Public Tracking, Tracking Key,
    goal, context, scope, non-goals, acceptance criteria, relevant files or areas,
    implementation hints, verification, dependencies, and open questions.
-8. Use status `specified` when the task is clear enough to implement and GitHub
-   Mirror Tracking did not leave it blocked. Never overwrite a tracking-related
-   `blocked` status merely because the local specification is ready. Use
-   `blocked` when required user decisions remain.
+8. Use status `specified` when the task is clear enough to implement and any
+   explicitly requested or linked public tracking did not leave it blocked.
+   Never overwrite an active tracking-related `blocked` status merely because
+   the local specification is ready. Use `blocked` when required user decisions
+   remain.
 9. Split into child tasks only when that clearly improves clarity, safety, or
    resumability. Prefer one narrow task.
 
@@ -289,9 +333,15 @@ implementation pass.
 1. Resolve the task reference, read the target task, parent task when present,
    directly relevant child tasks, dependencies, task templates, and referenced
    docs before editing runtime files.
-2. Apply GitHub Mirror Tracking before editing runtime files. When the repository
-   has a confirmed mirror, repair pending or missing tracking first and do not
-   implement until the task contains its validated Issue URL.
+2. Evaluate Optional GitHub Issue Tracking before editing runtime files. Validate
+   a stored full Issue URL through the existing tracking workflow. Enter that
+   workflow for an unlinked task only when the user explicitly requests public
+   tracking. Otherwise do not inspect eligibility, mirrors, Tea, `GH_TOKEN`, or
+   GitHub. For the exact pending-approval state described under Activation,
+   obtain an explicit resume-or-local choice; implementation may proceed locally
+   after the user chooses implementation without an Issue. Preserve and reconcile
+   any other pending state before implementation because its remote result may be
+   uncertain.
 3. Prefer implementing leaf tasks. If the target has unresolved child tasks that
    should stay separate, stop and report the next child task instead of silently
    collapsing that structure.
@@ -337,9 +387,11 @@ git --no-pager diff --check
     but public completion remains pending. A retry accepts an already completed
     and fully linked Issue and persists `solved` without repeating implementation
     side effects.
-13. When the task has no full Issue URL and is ineligible for GitHub tracking or
-    has a confirmed no-mirror result, write `solved` after local verification
-    without a remote close. Never use a later eligibility or mirror result to
+13. When the task has no full Issue URL and `Public Tracking` is `not requested`,
+    records the user's declined Issue creation, or has a confirmed ineligible or
+    no-mirror result, write `solved` after local verification without a remote
+    close. An unresolved pending value is not eligible for this local completion
+    path. Never use an unlinked value or a later eligibility or mirror result to
     bypass closure of an Issue that was already linked.
 14. Use `blocked` when a user decision, failing dependency, unresolved
     specification gap, or required Issue closure prevents completion.
