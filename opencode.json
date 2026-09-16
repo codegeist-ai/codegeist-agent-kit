@@ -29,7 +29,9 @@
       "**/node_modules/**",
       "**/dist/**",
       "**/output/**",
-      "**/tmp/**"
+      "**/tmp/**",
+      "**/.codegeist/.local.env",
+      "**/.codegeist/secrets/**"
     ]
   },
   "mcp": {
@@ -76,6 +78,11 @@
     }
   },
   "permission": {
+    "read": {
+      ".codegeist/.local.env": "deny",
+      ".codegeist/secrets": "deny",
+      ".codegeist/secrets/**": "deny"
+    },
     "external_directory": {
       "/tmp/**": "allow"
     }
