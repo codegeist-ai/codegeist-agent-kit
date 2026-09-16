@@ -25,11 +25,10 @@ Shared workflow commands intended to work across repos.
 - `/session-title` - generate a short session title from the current branch and
   recent result.
 - `/task` - manage canonical task files under `docs/tasks/` with the actions
-  `spec`, `impl`, `cancel`, and `backlog`; projects that mount
-  `codegeist-agent-kit` as `.opencode` and have a confirmed GitHub mirror receive
-  one concise Issue per top-level or child task through `GH_TOKEN`, but only
-  after the user approves the exact Issue preview; verified implementation closes
-  that Issue as completed before local status becomes `solved`.
+  `spec`, `impl`, `cancel`, and `backlog`; local tasks default to no public
+  tracking, while users may opt into one concise GitHub Issue through `GH_TOKEN`
+  and exact-preview approval. A linked Issue is validated before implementation
+  and confirmed closed as completed before local status becomes `solved`.
 - `/update-submodules` - update `.opencode` and `.devcontainer` to their
   configured branches from `.gitmodules`.
 - `/update-documentation` - refresh the docs affected by recent changes.

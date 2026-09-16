@@ -207,12 +207,61 @@ if ! grep -F 'The local task file is always the source of truth.' \
     "${target}/commands/task.md" >/dev/null; then
   fail "task command must keep the local task authoritative"
 fi
-if ! grep -F 'GitHub Mirror Tracking' "${target}/commands/task.md" >/dev/null; then
-  fail "task command must verify GitHub mirrors before Issue creation"
+if ! grep -F 'Optional GitHub Issue Tracking' "${target}/commands/task.md" >/dev/null; then
+  fail "task command must define optional GitHub Issue tracking"
 fi
-if ! grep -F 'Apply GitHub Mirror Tracking automatically only when the repository uses' \
+if ! grep -F 'Supported actions are `spec`, `impl`,' \
+    "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'Do not invent extra task actions beyond `spec`, `impl`, `cancel`, and `backlog`.' \
+      "${target}/commands/task.md" >/dev/null; then
+  fail "task command must keep the existing action set"
+fi
+if ! grep -F 'For a task without a full GitHub Issue URL, enter Project Eligibility and the' \
     "${target}/commands/task.md" >/dev/null; then
-  fail "task command must scope Issue tracking to agent-kit consumers"
+  fail "task command must gate public tracking for unlinked tasks"
+fi
+if ! grep -F 'only when the user explicitly requests public' \
+    "${target}/commands/task.md" >/dev/null; then
+  fail "task command must require an explicit public-tracking request"
+fi
+if ! grep -F 'A pending value' "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'does not authorize mirror discovery,' \
+      "${target}/commands/task.md" >/dev/null; then
+  fail "task command must not treat an old pending value as GitHub authorization"
+fi
+if ! grep -F 'Public Tracking: pending user approval for GitHub' \
+    "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'without an Issue, set `Public Tracking: not requested (user declined GitHub' \
+      "${target}/commands/task.md" >/dev/null; then
+  fail "task command must let pending unlinked tasks return to local implementation"
+fi
+if ! grep -F 'Preserve and keep `blocked` any other unlinked pending value from an earlier' \
+    "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'so it cannot be downgraded to `not requested`.' \
+      "${target}/commands/task.md" >/dev/null; then
+  fail "task command must reconcile uncertain pending remote results"
+fi
+if ! grep -F 'A full Issue URL in `Public Tracking` always activates the existing linked' \
+    "${target}/commands/task.md" >/dev/null; then
+  fail "task command must keep existing Issue URLs binding"
+fi
+if ! grep -F 'For a new task or a missing `Public' \
+    "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'Tracking` field, use `Public Tracking: not requested`.' \
+      "${target}/commands/task.md" >/dev/null; then
+  fail "task command must default new tasks to no public tracking"
+fi
+if ! grep -F -- '- **Public Tracking:** not requested' \
+    "docs/tasks/template.md" >/dev/null; then
+  fail "task template must default to no public tracking"
+fi
+if ! grep -F 'Made GitHub Issue tracking optional for `/task`.' \
+    "${target}/README.md" >/dev/null; then
+  fail "release README must document optional GitHub Issue tracking"
+fi
+if ! grep -F 'available if tracking is requested later through `/task spec`.' \
+    "${target}/rules/task-workflow.md" >/dev/null; then
+  fail "task workflow must allow later public-tracking opt-in through task spec"
 fi
 if ! grep -F 'path is exactly `.opencode`' \
     "${target}/commands/task.md" >/dev/null; then
@@ -234,18 +283,23 @@ if ! grep -F 'not mounted at .opencode' \
     "${target}/commands/task.md" >/dev/null; then
   fail "task command must keep ineligible repositories local"
 fi
-if ! grep -F 'Do not inspect' "${target}/commands/task.md" >/dev/null \
-    || ! grep -F '`GH_TOKEN` and do not run `gh`.' \
-    "${target}/commands/task.md" >/dev/null; then
-  fail "task command must skip GitHub access when no mirror exists"
+if ! grep -F 'the user has not explicitly requested public' \
+    "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'records declined Issue creation, or is a not-applicable result, do not inspect' \
+      "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'project eligibility, GitHub mirrors, Tea, or `GH_TOKEN`, and do not run `gh`.' \
+      "${target}/commands/task.md" >/dev/null; then
+  fail "task command must skip all public-tracking inspection when not requested"
 fi
 if ! grep -F 'Use `GH_TOKEN` as the only supported GitHub token environment' \
     "${target}/commands/task.md" >/dev/null; then
   fail "task command must require GH_TOKEN as its only token variable"
 fi
-if ! grep -F 'Public Tracking: pending GitHub mirror verification' \
-    "${target}/commands/task.md" >/dev/null; then
-  fail "task command must distinguish unknown mirrors from pending Issue approval"
+if ! grep -F 'public-tracking request without an Issue URL, use `Public Tracking: pending' \
+    "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'GitHub mirror verification` and status `blocked` while tracking setup is' \
+      "${target}/commands/task.md" >/dev/null; then
+  fail "task command must distinguish active unknown-mirror tracking"
 fi
 if ! grep -F '`env -u GH_TOKEN tea api --help` succeeds' \
     "${target}/commands/task.md" >/dev/null; then
@@ -390,23 +444,34 @@ if ! grep -F 'single-use: a changed repository, title, or body, or a failed crea
     "${target}/commands/task.md" >/dev/null; then
   fail "task command must not reuse stale Issue approval"
 fi
-if ! grep -F 'report that no' "${target}/commands/task.md" >/dev/null \
-    || ! grep -F 'Issue was created, and stop the creation path.' \
+if ! grep -F 'If the user declines or defers approval, set `Public Tracking: not requested' \
+    "${target}/commands/task.md" >/dev/null \
+    || ! grep -F '(user declined GitHub Issue creation)`' \
       "${target}/commands/task.md" >/dev/null; then
-  fail "task command must create no Issue when approval is absent"
+  fail "task command must record declined Issue creation as unrequested"
+fi
+if ! grep -F 'without the tracking blocker, report that no Issue was created, and stop only' \
+    "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'the public-tracking path. Continue the local `spec` or `impl` workflow.' \
+      "${target}/commands/task.md" >/dev/null; then
+  fail "task command must restore local progress when Issue creation is declined"
 fi
 if ! grep -F 'Only after approval, invoke `gh issue create`' \
     "${target}/commands/task.md" >/dev/null; then
   fail "task command must gate gh issue create behind approval"
 fi
+if ! grep -F 'An explicit request for public tracking is not approval to create or edit an' \
+    "${target}/commands/task.md" >/dev/null; then
+  fail "task command must keep public-tracking selection separate from approval"
+fi
 if ! grep -F 'Whenever any task path changes' \
     "${target}/commands/task.md" >/dev/null; then
   fail "task command must repair Issue linkage after every task path change"
 fi
-if ! grep -F 'completion closure, or' "${target}/commands/task.md" >/dev/null \
-    || ! grep -F 'completion verification fails, keep the local task `blocked`' \
+if ! grep -F 'completion closure, or completion' "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'verification fails, keep the local task `blocked`' \
       "${target}/commands/task.md" >/dev/null; then
-  fail "task command must block tasks when GitHub linkage fails"
+  fail "task command must block active or linked tracking when GitHub work fails"
 fi
 if ! grep -F 'close it with `gh issue close`' \
     "${target}/commands/task.md" >/dev/null; then
@@ -437,9 +502,15 @@ if ! grep -F 'and fully linked Issue and persists `solved` without repeating imp
     || ! grep -F 'side effects.' "${target}/commands/task.md" >/dev/null; then
   fail "task command must make completion closure retryable"
 fi
-if ! grep -F 'Never overwrite a tracking-related' \
+if ! grep -F 'Never overwrite an active tracking-related' \
     "${target}/commands/task.md" >/dev/null; then
-  fail "task spec must preserve tracking-related blocked status"
+  fail "task spec must preserve active tracking-related blocked status"
+fi
+if ! grep -F 'When the task has no full Issue URL and `Public Tracking` is `not requested`,' \
+    "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'An unresolved pending value is not eligible for this local completion' \
+      "${target}/commands/task.md" >/dev/null; then
+  fail "task impl must solve verified unlinked tasks locally"
 fi
 if ! grep -F 'Do not inspect GitHub mirrors, require `GH_TOKEN`, or create an Issue' \
     "${target}/commands/task.md" >/dev/null; then

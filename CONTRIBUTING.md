@@ -33,11 +33,12 @@ unclear.
    and any existing repository
    [Issues](https://github.com/codegeist-ai/codegeist-agent-kit/issues).
 2. Use `/task spec` to create the canonical specification under
-   [`docs/tasks/`](docs/tasks/README.md). When the repository's declared GitHub
-   mirror is confirmed, the command previews one concise Issue, creates it only
-   after explicit user approval, and records its URL in `Public Tracking`.
-   Existing Issues may be reused. GitHub access requires `GH_TOKEN`; no browser
-   login or stored GitHub CLI credential is used.
+   [`docs/tasks/`](docs/tasks/README.md). Tasks default to `Public Tracking: not
+   requested`. When public tracking is requested, the command confirms the
+   repository's declared GitHub mirror, previews one concise Issue, creates it
+   only after explicit user approval, and records its URL. Existing Issues may be
+   reused. GitHub access requires `GH_TOKEN`; no browser login or stored GitHub
+   CLI credential is used.
 3. An Issue labeled `status:ready` must link its canonical task. For a small
    unplanned fix, a maintainer may confirm that no new task is needed; state the
    reason in the pull request. Always use an existing task when one defines the
@@ -46,19 +47,21 @@ unclear.
 5. Use `/task impl` to implement the canonical task in source paths at the
    repository root. The generated `release` branch and consuming `.opencode/`
    checkouts are distribution outputs, not implementation targets. The command
-   must run the normal repository check before closing the linked Issue or
+   must run the normal repository check before closing any linked Issue or
    recording `solved`:
 
    ```bash
    task test
    ```
 
-   `/task impl` closes a validated linked Issue as completed only after that and
-   any task-specific verification pass, then records the local task as `solved`
-   only after GitHub confirms the close.
-6. Open a pull request that links the Issue and applicable local task, summarizes
-   the source and release impact, and reports verification. If no new task was
-   required, state `No local task needed:` and the maintainer-approved reason.
+   `/task impl` records a task with inactive public tracking as `solved` after
+   that and any task-specific verification pass. For a linked task, it closes the
+   validated Issue as completed and waits for GitHub to confirm the close before
+   recording `solved`.
+6. Open a pull request that links the applicable local task and any linked Issue,
+   summarizes the source and release impact, and reports verification. If no new
+   task was required, state `No local task needed:` and the maintainer-approved
+   reason.
 
 `task test` copies and validates the release bundle without creating commits,
 publishing a release, or updating submodules. Release publication through

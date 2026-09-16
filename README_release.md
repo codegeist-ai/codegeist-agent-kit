@@ -59,37 +59,51 @@ branch should contain only runtime files needed by consuming repositories:
   `.codegeist/secrets/` automatically after their runtime kit is updated. Other
   consumers should provide equivalent ignored paths when they adopt this
   convention. Existing temporary and secret paths are not migrated.
-- Extended `/task spec` so every project that mounts `codegeist-agent-kit` as an
-  initialized `.opencode` Git submodule gets one concise Issue per top-level or
-  child task after its GitHub mirror is confirmed and the user explicitly
-  approves the exact repository, title, and complete body preview. A task request
-  is not approval; declined or deferred approval creates no Issue and leaves the
-  task blocked. Backlog entries and ineligible repositories remain local, and
-  repositories without a mirror do not require GitHub access.
-- Added an optional Tea `v0.12.0` push-mirror discovery fallback for eligible
-  repositories without a mirror declaration or GitHub root remote. Unknown or
-  inaccessible results block public tracking until the repository declares
-  `GitHub Mirror: <URL|none>`; Tea runs without `GH_TOKEN` and never starts login
-  setup or exposes the raw source-forge response.
+- Made GitHub Issue tracking optional for `/task`. New top-level and child tasks
+  default to `Public Tracking: not requested`, retain a random immutable Tracking
+  Key, and can be specified, implemented, verified, and marked `solved` without
+  GitHub access. A later `/task spec` invocation can request public tracking.
+- Prevented `/task` from inspecting project eligibility, GitHub mirrors, Tea,
+  `GH_TOKEN`, or running `gh` for an unlinked task unless the user explicitly
+  requests public tracking. A full Issue URL still activates the binding linked
+  Issue workflow.
+- Kept public-tracking selection separate from remote mutation approval. A new
+  Issue still requires explicit single-use approval of the exact repository,
+  title, and complete body preview. Declining or deferring creation records
+  `Public Tracking: not requested (user declined GitHub Issue creation)`, restores
+  the intended local status, and leaves implementation available.
+- Allowed existing unlinked tasks with pending Issue approval to proceed locally
+  when the user explicitly chooses implementation without an Issue. A pending
+  value alone no longer authorizes mirror discovery or GitHub access; other
+  pending states remain blocked until uncertain remote results are reconciled.
+- Kept the optional Tea `v0.12.0` push-mirror discovery fallback for active
+  public-tracking requests in eligible repositories without a mirror declaration
+  or GitHub root remote. Unknown or inaccessible results block that request until
+  the repository declares `GitHub Mirror: <URL|none>`; Tea runs without
+  `GH_TOKEN` and never starts login setup or exposes the raw source-forge
+  response.
 - Kept each local task file authoritative for scope, acceptance criteria, status,
-  files, and verification. The linked Issue contains only the Goal, canonical
-  task path, and source-of-truth notice. `/task` does not synchronize labels,
-  projects, readiness, cancellation, or intermediate statuses, but it closes a
-  validated linked Issue as completed before persisting local status `solved`.
+  files, and verification. A linked Issue contains only the Goal, canonical task
+  path, and source-of-truth notice. `/task` does not synchronize labels, projects,
+  readiness, cancellation, or intermediate statuses. It closes a validated
+  linked Issue as completed before persisting local status `solved`; a task whose
+  public tracking is inactive becomes `solved` after local verification.
 - Preserved existing Issue URLs across later eligibility and no-mirror results,
   preventing a linked task from bypassing completion closure. Existing Issues
   that are unmarked or incomplete require an approved linkage edit, newly
   supplied exact cross-author links require approval before storage, and pull
   requests are rejected.
-- Consumer action: declare `GitHub Mirror: <URL|none>` in `docs/tasks/README.md`
-  when contributors cannot inspect the source repository's configured push
-  mirrors. A declaration keeps Tea optional and prevents an unknown mirror from
-  blocking task tracking.
-- Update notes for coding agents: existing task files do not require a bulk
-  migration. After updating `.opencode` and restarting OpenCode, let the next
-  `/task spec` or `/task impl` repair missing `Public Tracking` and immutable
-  `Tracking Key` fields. Do not create Issues without exact preview approval or
-  mark a linked task `solved` before completed closure is verified.
+- Consumer action: update `.opencode` and restart OpenCode to load the optional
+  workflow. No OpenCode configuration or bulk task-file migration is required.
+  Existing full Issue URLs remain binding. For an unlinked task pending
+  Issue-creation approval, explicitly choose whether to resume public tracking or
+  continue locally; other pending states require reconciliation. Declare `GitHub
+  Mirror: <URL|none>` only when public tracking is used and contributors cannot
+  inspect configured push mirrors.
+- Update notes for coding agents: preserve every task's immutable Tracking Key,
+  do not access GitHub for unrequested tracking, do not create or edit Issues
+  without the applicable exact-preview approval, and never mark a linked task
+  `solved` before completed closure is verified.
 - Replaced interactive GitHub CLI authentication with the `GH_TOKEN` environment
   variable and removed the shared `gh-auth` skill. Shared workflows no longer
   use `gh auth login`, `gh auth status`, stored GitHub CLI credentials, or any
@@ -417,11 +431,11 @@ When working inside a consuming repository that uses this submodule:
 - `/session-title` creates a short session title from the current branch and
   recent result.
 - `/task` manages authoritative task files under `docs/tasks/` with `spec`,
-  `impl`, `cancel`, and `backlog`. In projects that mount this kit as `.opencode`
-  and have a confirmed GitHub mirror, each top-level or child task gets one
-  concise Issue through `GH_TOKEN` only after the user approves its exact
-  preview. Verified implementation closes that Issue as completed before the
-  task becomes `solved`; backlog entries do not.
+  `impl`, `cancel`, and `backlog`. Tasks default to no public tracking and can be
+  completed locally. When a user requests public tracking, one concise Issue can
+  be created through `GH_TOKEN` only after exact-preview approval. Verified
+  implementation closes and confirms any linked Issue before the task becomes
+  `solved`; backlog entries do not use Issues.
 - `/update-documentation` refreshes documentation affected by recent changes.
 - `/verify-documentation` audits documentation and reports stale or broken
   references without editing them.

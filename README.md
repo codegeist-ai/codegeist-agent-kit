@@ -74,11 +74,13 @@ Source work starts from `main` and a topic branch, never from the generated
 [Codegeist roadmap](https://github.com/users/codegeist-ai/projects/1), and use the
 [local task guide](docs/tasks/README.md) for accepted implementation
 specifications. In projects that mount this kit as `.opencode`, `/task spec`
-keeps the local task authoritative and creates one concise Issue only after
-confirming the declared GitHub mirror and receiving explicit approval for the
-exact preview; existing Issues may be reused. GitHub CLI work requires
-`GH_TOKEN` in the OpenCode process environment. A verified implementation closes
-its validated Issue as completed before the local task becomes `solved`.
+keeps the local task authoritative and defaults to no public tracking. A user can
+request one concise Issue later; the command then confirms the declared GitHub
+mirror and requires explicit approval for the exact preview. GitHub CLI work
+requires `GH_TOKEN` only when tracking is requested or an Issue is already
+linked. A verified task whose public tracking is inactive becomes `solved`
+locally, while a linked task first closes and confirms its validated Issue as
+completed.
 
 The canonical normal check is non-publishing:
 

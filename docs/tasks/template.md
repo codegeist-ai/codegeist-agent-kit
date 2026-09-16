@@ -4,7 +4,7 @@
 - **Type:** <feature|fix|docs|refactor|test|chore>
 - **Parent:** <task-id|none>
 - **Status:** open
-- **Public Tracking:** pending GitHub mirror verification
+- **Public Tracking:** not requested
 - **Tracking Key:** <random UUID generated once>
 
 ## Goal

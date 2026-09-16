@@ -40,16 +40,16 @@ Agent-owned navigation map for the shared OpenCode workspace.
 ## Key Workflows
 
 - Start source contributions from `main`, keep the local task authoritative, use
-  its linked GitHub mirror Issue, and never implement changes in generated
-  `release` or `.opencode/` checkouts.
+  a GitHub mirror Issue only when public tracking is requested, and never
+  implement changes in generated `release` or `.opencode/` checkouts.
 - Use `task test` after changing documentation workflows, release runtime files,
   or release-copy behavior.
 - Maintainers use `task release-build` only after source review and
   `README_release.md` changelog updates for consumer-visible changes.
 - Use `/task spec "<title/context>"` and `/task impl <task-ref> [instructions]`
-  for tracked task work; eligible `.opencode` consumers with a GitHub mirror use
-  linked Issues, and creating a new Issue requires explicit approval of its exact
-  preview.
+  for tracked task work; public Issues are optional, and creating one requires an
+  explicit request plus approval of its exact preview. Existing linked Issues
+  remain binding through completion.
 - Use `/update-index <directory>` to create or refresh directory-local indexes.
 - For the internal Gitea `origin`, follow `.oc_local/rules/gitea-git.md`; Tea
   supplies credentials while Git performs fetch, pull, and push.

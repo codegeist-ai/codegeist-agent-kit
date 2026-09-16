@@ -38,8 +38,8 @@ Shared AI rules intended to work across repos.
 - `temporary-storage.md` - keep disposable artifacts outside persistent
   workspaces and persistent secrets under `.codegeist/secrets/`.
 - `task-workflow.md` - canonical local task workflow with `spec`, `impl`,
-  `cancel`, and `backlog`, plus Issue linkage and verified completion closure for
-  confirmed GitHub mirrors.
+  `cancel`, and `backlog`, plus optional GitHub Issue linkage and verified
+  completion closure for tasks that use public tracking.
 - `session-titles.md` - short, searchable session title conventions.
 - `ai-scripts.md` - policy for future `.opencode/ai-scripts/` helpers.
 - `excalidraw.md` - editable `.excalidraw.svg` export requirements.
