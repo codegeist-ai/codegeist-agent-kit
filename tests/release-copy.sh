@@ -162,6 +162,11 @@ jq -e '
   (.instructions | index(".opencode/rules/temporary-storage.md")) and
   ((.instructions | map(select(test("graphify"; "i"))) | length) == 0) and
   ((has("plugin")) | not) and
+  (.watcher.ignore | index("**/.codegeist/.local.env")) and
+  (.watcher.ignore | index("**/.codegeist/secrets/**")) and
+  (.permission.read[".codegeist/.local.env"] == "deny") and
+  (.permission.read[".codegeist/secrets"] == "deny") and
+  (.permission.read[".codegeist/secrets/**"] == "deny") and
   (.permission.external_directory["/tmp/**"] == "allow") and
   (.mcp.context7.type == "local") and
   (.mcp.playwright.type == "local") and

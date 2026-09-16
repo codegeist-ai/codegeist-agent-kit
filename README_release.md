@@ -7,8 +7,8 @@ configuration while leaving project-specific behavior in the consuming repo.
 
 ## What This Submodule Provides
 
-- `opencode.json` loads the shared instructions, MCP servers, and
-  external-directory permissions expected by OpenCode.
+- `opencode.json` loads the shared instructions, MCP servers, and filesystem
+  permissions expected by OpenCode.
 - `opencode.json` can load a repository-root `INDEX.md` owned by the consuming
   repository; the shared `.opencode` submodule does not ship that file.
   Keep project-specific index content outside `.opencode/`.
@@ -36,6 +36,15 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Added explicit OpenCode read denials and watcher exclusions for
+  `.codegeist/.local.env` and `.codegeist/secrets/`. The secret directory itself
+  is also denied so OpenCode cannot list it through the read tool.
+- Consumer action: update `.opencode` and restart OpenCode so the new read
+  permissions take effect. No file migration is required.
+- Update notes for coding agents: treat both paths as unavailable and do not try
+  alternate tools to expose their contents. These rules govern OpenCode's read
+  tool and watcher; operating-system access by separately authorized shell
+  commands remains a separate security boundary.
 - Removed the shared `docs/index.html` developer-map convention and the automatic
   documentation refresh from `/save`. `/update-documentation` and
   `/verify-documentation` remain available for general repository documentation.
