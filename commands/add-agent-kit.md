@@ -19,7 +19,6 @@ move <explicit .oc_local command, rule, or skill path>
 
 Follow @.opencode/rules/command-execution.md,
 @.opencode/rules/commit.md,
-@.opencode/rules/commit-conventions.md,
 @.opencode/rules/software-documentation.md,
 @.opencode/rules/software-tests.md, and
 @.opencode/rules/language-policy.md.
@@ -72,7 +71,7 @@ For `move` requests:
    verified in the updated submodule. Leave unselected `.oc_local/` files
    untouched.
 
-Then perform the upstream source workflow autonomously:
+Then prepare the upstream source workflow:
 
 1. Clone `https://github.com/codegeist-ai/codegeist-agent-kit.git` into an
    explicit user-owned temporary directory outside the consuming repository,
@@ -93,15 +92,21 @@ Then perform the upstream source workflow autonomously:
    future sessions.
 5. Run `task test` in the source checkout and fix any failures before
    continuing.
-6. Review the source checkout diff and create a focused Conventional Commit for
-   the source change. Do not commit secrets, unrelated files, generated noise,
-   or temporary clone paths.
-7. Push the source branch when the remote is configured and the authenticated
+6. Before creating or publishing any commit, require the current user request to
+   explicitly authorize the source commit and push plus the generated release
+   commit and push. Invoking `/add-agent-kit` or asking for an upstream change is
+   not commit authorization by itself. If authorization is missing, report the
+   prepared diff and verification result, ask one focused confirmation question
+   naming those side effects, and stop before the first commit.
+7. Review the source checkout diff and create a focused commit that follows
+   @.opencode/rules/commit.md. Do not commit secrets, unrelated files, generated
+   noise, or temporary clone paths.
+8. Push the source branch when the remote is configured and the authenticated
    session has permission. Before any GitHub CLI command, require a non-empty
    `GH_TOKEN`, force `GH_HOST=github.com`, set `GH_PROMPT_DISABLED=1`, and
    validate it with a read-only `gh api user` request. Never use stored
    credentials or an interactive login.
-8. Run `task release-build` in the source checkout so a normal commit is added
+9. Run `task release-build` in the source checkout so a normal commit is added
    to the generated `release` branch and pushed. The release branch history must
    stay reviewable; do not force-recreate it when the remote branch already
    exists.

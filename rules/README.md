@@ -13,12 +13,12 @@ Shared AI rules intended to work across repos.
 ## Core Rules
 
 - `learn.md` - capture durable project guidance in the right rule file.
-- `command-execution.md` - how commands should be chosen and run.
+- `command-execution.md` - how commands should be chosen and run, including the
+  explicit current-request gate for commits in non-disposable repositories.
 - `commit.md` - concise commit requirements used by repo workflows.
 
 ## Supporting Rules
 
-- `commit-conventions.md` - longer-form commit guidance.
 - `tools.md` - Bash, system command, script, and package-install access rules
   for coding agents.
 - `devcontainer-tools.md` - coding-relevant tools available in the devcontainer.
@@ -37,9 +37,9 @@ Shared AI rules intended to work across repos.
 - `taskfile-and-script-creation.md` - how to add wrappers and Taskfiles safely.
 - `temporary-storage.md` - keep disposable artifacts outside persistent
   workspaces and persistent secrets under `.codegeist/secrets/`.
-- `task-workflow.md` - canonical local task workflow with `spec`, `impl`,
-  `cancel`, and `backlog`, plus optional GitHub Issue linkage and verified
-  completion closure for tasks that use public tracking.
+- `task-workflow.md` - always-on task invariants for `spec`, `impl`, `cancel`,
+  and `backlog`, including optional GitHub Issue linkage and verified completion
+  closure; `commands/task.md` owns the detailed execution procedure.
 - `session-titles.md` - short, searchable session title conventions.
 - `ai-scripts.md` - policy for future `.opencode/ai-scripts/` helpers.
 - `excalidraw.md` - editable `.excalidraw.svg` export requirements.

@@ -32,6 +32,13 @@ Then:
 7. Use the same migration rule recursively for child tasks: they also start as
    standalone `<parent-id>_NN_<slug>.md` files and move to `task.md` only when
    they gain their own child tasks.
+8. When a task directory no longer contains child tasks, collapse it back to its
+   standalone Markdown form and remove the empty task directory. Apply this rule
+   recursively.
+9. Keep exactly one canonical representation for every task: either a standalone
+   task file or a directory containing `task.md`, never both.
+10. Keep every child task self-contained with its own goal, acceptance criteria,
+    files, non-goals, verification, and `Parent` link.
 
 ## Optional GitHub Issue Tracking
 
@@ -412,24 +419,14 @@ git --no-pager diff --check
 
 1. Treat the remaining arguments as one idea title and stop if they are missing.
 2. Create `docs/tasks/backlog.md` with a small English explanation when missing.
-3. Record the current branch and whether it was already synchronized with its
-   upstream before writing the backlog entry.
-4. Append exactly one new `* <idea>` line to `docs/tasks/backlog.md`.
-5. Stage and commit only `docs/tasks/backlog.md`, even when other worktree
-   changes exist.
-6. Do not update task files or other docs for this quick-capture path.
-7. Push the current branch only when that push would publish just the new
-   backlog-only commit; if the branch was already ahead before the new commit,
-   stop and report that the push would include unrelated commits.
-8. If the branch has no upstream but exactly one remote exists, set the upstream
-   with `git push -u` only when that push would not include unrelated local
-   commits.
-9. If no suitable push target exists, stop and report that exact blocker after
-   creating the local backlog commit.
-10. After the backlog-only commit and push attempt, stop and report the result
-    without treating the backlog item as the new active task context.
-11. Do not inspect GitHub mirrors, require `GH_TOKEN`, or create an Issue for a
-    backlog entry.
+3. Append exactly one new `* <idea>` line to `docs/tasks/backlog.md`.
+4. Do not stage, commit, or push the backlog change. `/task backlog` is a local
+   capture action and does not imply commit authorization.
+5. Do not update task files or other docs for this quick-capture path.
+6. Report the changed backlog file as an uncommitted local edit, then stop without
+   treating the backlog item as the new active task context.
+7. Do not inspect GitHub mirrors, require `GH_TOKEN`, or create an Issue for a
+   backlog entry.
 
 Report the created or updated task files, final statuses, mirror decision, Issue
 approval result, Issue URL when applicable, implementation result, verification

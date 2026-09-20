@@ -43,19 +43,16 @@ coding agent may run.
 
 ## Git And GitHub Commands
 
-- `git` and `gh` commands are allowed tools. Do not ask only because a task uses
-  Git, GitHub, remotes, pull requests, issues, releases, checks, workflows, or
-  repository metadata.
-- Run task-scoped `git` and `gh` actions directly when they are useful for
-  inspection, verification, repository setup, CI checks, issue or PR research,
-  release lookup, workflow inspection, or other requested work.
+- `git` and `gh` are available tools, but tool availability does not authorize
+  shared-state mutations.
+- Run task-scoped read-only `git` and `gh` actions directly when they are useful
+  for inspection, verification, repository setup, CI checks, issue or PR
+  research, release lookup, or workflow inspection.
+- Apply `command-execution.md` for commit authorization and GitHub CLI
+  authentication.
 - Direct changes in GitHub need extra care because they affect shared remote
   state. Inspect the target, prefer non-interactive commands, and keep changes
   narrowly tied to the user's task.
-- Run `gh` only when `GH_TOKEN` is present and valid, force
-  `GH_HOST=github.com`, and disable interactive prompting. Never expose the token
-  or fall back to another token variable, stored GitHub CLI credentials, or an
-  interactive login flow.
 - Follow the repository's commit and command-execution rules for commits,
   pushes, branch rewrites, pull-request creation, and other history-changing
   operations in non-disposable repositories.

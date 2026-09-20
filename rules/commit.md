@@ -2,14 +2,22 @@
 
 Use these rules whenever you create a git commit for this project.
 
+## Authorization
+
+- This file defines how to create an already-authorized commit; it never grants
+  authorization to create one.
+- Apply the canonical Git Write Authorization gate in `command-execution.md`.
+
 ## Format
 
-- Prefer Conventional Commit style: `<type>(<scope>): <subject>` or `<type>: <subject>`.
+- Use Conventional Commit style: `<type>(<scope>): <subject>` or `<type>: <subject>`.
 - Allowed types: `feat`, `fix`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`, `style`.
 - Write the subject and body in English.
 - Write the subject in imperative mood, for example `add --cmd support`.
 - Keep the subject concise and ideally under 72 characters.
 - Do not end the subject with a period.
+- Use a short scope that identifies the changed area when a scope adds useful
+  context.
 
 ## Content
 
@@ -31,8 +39,10 @@ Use these rules whenever you create a git commit for this project.
 
 ## Body
 
-- Add a body only when extra context is useful.
+- Add a body for non-trivial changes; omit it only when the subject fully explains
+  a small change.
 - Use the body to explain why the change exists, notable constraints, or follow-up notes.
+- Wrap body lines around 72 characters when practical.
 - When constructing commit messages via shell flags or automation, use real line
   breaks in the body; never leave literal `\n` escape sequences in the final
   committed message.
