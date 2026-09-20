@@ -4,6 +4,14 @@ agent: build
 ---
 Review the current repository state and the active chat context.
 
+Invoking `/save` is itself explicit authorization for the documented commit,
+shared-submodule synchronization, rebase, and push side effects. Do not ask for
+a separate commit confirmation after invocation. For a plain chat request that
+does not invoke `/save`, execute this workflow only when it explicitly asks for
+the full commit, rebase, and push workflow, including shared-submodule
+synchronization. Never select or delegate to `/save` merely because implementation
+or verification is complete.
+
 This workflow is branch-aware and uses rebase, not merge:
 
 - In every path where a local base branch is resolved, refresh that local base
@@ -25,8 +33,7 @@ Then execute @.opencode/commands/update-submodules.md so `.opencode` and
 `.devcontainer` are refreshed to their configured branches before the commit.
 
 Then review the current git status, staged and unstaged changes, and recent
-commit messages. Follow @.opencode/rules/commit.md and
-@.opencode/rules/commit-conventions.md.
+commit messages. Follow @.opencode/rules/commit.md.
 
 If the user provided extra context, use it as an additional hint for the commit
 message:

@@ -5,12 +5,8 @@ the smallest direct way to inspect, edit, build, test, or document the repo.
 
 ## Bash Command Access
 
-- Coding agents may use Bash commands without command-level restrictions.
-- Prefer non-interactive command forms and the repo's existing entrypoints.
-- Keep commands focused on the task and avoid destructive actions unless the
-  user explicitly asks for them.
-- Prefer built-in OpenCode file tools for precise reads, searches, and manual
-  edits unless a shell command is the clearer fit.
+- `tools.md` owns command access and safety policy. This file only inventories
+  tools installed in the shared devcontainer.
 
 ## Shells And CLI Basics
 
@@ -27,10 +23,8 @@ the smallest direct way to inspect, edit, build, test, or document the repo.
 
 ## Git And GitHub
 
-- `git` handles repository inspection, diffs, branches, rebases, and commits.
-- `gh` handles GitHub issues, pull requests, checks, releases, and API calls;
-  require a valid `GH_TOKEN`, force `GH_HOST=github.com`, and disable interactive
-  prompting before using it.
+- `git` and `gh` provide repository and GitHub workflows; follow
+  `command-execution.md` for authorization and authentication.
 - `lazygit` is available for local interactive Git inspection, but prefer
   non-interactive `git` commands during agent workflows.
 

@@ -2,11 +2,40 @@
 
 Use these rules whenever you choose or run commands in this project.
 
+## Git Write Authorization
+
+- In a non-disposable repository, never create a Git commit unless the current
+  user request explicitly asks to create or record a commit, or explicitly
+  invokes `/commit`, `/git-commit`, or `/save`.
+- Direct invocation of `/commit`, `/git-commit`, or `/save` is the authorization;
+  do not ask for a second commit confirmation. In particular, `/save` authorizes
+  its documented commit, submodule synchronization, rebase, and push workflow.
+- A repository command whose documented primary purpose necessarily creates and
+  publishes commits may declare direct invocation as authorization for those
+  enumerated side effects. Do not ask for a second confirmation when that
+  command makes the authorization boundary explicit.
+- Commit authorization is limited to the current request and applies equally to
+  parent and submodule commits. Do not infer it from an earlier request, broad
+  implementation autonomy, task completion, a dirty worktree, or a workflow that
+  happens to contain a commit step.
+- A plain chat request qualifies only when it unambiguously asks to create a Git
+  commit. Requests merely to save files, persist edits, record task state, push,
+  or synchronize do not satisfy the gate.
+- Implementing, fixing, testing, documenting, finishing a task, updating a
+  submodule, rebasing, synchronizing, or requesting a push does not authorize a
+  commit.
+- Do not select, invoke, or delegate to a commit-producing command on the user's
+  behalf without the same explicit authorization. When an otherwise requested
+  workflow requires a commit, stop before its first commit and ask one focused
+  confirmation question that identifies the commits and pushes it would perform.
+- The disposable test-repository exception in `tools.md` remains available for
+  isolated fixtures created during the current task.
+
 ## Preference Order
 
 - Prefer repo-local workflow commands: `@.opencode/commands/learn.md`,
-  `@.opencode/commands/save.md`, `@.opencode/commands/rebase.md`, and
-  `@.opencode/commands/git-sync.md`.
+  `@.opencode/commands/rebase.md`, and `@.opencode/commands/git-sync.md` when the
+  user requests the behavior they own.
 - When a repo-local skill already defines a specialized workflow, prefer
   invoking that skill from commands instead of duplicating its step-by-step
   procedure in the command file.
@@ -27,21 +56,17 @@ Use these rules whenever you choose or run commands in this project.
   <URL|none>`.
 - Prefer non-interactive command forms whenever a tool might prompt or open a
   pager.
-- Prefer the repo-local `/commit` or `/save` workflow for commit-style tasks
-  because those commands already bundle learn, rebase, and branch-sync steps.
+- For an explicitly authorized commit task, use the repo-local `/commit` workflow
+  by default. Use `/save` only when the current request invokes it or explicitly
+  asks for its full commit, rebase, and push workflow.
 - Prefer `/add-agent-kit` when a consuming repository needs a generic shared
   command, rule, or skill added upstream to this agent kit, or when explicitly
   selected generic `.oc_local/` overlays should move into the shared kit.
 - Do not use `/add-agent-kit` for product-specific behavior; keep that in the
   consuming repository's `.oc_local/` overlays instead.
-- A plain chat request to commit, save, or record changes is also sufficient in
-  this repo when the user is explicitly asking for that git write workflow.
-- When commit-like work is requested outside `/commit` or `/save`, still follow
-  the same project commit, learn, rebase, and branch-sync rules instead of
+- When the current user explicitly requests a commit outside `/commit` or
+  `/save`, follow the `/commit` workflow instead of adding `/save` side effects or
   refusing only because the request came from normal chat.
-- Apply the same allowance and the same safety checks to submodule commits,
-  parent gitlink updates, and any other git steps whose purpose is to create or
-  record a commit.
 - For git read commands, prefer `git --no-pager ...`.
 - Prefer read-only inspection, documentation, and repo-local workflow commands
   over speculative implementation commands.

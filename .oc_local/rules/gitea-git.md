@@ -108,7 +108,9 @@ intact.
 - Use `git pull --ff-only` when the current branch should only fast-forward to
   its upstream. If it has diverged, stop and follow the repository's documented
   rebase workflow instead of creating an implicit merge.
-- Use the normal repository `/save` rules for feature-branch rebases and pushes.
+- Use `/save` for feature-branch rebases and pushes only when the current user
+  request explicitly authorizes its commit workflow. A rebase or push request
+  alone does not authorize committing dirty changes.
 - Use a normal non-force `git push` unless the active branch workflow explicitly
   permits `--force-with-lease` for a rebased non-base branch.
 - After the operation, run `git --no-pager status --short --branch` and report

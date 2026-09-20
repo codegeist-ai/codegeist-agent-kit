@@ -181,8 +181,10 @@ Failures during explicitly requested tracking and failures validating or closing
 an existing link leave the task `blocked` and retryable. Declining Issue creation
 does not block the authoritative local task.
 
-Backlog ideas without accepted scope stay in the repository Issue tracker or
-`docs/tasks/backlog.md`; they are not presented as ready implementation tasks.
+Backlog ideas without accepted scope may be tracked manually in the repository
+Issue tracker or locally in `docs/tasks/backlog.md`; they are not presented as
+ready implementation tasks. `/task backlog` uses only the local file and never
+creates an Issue.
 
 ## Required Task Fields
 

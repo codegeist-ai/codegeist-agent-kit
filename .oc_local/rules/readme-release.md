@@ -7,6 +7,8 @@ Use this rule when creating or updating `README_release.md`.
 - Treat `README_release.md` as the source documentation for the generated
   `.opencode/README.md` that consuming repositories receive from the `release`
   branch.
+- Keep the generated README as reference documentation rather than an active
+  `opencode.json` instruction; behavior belongs in focused files under `rules/`.
 - Document the released OpenCode workspace contract for consumers, not general
   development notes for this source repository.
 

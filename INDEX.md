@@ -44,8 +44,8 @@ Agent-owned navigation map for the shared OpenCode workspace.
   implement changes in generated `release` or `.opencode/` checkouts.
 - Use `task test` after changing documentation workflows, release runtime files,
   or release-copy behavior.
-- Maintainers use `task release-build` only after source review and
-  `README_release.md` changelog updates for consumer-visible changes.
+- Maintainers use `.oc_local/commands/release-build.md` for release review,
+  changelog, authorization, publication, and final synchronization.
 - Use `/task spec "<title/context>"` and `/task impl <task-ref> [instructions]`
   for tracked task work; public Issues are optional, and creating one requires an
   explicit request plus approval of its exact preview. Existing linked Issues

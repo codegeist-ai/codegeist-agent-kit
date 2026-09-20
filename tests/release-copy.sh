@@ -59,6 +59,7 @@ assert_file "commands/update-documentation.md"
 assert_file "commands/verify-documentation.md"
 assert_file "rules/ai-ready-documentation.md"
 assert_file "rules/bash-scripts.md"
+assert_file "rules/commit.md"
 assert_file "rules/scripting-best-practices.md"
 assert_file "rules/software-documentation.md"
 assert_file "rules/task-workflow.md"
@@ -88,6 +89,7 @@ assert_absent "commands/update-chat.md"
 assert_absent "rules/task-phases.md"
 assert_absent "rules/chat.md"
 assert_absent "rules/memory-bank.md"
+assert_absent "rules/commit-conventions.md"
 assert_absent "plugin"
 assert_absent "skills/gh-auth"
 assert_absent "skills/graphify"
@@ -153,13 +155,26 @@ cmp "${expected_gitignore}" "${target}/.gitignore" \
   || fail "release .gitignore content mismatch"
 
 jq -e '
-  (.instructions | index("INDEX.md")) and
-  ((.instructions | index(".opencode/INDEX.md")) | not) and
-  ((.instructions | index(".opencode/rules/task-phases.md")) | not) and
-  ((.instructions | index(".opencode/rules/chat.md")) | not) and
-  ((.instructions | index(".opencode/rules/memory-bank.md")) | not) and
-  (.instructions | index(".opencode/rules/tools.md")) and
-  (.instructions | index(".opencode/rules/temporary-storage.md")) and
+  (.instructions == [
+    "INDEX.md",
+    ".opencode/rules/ai-ready-documentation.md",
+    ".opencode/rules/ai-scripts.md",
+    ".opencode/rules/command-execution.md",
+    ".opencode/rules/commit.md",
+    ".opencode/rules/tools.md",
+    ".opencode/rules/devcontainer-tools.md",
+    ".opencode/rules/directory-index.md",
+    ".opencode/rules/excalidraw.md",
+    ".opencode/rules/language-policy.md",
+    ".opencode/rules/learn.md",
+    ".opencode/rules/scripting-best-practices.md",
+    ".opencode/rules/session-titles.md",
+    ".opencode/rules/software-documentation.md",
+    ".opencode/rules/software-tests.md",
+    ".opencode/rules/task-workflow.md",
+    ".opencode/rules/taskfile-and-script-creation.md",
+    ".opencode/rules/temporary-storage.md"
+  ]) and
   ((.instructions | map(select(test("graphify"; "i"))) | length) == 0) and
   ((has("plugin")) | not) and
   (.watcher.ignore | index("**/.codegeist/.local.env")) and
@@ -181,6 +196,83 @@ jq -e '
 if ! grep -F 'Store persistent secrets that are not disposable test fixtures under the' \
     "${target}/rules/temporary-storage.md" >/dev/null; then
   fail "temporary-storage rule is missing from the release"
+fi
+if ! grep -F 'In a non-disposable repository, never create a Git commit unless the current' \
+    "${target}/rules/command-execution.md" >/dev/null \
+    || ! grep -F 'do not ask for a second commit confirmation.' \
+      "${target}/rules/command-execution.md" >/dev/null \
+    || ! grep -F 'Do not select, invoke, or delegate to a commit-producing command' \
+      "${target}/rules/command-execution.md" >/dev/null \
+    || ! grep -F 'Requests merely to save files, persist edits, record' \
+      "${target}/rules/command-execution.md" >/dev/null; then
+  fail "command execution rule must require explicit commit authorization"
+fi
+if ! grep -F 'This file defines how to create an already-authorized commit; it never grants' \
+    "${target}/rules/commit.md" >/dev/null; then
+  fail "commit rule must not authorize commits"
+fi
+if grep -R -F '@.opencode/rules/commit-conventions.md' \
+    "${target}/commands" "${target}/rules" "${target}/README.md" >/dev/null; then
+  fail "release runtime must use commit.md as the sole commit convention"
+fi
+if ! grep -F 'Report `@.opencode/commands/save.md` as an available follow-up' \
+    "${target}/rules/task-workflow.md" >/dev/null \
+    || ! grep -F 'execute or delegate to it unless the current user request explicitly' \
+      "${target}/rules/task-workflow.md" >/dev/null; then
+  fail "task completion must not invoke save automatically"
+fi
+if ! grep -F 'Do not stage, commit, or push the backlog change.' \
+    "${target}/commands/task.md" >/dev/null \
+    || grep -F 'Stage and commit only `docs/tasks/backlog.md`' \
+      "${target}/commands/task.md" >/dev/null; then
+  fail "task backlog must remain an uncommitted local edit"
+fi
+if ! grep -F 'Invoking `/add-agent-kit` or asking for an upstream change is' \
+    "${target}/commands/add-agent-kit.md" >/dev/null; then
+  fail "add-agent-kit must stop for explicit commit authorization"
+fi
+if ! grep -F 'Execute this workflow only when the current user request explicitly invokes' \
+    "${target}/commands/commit.md" >/dev/null \
+    || ! grep -F 'Invoking `/save` is itself explicit authorization' \
+      "${target}/commands/save.md" >/dev/null; then
+  fail "commit-producing commands must enforce their direct authorization gates"
+fi
+if ! grep -F 'Do not ask for' "${target}/commands/save.md" >/dev/null \
+    || ! grep -F 'a separate commit confirmation after invocation.' \
+      "${target}/commands/save.md" >/dev/null; then
+  fail "save invocation must not require redundant commit confirmation"
+fi
+if ! grep -F 'use the repo-local `/commit` workflow' \
+    "${target}/rules/command-execution.md" >/dev/null \
+    || ! grep -F 'full commit, rebase, and push workflow' \
+      "${target}/commands/save.md" >/dev/null; then
+  fail "plain commits must not inherit save side effects"
+fi
+if ! grep -F 'Stage only the intended coherent change set' \
+    "${target}/commands/commit.md" >/dev/null \
+    || ! grep -F 'Do not fetch, rebase, synchronize, or push a touched submodule' \
+      "${target}/commands/commit.md" >/dev/null \
+    || ! grep -F 'Do not push any repository or submodule unless the current user request' \
+      "${target}/commands/commit.md" >/dev/null; then
+  fail "commit command must stay local and exclude unrelated worktree changes"
+fi
+if ! grep -F 'Invoking `/release-build` is itself explicit authorization' \
+    ".oc_local/commands/release-build.md" >/dev/null; then
+  fail "local release invocation must authorize its documented write workflow"
+fi
+if ! grep -F 'release commit and push plus the full parent repository commit, rebase, and' \
+    ".oc_local/commands/release-build.md" >/dev/null \
+    && ! grep -F 'release commit and push plus the full parent repository commit, shared-submodule' \
+      ".oc_local/commands/release-build.md" >/dev/null; then
+  fail "local release authorization must disclose the complete save workflow"
+fi
+if grep -F 'ask one focused confirmation question' \
+    ".oc_local/commands/release-build.md" >/dev/null; then
+  fail "local release workflow must not request redundant commit confirmation"
+fi
+if grep -F '@.opencode/commands/update-submodules.md' \
+    ".oc_local/commands/release-build.md" >/dev/null; then
+  fail "local release workflow must not refresh shared submodules twice"
 fi
 jq -e '
   (.outputDir == ".chrome/playwright-mcp") and
@@ -215,6 +307,13 @@ if ! grep -F 'Supported actions are `spec`, `impl`,' \
     || ! grep -F 'Do not invent extra task actions beyond `spec`, `impl`, `cancel`, and `backlog`.' \
       "${target}/commands/task.md" >/dev/null; then
   fail "task command must keep the existing action set"
+fi
+if ! grep -F 'collapse it back to its' "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'Keep exactly one canonical representation for every task' \
+      "${target}/commands/task.md" >/dev/null \
+    || ! grep -F 'Keep every child task self-contained' \
+      "${target}/commands/task.md" >/dev/null; then
+  fail "task command must preserve recursive task hierarchy invariants"
 fi
 if ! grep -F 'For a task without a full GitHub Issue URL, enter Project Eligibility and the' \
     "${target}/commands/task.md" >/dev/null; then
@@ -259,8 +358,10 @@ if ! grep -F 'Made GitHub Issue tracking optional for `/task`.' \
     "${target}/README.md" >/dev/null; then
   fail "release README must document optional GitHub Issue tracking"
 fi
-if ! grep -F 'available if tracking is requested later through `/task spec`.' \
-    "${target}/rules/task-workflow.md" >/dev/null; then
+if ! grep -F 'public tracking remains available if tracking' \
+    "${target}/rules/task-workflow.md" >/dev/null \
+    || ! grep -F 'is requested later through `/task spec`.' \
+      "${target}/rules/task-workflow.md" >/dev/null; then
   fail "task workflow must allow later public-tracking opt-in through task spec"
 fi
 if ! grep -F 'path is exactly `.opencode`' \

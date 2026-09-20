@@ -7,8 +7,9 @@ configuration while leaving project-specific behavior in the consuming repo.
 
 ## What This Submodule Provides
 
-- `opencode.json` loads the shared instructions, MCP servers, and filesystem
-  permissions expected by OpenCode.
+- `opencode.json` loads focused shared rule files, MCP servers, and filesystem
+  permissions expected by OpenCode. This README remains reference documentation
+  and is not itself loaded as a global instruction.
 - `opencode.json` can load a repository-root `INDEX.md` owned by the consuming
   repository; the shared `.opencode` submodule does not ship that file.
   Keep project-specific index content outside `.opencode/`.
@@ -36,6 +37,37 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Added a hard commit-authorization gate: agents may create commits in a
+  non-disposable repository only when the current user request invokes
+  `/commit`, `/git-commit`, or `/save`, or otherwise explicitly requests a
+  commit. Implementation, task completion, submodule updates, push requests, and
+  dirty worktrees do not imply authorization.
+- Direct `/save` invocation is itself authorization for its documented commit,
+  shared-submodule synchronization, rebase, and push workflow. Agents must not
+  ask for a redundant commit confirmation after the command is invoked.
+- Direct invocation of this source repository's `/release-build` workflow is
+  itself authorization for the generated release commit and push plus the
+  subsequent full `/save` workflow. Maintainers are not asked for another
+  confirmation after starting that command.
+- Consolidated commit behavior into `command-execution.md` for authorization and
+  `commit.md` for content and message requirements. Removed the redundant
+  `commit-conventions.md` instruction and the navigation-only `rules/README.md`
+  instruction. A plain commit request now uses local-only `/commit`; `/save`
+  still requires its full commit, rebase, and push workflow to be explicit.
+- Reduced the globally loaded task workflow to stable invariants and kept the
+  detailed mirror, approval, linkage, and completion procedure in `/task`,
+  avoiding two active copies of the same operational contract.
+- Removed `.opencode/README.md` from the `opencode.json` instruction list. The
+  release README remains available as reference documentation without injecting
+  its maintenance and publication examples into every agent task.
+- Changed `/task backlog` to leave its focused backlog edit uncommitted and
+  unpushed. `/add-agent-kit` now prepares and tests changes, then requires
+  explicit authorization before source and release commits or pushes.
+- Consumer action: update `.opencode` and restart OpenCode so the focused
+  instruction list and commit gate take effect. Explicitly invoke `/commit` or
+  `/save` when Git history should be written. Repo-local overlays that directly
+  reference the removed `.opencode/rules/commit-conventions.md` file must switch
+  to `.opencode/rules/commit.md`; otherwise no repository migration is required.
 - Added explicit OpenCode read denials and watcher exclusions for
   `.codegeist/.local.env` and `.codegeist/secrets/`. The secret directory itself
   is also denied so OpenCode cannot list it through the read tool.
@@ -225,9 +257,9 @@ branch should contain only runtime files needed by consuming repositories:
 - Hardened the shared rules, `/update-index`, release docs, and release smoke
   test so future changes keep `INDEX.md` out of the generated `.opencode`
   submodule while still loading a consumer-owned repository-root `INDEX.md`.
-- Replaced the separate task phase commands with one `/task` workflow that uses
-  only `spec` and `impl`, so task specification and implementation can repeat
-  without juggling separate phase commands.
+- Replaced the separate task phase commands with one `/task` workflow centered
+  on repeatable `spec` and `impl` actions, with focused `cancel` and `backlog`
+  actions for the remaining lifecycle operations.
 - Update notes for coding agents: use `/task spec "<title/context>"` to create
   and collaboratively specify a focused task, then use
   `/task impl <task-ref> [instructions]` to implement it. If implementation
@@ -257,8 +289,9 @@ git submodule add -b release https://github.com/codegeist-ai/codegeist-agent-kit
 git submodule update --init --recursive
 ```
 
-After adding or updating the submodule, commit the parent repository gitlink
-change together with the matching `.gitmodules` change when applicable.
+After adding or updating the submodule, report the parent repository gitlink
+change. Commit it together with the matching `.gitmodules` change only when the
+current user request explicitly authorizes a commit.
 
 ## Update In A Consuming Repository
 
@@ -327,7 +360,8 @@ task test
 ```
 
 It validates a temporary release copy without publishing. Release publication
-is maintainer-only after source review.
+is maintainer-only after source review and explicit authorization for its commits
+and pushes.
 
 ## Extending This Agent Kit
 
@@ -347,7 +381,9 @@ checkout of `https://github.com/codegeist-ai/codegeist-agent-kit.git` on `main`.
 `README_release.md` is the source file that becomes `.opencode/README.md` in
 consuming repositories.
 
-Expected autonomous workflow for the agent:
+The agent may prepare and verify the upstream source change autonomously. Commit
+and publication steps require a separate explicit authorization in the current
+user request:
 
 1. Inspect the consuming repository state and verify that `.opencode` exists,
    is a Git submodule, and is configured to track the `release` branch in
@@ -383,23 +419,28 @@ Expected autonomous workflow for the agent:
    place.
 7. Run the source repository verification, starting with `task test`, and fix
    failures before continuing.
-8. Commit the source repository change with a focused Conventional Commit
+8. Before creating or publishing any commit, require the current user request to
+   authorize the source commit and push plus the generated release commit and
+   push. An `/add-agent-kit` request alone does not grant commit authorization;
+   ask one focused confirmation question and stop before the first commit when
+   authorization is missing.
+9. Commit the source repository change with a focused Conventional Commit
    message, then push the source branch when the remote is configured and the
    authenticated session has permission.
-9. Run `task release-build` in the source repository. This creates and pushes a
-   normal commit on the generated `release` branch with only the runtime files
-   that consuming repositories mount as `.opencode`, preserving release history
-   so the copied changes remain reviewable.
-10. Return to the consuming repository and update only the `.opencode` submodule
-   to the new `origin/release` commit, using the same safety checks as
-   `/update-submodules`: fetch the configured branch, run
-   `git checkout -B release origin/release` inside `.opencode`, verify that
-   `HEAD` matches `origin/release`, and verify that the submodule status is
-   clean.
-11. Report the new `.opencode` commit and the parent repository gitlink change.
-   If the user requested a full save workflow, commit the parent gitlink update
-   in the consuming repository through `/save` or the repo's equivalent commit
-   workflow.
+10. Run `task release-build` in the source repository. This creates and pushes a
+    normal commit on the generated `release` branch with only the runtime files
+    that consuming repositories mount as `.opencode`, preserving release history
+    so the copied changes remain reviewable.
+11. Return to the consuming repository and update only the `.opencode` submodule
+    to the new `origin/release` commit, using the same safety checks as
+    `/update-submodules`: fetch the configured branch, run
+    `git checkout -B release origin/release` inside `.opencode`, verify that
+    `HEAD` matches `origin/release`, and verify that the submodule status is
+    clean.
+12. Report the new `.opencode` commit and the parent repository gitlink change.
+    If the user requested a full save workflow, commit the parent gitlink update
+    in the consuming repository through `/save` or the repo's equivalent commit
+    workflow.
 
 Only use direct edits inside `.opencode/` for temporary inspection or debugging;
 do not leave them as the implementation path. The agent must not update
@@ -422,8 +463,10 @@ When working inside a consuming repository that uses this submodule:
 - `/save` learns durable guidance, updates shared submodules, commits, rebases,
   and pushes the intended branch. On the local base branch it may push that base
   branch; on a feature branch it updates the base branch from upstream first,
-  then pushes only the current branch.
-- `/commit` reviews the diff and creates a focused conventional commit.
+  then pushes only the current branch. Invoking `/save` authorizes those
+  documented side effects without another commit confirmation.
+- `/commit` creates one local commit from the intended coherent change set and
+  leaves unrelated files and unrequested pushes untouched.
 - `/git-sync` synchronizes the current branch and local base branch without
   creating a commit.
 - `/rebase` rebases the current branch onto the local base branch.
@@ -435,7 +478,7 @@ When working inside a consuming repository that uses this submodule:
   completed locally. When a user requests public tracking, one concise Issue can
   be created through `GH_TOKEN` only after exact-preview approval. Verified
   implementation closes and confirms any linked Issue before the task becomes
-  `solved`; backlog entries do not use Issues.
+  `solved`; backlog entries remain uncommitted local edits and do not use Issues.
 - `/update-documentation` refreshes documentation affected by recent changes.
 - `/verify-documentation` audits documentation and reports stale or broken
   references without editing them.
@@ -447,12 +490,17 @@ When working inside a consuming repository that uses this submodule:
 
 Prefer these commands over reimplementing their documentation, shell, and git
 logic in chat, especially for documentation refreshes, commits, saves,
-submodule updates, and base-branch sync.
+submodule updates, and base-branch sync. This preference never authorizes a
+commit-producing command; the current user request must still pass the explicit
+commit gate.
 
 ## Commit And Git Safety
 
-- Follow conventional commit style from `.opencode/rules/commit.md` and
-  `.opencode/rules/commit-conventions.md`.
+- Treat `.opencode/rules/command-execution.md` as the canonical commit
+  authorization policy and `.opencode/rules/commit.md` as the canonical commit
+  content and message policy. `/commit` is local-only unless the current request
+  separately asks for a push; `/save` owns the explicit commit, rebase, and push
+  workflow.
 - Use `.opencode/ai-scripts/commit-message-guard.sh` or the
   `commit-message-guard` skill when creating commits through the shared
   workflow.
@@ -463,9 +511,10 @@ submodule updates, and base-branch sync.
   explicitly asks for that exact action.
 - Do not amend commits unless the user explicitly requests it and the active
   safety rules allow it.
-- When a task intentionally changes a submodule, commit the submodule content on
-  the intended branch first, synchronize its upstream when configured, then
-  commit the parent repository gitlink update.
+- When an explicitly authorized commit includes an intentional submodule change,
+  commit the submodule content on the intended branch before the parent gitlink
+  update. Synchronize or push the submodule only when the current request also
+  authorizes that operation or invokes `/save`.
 
 ## GitHub CLI Work
 
@@ -506,7 +555,8 @@ Run the release smoke test:
 task test
 ```
 
-Build and push the generated release branch:
+With explicit user authorization for the release commit and push, build and push
+the generated release branch:
 
 ```bash
 task release-build
@@ -521,9 +571,10 @@ branch and dirty worktree are left untouched except for the temporary release
 worktree cleanup.
 
 When using this repo's local release workflow, prefer
-`.oc_local/commands/release-build.md`; it runs `task release-build`, refreshes
-the configured shared submodules, and then delegates final commit, rebase, and
-sync work to the shared `/save` workflow.
+`.oc_local/commands/release-build.md`; it runs `task release-build` and then
+delegates the single shared-submodule refresh plus final commit, rebase, and sync
+work to `/save`. Invoking `/release-build` authorizes these documented side
+effects without another confirmation.
 
 ## Quick Troubleshooting
 
@@ -531,8 +582,9 @@ sync work to the shared `/save` workflow.
   `.opencode/` and `opencode.json` is present at `.opencode/opencode.json`.
 - If a shared command seems too generic, check for a consuming-repo overlay under
   `.oc_local/commands/` before changing the shared command.
-- If submodule updates show a dirty parent repo, commit the intentional gitlink
-  update in the parent repository.
+- If submodule updates show a dirty parent repo, report the intentional gitlink
+  update. Commit it only when the current user request explicitly authorizes a
+  commit.
 - If a release bundle is missing files, run `task test` in this repository and
   inspect `Taskfile.yml` `RELEASE_PATHS`, the `README_release.md` to `README.md`
   rename step, and `tests/release-copy.sh`.

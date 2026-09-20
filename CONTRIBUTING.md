@@ -65,7 +65,11 @@ unclear.
 
 `task test` copies and validates the release bundle without creating commits,
 publishing a release, or updating submodules. Release publication through
-`task release-build` is maintainer-only and happens after source review.
+`task release-build` is maintainer-only, happens after source review, and
+requires an explicit current user request authorizing its commit and push.
+Invoking the repository-local `/release-build` workflow supplies that
+authorization, including its documented subsequent `/save` workflow, without a
+second confirmation.
 
 ## License
 

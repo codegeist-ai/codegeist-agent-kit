@@ -58,12 +58,16 @@ To update an existing consuming repository to the latest release branch commit:
 git submodule update --remote .opencode
 ```
 
-After source review, maintainers build and push the release branch from this
-repository with:
+After source review and explicit user authorization for its commit and push,
+maintainers build and publish the release branch from this repository with:
 
 ```bash
 task release-build
 ```
+
+Invoking the repository-local `/release-build` workflow supplies authorization
+for its documented release commit, push, and subsequent `/save` side effects
+without a second confirmation.
 
 ## Contributing
 
@@ -128,7 +132,8 @@ analysis flows should live in local overlays such as:
 
 - Run `task test` after source changes. It validates a temporary release copy
   without creating or publishing a release branch.
-- Release publication is maintainer-only after review.
+- Release publication is maintainer-only after review and requires an explicit
+  current user request authorizing its commits and pushes.
 - `node_modules/` is ignored.
 - `package.json` and `package-lock.json` are local-only plugin files and are
   ignored because consuming workspaces do not require pinned plugin versions.
