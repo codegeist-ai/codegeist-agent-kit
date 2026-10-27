@@ -7,9 +7,10 @@ configuration while leaving project-specific behavior in the consuming repo.
 
 ## What This Submodule Provides
 
-- `opencode.json` loads focused shared rule files, MCP servers, and filesystem
-  permissions expected by OpenCode. This README remains reference documentation
-  and is not itself loaded as a global instruction.
+- `opencode.json` loads every Markdown file directly under `.opencode/rules/`
+  through the `.opencode/rules/*.md` instruction glob, plus MCP servers and
+  filesystem permissions expected by OpenCode. This release README remains
+  reference documentation and is not itself loaded as a global instruction.
 - `opencode.json` can load a repository-root `INDEX.md` owned by the consuming
   repository; the shared `.opencode` submodule does not ship that file.
   Keep project-specific index content outside `.opencode/`.
@@ -37,6 +38,17 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Added an explicit OpenCode read denial and watcher exclusion for
+  `.codegeist/secrets.env`, the optional devcontainer secret environment file.
+  Consumer action: update `.opencode` and restart OpenCode; no file migration is
+  required.
+- Replaced individual shared-rule instruction entries with
+  `.opencode/rules/*.md`. All Markdown files directly in `rules/` now load,
+  including `bash-scripts.md`, `semver.md`, and the `rules/README.md` inventory.
+  New shared rules no longer need individual config entries.
+- Consumer action: update `.opencode` and restart OpenCode to load the rule glob.
+  The repository-root `INDEX.md` remains a separate instruction. No configuration
+  migration is required; keep newly added shared rules directly under `rules/`.
 - Added a hard commit-authorization gate: agents may create commits in a
   non-disposable repository only when the current user request invokes
   `/commit`, `/git-commit`, or `/save`, or otherwise explicitly requests a
@@ -51,9 +63,9 @@ branch should contain only runtime files needed by consuming repositories:
   confirmation after starting that command.
 - Consolidated commit behavior into `command-execution.md` for authorization and
   `commit.md` for content and message requirements. Removed the redundant
-  `commit-conventions.md` instruction and the navigation-only `rules/README.md`
-  instruction. A plain commit request now uses local-only `/commit`; `/save`
-  still requires its full commit, rebase, and push workflow to be explicit.
+  `commit-conventions.md` instruction. A plain commit request now uses local-only
+  `/commit`; `/save` still requires its full commit, rebase, and push workflow to
+  be explicit.
 - Reduced the globally loaded task workflow to stable invariants and kept the
   detailed mirror, approval, linkage, and completion procedure in `/task`,
   avoiding two active copies of the same operational contract.
@@ -63,8 +75,8 @@ branch should contain only runtime files needed by consuming repositories:
 - Changed `/task backlog` to leave its focused backlog edit uncommitted and
   unpushed. `/add-agent-kit` now prepares and tests changes, then requires
   explicit authorization before source and release commits or pushes.
-- Consumer action: update `.opencode` and restart OpenCode so the focused
-  instruction list and commit gate take effect. Explicitly invoke `/commit` or
+- Consumer action: update `.opencode` and restart OpenCode so the shared
+  instructions and commit gate take effect. Explicitly invoke `/commit` or
   `/save` when Git history should be written. Repo-local overlays that directly
   reference the removed `.opencode/rules/commit-conventions.md` file must switch
   to `.opencode/rules/commit.md`; otherwise no repository migration is required.
