@@ -38,6 +38,9 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Source contributors may work directly on source `main` or use an optional
+  topic branch. Agents stay on the current source branch and create a new branch
+  only on explicit user request. No consumer configuration change is required.
 - Added an explicit OpenCode read denial and watcher exclusion for
   `.codegeist/secrets.env`, the optional devcontainer secret environment file.
   Consumer action: update `.opencode` and restart OpenCode; no file migration is
@@ -347,8 +350,10 @@ intended to apply across all consuming repositories.
 This checkout is generated distribution content. Propose generic shared
 OpenCode behavior in the
 [`codegeist-agent-kit` source repository](https://github.com/codegeist-ai/codegeist-agent-kit)
-from a topic branch based on source `main`; do not implement it on `release` or
-inside a consuming `.opencode/` checkout. Project-specific behavior belongs in
+on source `main` or an optional topic branch based on it; agents stay on the
+current source branch and create a new branch only on explicit user request.
+Do not implement it on `release` or inside a consuming `.opencode/` checkout.
+Project-specific behavior belongs in
 the consuming repository's `.oc_local/` overlay.
 
 Use the source repository's
