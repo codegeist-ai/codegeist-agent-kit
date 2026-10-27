@@ -45,6 +45,9 @@ release that consuming repositories mount at `.opencode/`.
 
 ## Before Editing
 
+- Stay on the current source branch by default. Working directly on source
+  `main` is supported; a topic branch based on `main` is optional. Create a new
+  branch only when the user explicitly requests it.
 - If a path exists both at the repository root and under `.opencode/`, prefer
   the root path unless the user explicitly asks for `.opencode/` release-state
   changes.

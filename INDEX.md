@@ -41,7 +41,8 @@ Agent-owned navigation map for the shared OpenCode workspace.
 
 ## Key Workflows
 
-- Start source contributions from `main`, keep the local task authoritative, use
+- Work on the current source branch; topic branches from `main` are optional and
+  agents create them only on explicit user request. Keep the local task authoritative, use
   a GitHub mirror Issue only when public tracking is requested, and never
   implement changes in generated `release` or `.opencode/` checkouts.
 - Use `task test` after changing documentation workflows, release runtime files,

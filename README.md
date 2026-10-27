@@ -74,8 +74,10 @@ without a second confirmation.
 
 ## Contributing
 
-Source work starts from `main` and a topic branch, never from the generated
-`release` branch or a consuming repository's `.opencode/` checkout. Read the
+Source work may happen directly on `main` or on an optional topic branch based
+on `main`, never on the generated `release` branch or in a consuming repository's
+`.opencode/` checkout. Agents stay on the current source branch and create a new
+branch only when the user explicitly requests it. Read the
 [local contribution guide](CONTRIBUTING.md), find public work in
 [Issues](https://github.com/codegeist-ai/codegeist-agent-kit/issues) and the
 [Codegeist roadmap](https://github.com/users/codegeist-ai/projects/1), and use the

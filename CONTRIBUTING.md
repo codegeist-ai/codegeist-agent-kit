@@ -43,7 +43,9 @@ unclear.
    unplanned fix, a maintainer may confirm that no new task is needed; state the
    reason in the pull request. Always use an existing task when one defines the
    work.
-4. Create a topic branch from the source `main` branch.
+4. Work on the current source branch. A topic branch based on source `main` is
+   optional; agents create one only when the user explicitly requests it.
+   Working directly on source `main` is supported.
 5. Use `/task impl` to implement the canonical task in source paths at the
    repository root. The generated `release` branch and consuming `.opencode/`
    checkouts are distribution outputs, not implementation targets. The command
