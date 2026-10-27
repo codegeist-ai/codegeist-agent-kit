@@ -157,29 +157,15 @@ cmp "${expected_gitignore}" "${target}/.gitignore" \
 jq -e '
   (.instructions == [
     "INDEX.md",
-    ".opencode/rules/ai-ready-documentation.md",
-    ".opencode/rules/ai-scripts.md",
-    ".opencode/rules/command-execution.md",
-    ".opencode/rules/commit.md",
-    ".opencode/rules/tools.md",
-    ".opencode/rules/devcontainer-tools.md",
-    ".opencode/rules/directory-index.md",
-    ".opencode/rules/excalidraw.md",
-    ".opencode/rules/language-policy.md",
-    ".opencode/rules/learn.md",
-    ".opencode/rules/scripting-best-practices.md",
-    ".opencode/rules/session-titles.md",
-    ".opencode/rules/software-documentation.md",
-    ".opencode/rules/software-tests.md",
-    ".opencode/rules/task-workflow.md",
-    ".opencode/rules/taskfile-and-script-creation.md",
-    ".opencode/rules/temporary-storage.md"
+    ".opencode/rules/*.md"
   ]) and
   ((.instructions | map(select(test("graphify"; "i"))) | length) == 0) and
   ((has("plugin")) | not) and
   (.watcher.ignore | index("**/.codegeist/.local.env")) and
+  (.watcher.ignore | index("**/.codegeist/secrets.env")) and
   (.watcher.ignore | index("**/.codegeist/secrets/**")) and
   (.permission.read[".codegeist/.local.env"] == "deny") and
+  (.permission.read[".codegeist/secrets.env"] == "deny") and
   (.permission.read[".codegeist/secrets"] == "deny") and
   (.permission.read[".codegeist/secrets/**"] == "deny") and
   (.permission.external_directory["/tmp/**"] == "allow") and

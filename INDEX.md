@@ -17,6 +17,8 @@ Agent-owned navigation map for the shared OpenCode workspace.
 - `skills/` - specialized workflows that can be loaded on demand.
 - `docs/tasks/` - source-repository task guide and local implementation specs for
   accepted work.
+- `.oc_local/opencode.json` - source-only configuration that explicitly loads
+  `.oc_local/rules/*.md` alongside the shared instructions.
 - `.oc_local/rules/gitea-git.md` - source-only Tea authentication and Git
   fetch/pull/push guidance for the internal Gitea remote.
 - `.github/workflows/ci.yml` - read-only contributor CI that runs `task test`.
@@ -44,6 +46,8 @@ Agent-owned navigation map for the shared OpenCode workspace.
   implement changes in generated `release` or `.opencode/` checkouts.
 - Use `task test` after changing documentation workflows, release runtime files,
   or release-copy behavior.
+- For source sessions, point `OPENCODE_CONFIG_DIR` at `<repository-root>/.oc_local`
+  (already set by the devcontainer) and restart OpenCode after config changes.
 - Maintainers use `.oc_local/commands/release-build.md` for release review,
   changelog, authorization, publication, and final synchronization.
 - Use `/task spec "<title/context>"` and `/task impl <task-ref> [instructions]`
@@ -67,7 +71,7 @@ Agent-owned navigation map for the shared OpenCode workspace.
 - `GITEA_TOKEN`, `tea login helper`, `git.codegeist.ai`, `sslVerify` - internal
   source Git authentication and TLS troubleshooting.
 - `directory-index.md` - rule that defines the `INDEX.md` pattern.
-- `instructions` - `opencode.json` entries loaded by OpenCode.
+- `instructions`, `OPENCODE_CONFIG_DIR` - shared and source-local rule loading.
 
 ## Update Triggers
 

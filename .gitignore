@@ -8,3 +8,4 @@ package-lock.json
 /.chrome/
 /.codegeist/secrets/
 /.tmp
+/.codegeist/secrets.env

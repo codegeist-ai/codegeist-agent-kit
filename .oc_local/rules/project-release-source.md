@@ -31,12 +31,17 @@ release that consuming repositories mount at `.opencode/`.
 - The root `opencode.json` intentionally references `.opencode/...` paths
   because those paths are correct after this project is released into consuming
   repositories as a `.opencode` submodule.
-- A new shared rule normally needs both the root source file, for example
-  `rules/example.md`, and a root `opencode.json` instruction entry pointing to
-  `.opencode/rules/example.md`.
+- Add new shared rules directly under `rules/`, for example `rules/example.md`.
+  The `.opencode/rules/*.md` instruction glob includes every Markdown file in
+  that directory after release; no individual config entry is needed.
 - Local development-only guidance for this source repo belongs under
   `.oc_local/rules/` and must not be referenced from root `opencode.json`,
   because that file is copied into the generated release.
+- Load these local rules through `.oc_local/opencode.json`, whose `instructions`
+  include the project-relative `.oc_local/rules/*.md` pattern.
+- Set `OPENCODE_CONFIG_DIR` to `<repository-root>/.oc_local`, as the devcontainer
+  already does. The variable selects the config directory but does not load
+  Markdown rules by itself. Quit and restart OpenCode after changing the config.
 
 ## Before Editing
 

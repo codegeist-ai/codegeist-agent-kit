@@ -37,6 +37,9 @@ multiple repositories via a checked-out `.opencode/` directory.
   workspace directory mounted at `.opencode/` inside a consuming repository.
 - The instruction paths in `opencode.json` intentionally use the
   `.opencode/...` prefix and should stay that way.
+- The `.opencode/rules/*.md` instruction glob loads every Markdown file directly
+  in the shared rules directory, including `rules/README.md`. New rules need no
+  individual config entry.
 - Project-specific extensions should live beside it in a local overlay such as
   `@.oc_local/` rather than being added to the shared core.
 
@@ -114,6 +117,29 @@ analysis flows should live in local overlays such as:
 - `@.oc_local/commands/*.md`
 - `@.oc_local/rules/*.md`
 - `@.oc_local/skills/*/SKILL.md`
+
+### Source Repository Rule Loading
+
+This source checkout uses `.oc_local/opencode.json` to load
+`.oc_local/rules/*.md` alongside the shared instructions. The pattern is
+project-relative, so keep the `.oc_local/` prefix. The local configuration and
+its `.gitignore` exceptions are versioned together; `.oc_local/` stays outside
+the generated release bundle.
+
+The local `.gitignore` excludes generated dependency files, while new project
+rules, commands, and skills remain visible to Git for versioning.
+
+`OPENCODE_CONFIG_DIR` must point to `<repository-root>/.oc_local`. The
+devcontainer already sets it. Outside the devcontainer, start OpenCode from
+this repository root with:
+
+```bash
+OPENCODE_CONFIG_DIR="$PWD/.oc_local" opencode
+```
+
+The environment variable selects the configuration directory; the explicit
+`instructions` entry loads the Markdown rule files. Quit and restart OpenCode
+after changing this configuration so new sessions receive the local rules.
 
 ## Current Shared Surface
 

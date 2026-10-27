@@ -1,0 +1,5 @@
+# Ignore generated OpenCode dependencies while keeping project overlays visible.
+node_modules/
+bun.lock
+package.json
+package-lock.json
