@@ -38,6 +38,10 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Removed the redundant `fetch` MCP server. Use OpenCode's built-in `webfetch`
+  tool for webpage retrieval. Consumer action: update `.opencode` and restart
+  OpenCode; no configuration migration is required unless a local overlay
+  independently configures the removed server.
 - Source contributors may work directly on source `main` or use an optional
   topic branch. Agents stay on the current source branch and create a new branch
   only on explicit user request. No consumer configuration change is required.

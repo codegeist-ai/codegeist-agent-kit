@@ -48,15 +48,6 @@
       "url": "https://mcp.grep.app",
       "enabled": true,
       "timeout": 15000
-    },
-    "fetch": {
-      "type": "local",
-      "command": [
-        "uvx",
-        "mcp-server-fetch"
-      ],
-      "enabled": true,
-      "timeout": 15000
     }
   },
   "permission": {

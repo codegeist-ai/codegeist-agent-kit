@@ -175,7 +175,7 @@ jq -e '
   (.mcp.playwright.environment.PLAYWRIGHT_MCP_USER_DATA_DIR == ".chrome") and
   ((.mcp.playwright.environment.PLAYWRIGHT_MCP_USER_DATA_DIR | contains("/mnt/codegeist")) | not) and
   (.mcp.grep_app.type == "remote") and
-  (.mcp.fetch.type == "local") and
+  ((.mcp | has("fetch")) | not) and
   ((.mcp | has("repomix")) | not)
 ' "${target}/opencode.json" >/dev/null \
   || fail "release opencode.json is missing expected OpenCode config"

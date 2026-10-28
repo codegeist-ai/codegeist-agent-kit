@@ -21,6 +21,8 @@ Agent-owned navigation map for the shared OpenCode workspace.
   `.oc_local/rules/*.md` alongside the shared instructions.
 - `.oc_local/rules/gitea-git.md` - source-only Tea authentication and Git
   fetch/pull/push guidance for the internal Gitea remote.
+- `.oc_local/rules/mcp-maintenance.md` - check enabled MCP integrations for
+  currency, maintenance, and connectivity during every `/save`.
 - `.github/workflows/ci.yml` - read-only contributor CI that runs `task test`.
 - `opencode.json` - runtime configuration that loads shared instructions,
   MCP servers, and permissions.
