@@ -17,6 +17,7 @@ Agent-owned navigation map for the shared OpenCode workspace.
 - `skills/` - specialized workflows that can be loaded on demand.
 - `docs/tasks/` - source-repository task guide and local implementation specs for
   accepted work.
+- `docs/tasks/OVERVIEW.md` - concise open-task list with dependencies and blockers.
 - `.oc_local/opencode.json` - source-only configuration that explicitly loads
   `.oc_local/rules/*.md` alongside the shared instructions.
 - `.oc_local/rules/gitea-git.md` - source-only Tea authentication and Git

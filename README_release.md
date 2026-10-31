@@ -38,6 +38,14 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- `/task spec`, `impl`, and `cancel` now maintain a project-owned
+  `docs/tasks/OVERVIEW.md` with open tasks, short summaries, dependencies, and
+  blockers, including nested tasks and blocked outcomes. Task files remain the
+  source of truth; `/task backlog` does not update the overview.
+- Consumer action: update `.opencode` and restart OpenCode. The next task change
+  creates or refreshes the overview locally; existing tasks without `Blockers`
+  remain valid and missing details are shown as `Not recorded`. No bulk task
+  migration is required; the project overview is not shipped in this bundle.
 - Removed the redundant `fetch` MCP server. Use OpenCode's built-in `webfetch`
   tool for webpage retrieval. Consumer action: update `.opencode` and restart
   OpenCode; no configuration migration is required unless a local overlay

@@ -7,6 +7,27 @@ this repository. The confirmed GitHub mirror can provide concise public Issues
 for discovery and discussion when requested, but an Issue never replaces its
 local task file.
 
+## Open Task Overview
+
+[`OVERVIEW.md`](OVERVIEW.md) summarizes unfinished work from local task files.
+The shared `/task` workflow creates or refreshes it after `spec`, `impl`, and
+`cancel` changes, including blocked outcomes, completion, and task path moves.
+Keep it aligned when editing task records directly as well. `/task backlog`
+changes only the backlog file and does not refresh this overview.
+
+Use one table ordered by task ID with linked task IDs and titles, status,
+one-sentence goal summaries, dependencies, and blockers. Include `open`,
+`specified`, `in progress`, and `blocked` tasks at every hierarchy level; omit
+`solved`, `finalized`, and `cancelled`. Show `No open tasks.` when none qualify.
+Keep missing or unknown statuses visible for correction.
+
+Read `Dependencies` and `Blockers` from the canonical tasks. Link task dependencies
+to their current files and summarize external prerequisites. Include a blocker's
+recorded next step when available. Use `Not recorded` for missing or empty fields
+and `None` only for an explicit absence; do not invent relationships or blockers.
+Existing tasks without `Blockers` remain valid. The overview is a derived,
+project-owned summary, not an additional source of task status or GitHub access.
+
 ## Linkage
 
 ```text

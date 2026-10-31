@@ -45,6 +45,10 @@
 
 - None.
 
+## Blockers
+
+- None.
+
 ## Open Questions
 
 None.

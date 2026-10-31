@@ -288,6 +288,31 @@ fi
 if ! grep -F 'Optional GitHub Issue Tracking' "${target}/commands/task.md" >/dev/null; then
   fail "task command must define optional GitHub Issue tracking"
 fi
+# The task workflow is prompt-driven: verify the shipped maintenance contract,
+# while project task records and their derived overview stay out of the bundle.
+assert_absent "OVERVIEW.md"
+for contract in \
+  'For `spec`, `impl`, and `cancel`, create or refresh `docs/tasks/OVERVIEW.md`' \
+  'blocked outcomes, failed verification, or unresolved public tracking.' \
+  'Do not update the overview for `backlog`.' \
+  'including nested children.' \
+  'Include statuses `open`, `specified`, `in progress`, and `blocked`.' \
+  '`solved`, `finalized`, and `cancelled`.' \
+  'Task | Status | Summary | Dependencies | Blockers' \
+  'path relative to `OVERVIEW.md`.' \
+  'Link recorded task IDs to' \
+  'placeholder-only information is `Not recorded`; use `None` only when the' \
+  'Repair overview and dependency links when canonical paths move.' \
+  'task remains visible as blocked until required Issue closure and read-back' \
+  'If no tasks qualify, write `No open tasks.`'; do
+  grep -F "${contract}" "${target}/commands/task.md" >/dev/null \
+    || fail "task overview contract missing: ${contract}"
+done
+grep -F '## Blockers' "docs/tasks/template.md" >/dev/null \
+  || fail "task template must include blockers"
+grep -F 'Keep project-owned `docs/tasks/OVERVIEW.md` aligned with local task changes,' \
+  "${target}/rules/task-workflow.md" >/dev/null \
+  || fail "task rule must require overview maintenance"
 if ! grep -F 'Supported actions are `spec`, `impl`,' \
     "${target}/commands/task.md" >/dev/null \
     || ! grep -F 'Do not invent extra task actions beyond `spec`, `impl`, `cancel`, and `backlog`.' \

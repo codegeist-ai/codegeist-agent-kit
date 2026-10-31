@@ -40,6 +40,51 @@ Then:
 10. Keep every child task self-contained with its own goal, acceptance criteria,
     files, non-goals, verification, and `Parent` link.
 
+## Open Task Overview
+
+For `spec`, `impl`, and `cancel`, create or refresh `docs/tasks/OVERVIEW.md`
+after persisting task changes and before returning, including early returns for
+blocked outcomes, failed verification, or unresolved public tracking. Refresh
+after creation, summary-relevant edits, status changes, completion, cancellation,
+and task path or hierarchy changes. Do not update the overview for `backlog`.
+
+- Use only local task records; overview maintenance never authorizes GitHub
+  requests, remote mutations, commits, or a change to a task's status.
+- Recursively inspect canonical standalone task files and directory `task.md`
+  files, including nested children. Exclude guides, templates, the overview,
+  and backlog entries. List each task exactly once, ordered by numeric task ID
+  components so parents precede their children.
+- Include statuses `open`, `specified`, `in progress`, and `blocked`. Exclude
+  `solved`, `finalized`, and `cancelled`. If a status is missing or unrecognized,
+  retain a row marked `Not recorded` or with its actual unknown status and report
+  the inconsistency rather than silently hiding unfinished work.
+- Keep a short title, a source-of-truth note, and one compact Markdown table:
+  `Task | Status | Summary | Dependencies | Blockers`.
+  Link the task ID and title to its canonical path relative to `OVERVIEW.md`.
+  Summarize the goal in one sentence; escape table delimiters in cell text.
+- Read `Dependencies` and `Blockers` from each task. Link recorded task IDs to
+  their existing canonical files, even if the dependency is already completed;
+  keep external prerequisites concise. Do not infer blockers from dependencies.
+  Include the recorded next step for a blocker when available. Missing, empty,
+  or placeholder-only information is `Not recorded`; use `None` only when the
+  task explicitly records no dependencies or blockers. Existing tasks without
+  a `Blockers` section remain valid and do not require bulk migration. Preserve
+  unresolved dependency references as text and report missing targets.
+- When specifying a new task without a local template, include `Dependencies`
+  and `Blockers` sections. Record known impediments and next steps in `Blockers`
+  when marking a task blocked; do not invent a resolution.
+- Repair overview and dependency links when canonical paths move. Remove rows
+  only after their task files have actually reached an excluded status. A linked
+  task remains visible as blocked until required Issue closure and read-back
+  permit persisting `solved`; never mark it solved to clean up the overview.
+- If no tasks qualify, write `No open tasks.` instead of an empty table. Do not
+  add completed-task inventories, timestamps, or transcripts. If refreshing the
+  overview fails, report the incomplete refresh without rolling back verified
+  task outcomes or repeating remote side effects.
+
+The overview belongs to the consuming project, outside `.opencode/`, and is a
+derived summary. The local task files remain authoritative.
+
 ## Optional GitHub Issue Tracking
 
 The local task file is always the source of truth. Every top-level or child task
