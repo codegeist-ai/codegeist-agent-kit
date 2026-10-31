@@ -35,6 +35,11 @@ Keep task handoff small, traceable, and easy to resume.
   create an Issue, stage files, commit, or push.
 - Keep `spec` minimal and `impl` limited to lines justified by the acceptance
   criteria or implementation notes.
+- Keep project-owned `docs/tasks/OVERVIEW.md` aligned with local task changes,
+  including blocked outcomes, completion, cancellation, and canonical path moves.
+  Follow `commands/task.md` for its open-status table, dependency links, and
+  blocker summaries. Task files stay authoritative; missing information must not
+  be presented as an explicit absence. `/task backlog` does not update it.
 
 ## Public Tracking Invariants
 
