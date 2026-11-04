@@ -14,6 +14,8 @@ configuration while leaving project-specific behavior in the consuming repo.
 - `opencode.json` can load a repository-root `INDEX.md` owned by the consuming
   repository; the shared `.opencode` submodule does not ship that file.
   Keep project-specific index content outside `.opencode/`.
+- `opencode.json` sets `websearch: false`, disabling OpenCode's built-in web
+  search tool by default in every consuming workspace that loads this kit.
 - `rules/` contains durable agent rules for command execution, commits, tests,
   documentation, task workflow, scripting, and related engineering practices.
 - `commands/` contains reusable slash-command workflows such as `/save`,
@@ -38,6 +40,10 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Disabled OpenCode's built-in web search in the shared `opencode.json` with
+  `websearch: false`, so agent sessions no longer receive that tool by default.
+- Consumer action: update `.opencode` and run `/reload` in OpenCode to load the
+  shared setting.
 - `/task spec`, `impl`, and `cancel` now maintain a project-owned
   `docs/tasks/OVERVIEW.md` with open tasks, short summaries, dependencies, and
   blockers, including nested tasks and blocked outcomes. Task files remain the
