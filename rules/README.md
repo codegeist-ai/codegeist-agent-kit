@@ -37,9 +37,9 @@ Shared AI rules intended to work across repos.
 - `taskfile-and-script-creation.md` - how to add wrappers and Taskfiles safely.
 - `temporary-storage.md` - keep disposable artifacts outside persistent
   workspaces and persistent secrets under `.codegeist/secrets/`.
-- `task-workflow.md` - always-on task invariants for `spec`, `impl`, `cancel`,
-  and `backlog`, including optional GitHub Issue linkage and verified completion
-  closure; `commands/task.md` owns the detailed execution procedure.
+- `task-workflow.md` - always-on task invariants for `spec`, `impl`, and `cancel`,
+  including overview backlog preservation, optional GitHub Issue linkage, and
+  verified completion closure; `commands/task.md` owns the detailed procedure.
 - `session-titles.md` - short, searchable session title conventions.
 - `ai-scripts.md` - policy for future `.opencode/ai-scripts/` helpers.
 - `excalidraw.md` - editable `.excalidraw.svg` export requirements.

@@ -29,11 +29,12 @@ Shared workflow commands intended to work across repos.
 - `/session-title` - generate a short session title from the current branch and
   recent result.
 - `/task` - manage canonical task files under `docs/tasks/` with the actions
-  `spec`, `impl`, `cancel`, and `backlog`; local tasks default to no public
+  `spec`, `impl`, and `cancel`; local tasks default to no public
   tracking, while users may opt into one concise GitHub Issue through `GH_TOKEN`
   and exact-preview approval. A linked Issue is validated before implementation
   and confirmed closed as completed before local status becomes `solved`.
-  `backlog` only records an uncommitted local edit.
+  Ideas and deferred tasks live in the optional final `## Backlog` section of
+  `docs/tasks/OVERVIEW.md`, not in a separate command or backlog file.
 - `/update-submodules` - update `.opencode` and `.devcontainer` to their
   configured branches from `.gitmodules`.
 - `/update-documentation` - refresh the docs affected by recent changes.

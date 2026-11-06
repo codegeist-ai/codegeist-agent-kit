@@ -7,7 +7,7 @@ Keep task handoff small, traceable, and easy to resume.
 - The local task file owns scope, acceptance criteria, status, files, and
   verification. A linked GitHub Issue is only a concise public pointer and
   discussion surface.
-- `commands/task.md` owns the detailed `spec`, `impl`, `cancel`, and `backlog`
+- `commands/task.md` owns the detailed `spec`, `impl`, and `cancel`
   execution procedure, including project eligibility, mirror discovery, GitHub
   authentication, Issue linkage, and completion checks.
 - A repository's `docs/tasks/README.md` owns local fields, statuses, mirror
@@ -31,15 +31,19 @@ Keep task handoff small, traceable, and easy to resume.
 - Give every task one immutable random `Tracking Key`. New tasks default to
   `Public Tracking: not requested`; public tracking remains available if tracking
   is requested later through `/task spec`.
-- Keep backlog ideas local to `docs/tasks/backlog.md`. `/task backlog` does not
-  create an Issue, stage files, commit, or push.
+- Keep loose ideas and explicitly deferred task links only in the optional final
+  `## Backlog` section of `docs/tasks/OVERVIEW.md`. Preserve this planning input
+  during refreshes. Deferred tasks are excluded from active work selection until
+  explicitly reactivated; task status and Issue linkage remain authoritative.
+  Backlog edits do not authorize Issues, commits, or pushes.
 - Keep `spec` minimal and `impl` limited to lines justified by the acceptance
   criteria or implementation notes.
 - Keep project-owned `docs/tasks/OVERVIEW.md` aligned with local task changes,
   including blocked outcomes, completion, cancellation, and canonical path moves.
   Follow `commands/task.md` for its open-status table, dependency links, and
   blocker summaries. Task files stay authoritative; missing information must not
-  be presented as an explicit absence. `/task backlog` does not update it.
+  be presented as an explicit absence. The overview owns only backlog placement,
+  not task implementation status.
 
 ## Public Tracking Invariants
 

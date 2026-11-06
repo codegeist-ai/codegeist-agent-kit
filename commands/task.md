@@ -14,7 +14,7 @@ $ARGUMENTS
 
 Then:
 1. Parse the first argument as the action. Supported actions are `spec`, `impl`,
-   `cancel`, and `backlog`. Stop and report the valid actions if the first
+   and `cancel`. Stop and report the valid actions if the first
    argument is missing or invalid.
 2. Inspect `docs/tasks/README.md` and `docs/tasks/template.md` before writing
    task files. Create the directory or helper docs only if they are missing.
@@ -46,7 +46,7 @@ For `spec`, `impl`, and `cancel`, create or refresh `docs/tasks/OVERVIEW.md`
 after persisting task changes and before returning, including early returns for
 blocked outcomes, failed verification, or unresolved public tracking. Refresh
 after creation, summary-relevant edits, status changes, completion, cancellation,
-and task path or hierarchy changes. Do not update the overview for `backlog`.
+and task path or hierarchy changes.
 
 - Use only local task records; overview maintenance never authorizes GitHub
   requests, remote mutations, commits, or a change to a task's status.
@@ -62,6 +62,24 @@ and task path or hierarchy changes. Do not update the overview for `backlog`.
   `Task | Status | Summary | Dependencies | Blockers`.
   Link the task ID and title to its canonical path relative to `OVERVIEW.md`.
   Summarize the goal in one sentence; escape table delimiters in cell text.
+- Preserve an optional `## Backlog` as the last section of the overview. It is
+  manually maintained planning input, not a generated task summary. Keep loose
+  ideas as bullets and deferred tasks as bullets linking their canonical files,
+  with a short reason when recorded. Omit the section when empty. Never invent
+  entries, promote ideas to tasks, or discard entries during a refresh.
+- An unfinished task explicitly linked in `## Backlog` is deferred: exclude it
+  from the active table and general work selection without changing its status,
+  blockers, or Issue linkage. Deferring a parent does not implicitly defer its
+  children. Preserve unresolved links and report them; repair links after moves.
+  Completed or cancelled tasks no longer belong in the backlog: remove their
+  task entries only after the canonical status confirms completion/cancellation.
+- With only backlog entries remaining, write `No active tasks.` above the backlog;
+  with no active tasks or backlog entries, write `No open tasks.`. Direct requests
+  to defer or reactivate work edit this section, not a separate backlog file or
+  task queue field. Reactivation removes the task entry and refreshes the table.
+- If a legacy `docs/tasks/backlog.md` exists, preserve its ideas and context in
+  the final backlog section before removing that file. Do not silently overwrite
+  existing overview entries or collapse distinct ideas during migration.
 - Read `Dependencies` and `Blockers` from each task. Link recorded task IDs to
   their existing canonical files, even if the dependency is already completed;
   keep external prerequisites concise. Do not infer blockers from dependencies.
@@ -74,10 +92,11 @@ and task path or hierarchy changes. Do not update the overview for `backlog`.
   and `Blockers` sections. Record known impediments and next steps in `Blockers`
   when marking a task blocked; do not invent a resolution.
 - Repair overview and dependency links when canonical paths move. Remove rows
-  only after their task files have actually reached an excluded status. A linked
+  only after explicit deferral or when task files reach an excluded status. A linked
   task remains visible as blocked until required Issue closure and read-back
   permit persisting `solved`; never mark it solved to clean up the overview.
-- If no tasks qualify, write `No open tasks.` instead of an empty table. Do not
+- If no tasks qualify, write `No open tasks.` when the backlog is also empty;
+  otherwise use `No active tasks.` instead of an empty table. Do not
   add completed-task inventories, timestamps, or transcripts. If refreshing the
   overview fails, report the incomplete refresh without rolling back verified
   task outcomes or repeating remote side effects.
@@ -89,7 +108,7 @@ derived summary. The local task files remain authoritative.
 
 The local task file is always the source of truth. Every top-level or child task
 keeps a random immutable `Tracking Key` so public tracking can be added later,
-but a GitHub Issue is optional. Do not apply this section to `backlog` entries.
+but a GitHub Issue is optional. Loose backlog ideas never activate this workflow.
 
 ### Activation
 
@@ -385,6 +404,9 @@ implementation pass.
 1. Resolve the task reference, read the target task, parent task when present,
    directly relevant child tasks, dependencies, task templates, and referenced
    docs before editing runtime files.
+   An explicit `impl` request for a deferred task reactivates that task: remove
+   its backlog entry and refresh the overview. This does not bypass specification,
+   dependency, or public-tracking checks, and does not reactivate children.
 2. Evaluate Optional GitHub Issue Tracking before editing runtime files. Validate
    a stored full Issue URL through the existing tracking workflow. Enter that
    workflow for an unlinked task only when the user explicitly requests public
@@ -460,25 +482,11 @@ git --no-pager diff --check
    update a linked GitHub Issue automatically when a task is cancelled; the local
    cancellation status remains authoritative.
 
-## `backlog`
-
-1. Treat the remaining arguments as one idea title and stop if they are missing.
-2. Create `docs/tasks/backlog.md` with a small English explanation when missing.
-3. Append exactly one new `* <idea>` line to `docs/tasks/backlog.md`.
-4. Do not stage, commit, or push the backlog change. `/task backlog` is a local
-   capture action and does not imply commit authorization.
-5. Do not update task files or other docs for this quick-capture path.
-6. Report the changed backlog file as an uncommitted local edit, then stop without
-   treating the backlog item as the new active task context.
-7. Do not inspect GitHub mirrors, require `GH_TOKEN`, or create an Issue for a
-   backlog entry.
-
 Report the created or updated task files, final statuses, mirror decision, Issue
 approval result, Issue URL when applicable, implementation result, verification
 commands, and any follow-up. Never include token values or credential details.
 
 Do not create a heavier planning system than `docs/tasks/` plus recursive
 `tasks/` directories created only when needed.
-Do not write task docs outside `docs/tasks/`, including the `backlog` action,
-which writes only `docs/tasks/backlog.md`.
-Do not invent extra task actions beyond `spec`, `impl`, `cancel`, and `backlog`.
+Do not write task docs outside `docs/tasks/`.
+Do not invent extra task actions beyond `spec`, `impl`, and `cancel`.

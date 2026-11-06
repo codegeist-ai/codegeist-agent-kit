@@ -38,10 +38,21 @@ branch should contain only runtime files needed by consuming repositories:
 
 ### Current Version
 
+- Removed `/task backlog`; `/task` now accepts only `spec`, `impl`, and `cancel`.
+  Keep ideas and linked deferred tasks in an optional final `## Backlog` section
+  of project-owned `docs/tasks/OVERVIEW.md`. Refreshes preserve these entries;
+  deferred tasks stay out of the active table and general work selection without
+  changing their status or Issue linkage. An explicit `impl` request reactivates
+  its target through the usual checks.
+- Migration: agents must preserve any existing overview backlog and transfer
+  legacy `docs/tasks/backlog.md` ideas and context into it before removing the
+  old file. Edit the section directly instead of invoking `/task backlog`.
+  Update repo-local command examples and overlays that still invoke the removed
+  action. No task-status or Issue migration is required.
 - `/task spec`, `impl`, and `cancel` now maintain a project-owned
   `docs/tasks/OVERVIEW.md` with open tasks, short summaries, dependencies, and
   blockers, including nested tasks and blocked outcomes. Task files remain the
-  source of truth; `/task backlog` does not update the overview.
+  source of truth; the final optional backlog section preserves planning input.
 - Consumer action: update `.opencode` and restart OpenCode. The next task change
   creates or refreshes the overview locally; existing tasks without `Blockers`
   remain valid and missing details are shown as `Not recorded`. No bulk task
@@ -503,11 +514,13 @@ When working inside a consuming repository that uses this submodule:
 - `/session-title` creates a short session title from the current branch and
   recent result.
 - `/task` manages authoritative task files under `docs/tasks/` with `spec`,
-  `impl`, `cancel`, and `backlog`. Tasks default to no public tracking and can be
+  `impl`, and `cancel`. Tasks default to no public tracking and can be
   completed locally. When a user requests public tracking, one concise Issue can
   be created through `GH_TOKEN` only after exact-preview approval. Verified
   implementation closes and confirms any linked Issue before the task becomes
-  `solved`; backlog entries remain uncommitted local edits and do not use Issues.
+  `solved`. Ideas and deferred task links belong only in the optional final
+  `## Backlog` section of `docs/tasks/OVERVIEW.md`; editing it does not authorize
+  commits or Issue creation.
 - `/update-documentation` refreshes documentation affected by recent changes.
 - `/verify-documentation` audits documentation and reports stale or broken
   references without editing them.
